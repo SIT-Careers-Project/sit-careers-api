@@ -58,4 +58,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     Route::get('banner', 'BannerController@getBannerById');
     Route::post('banner', 'BannerController@create');
     Route::delete('banner', 'BannerController@destroy');
+
+    Route::prefix('dashboard')->group(function () {
+        Route::get('stats', 'DashboardController@getStats');
+    });
 // });
