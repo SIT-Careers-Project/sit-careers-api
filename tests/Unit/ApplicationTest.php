@@ -178,7 +178,7 @@ class ApplicationTest extends TestCase
     }
 
 
-    public function test_create_expire_date_of_application_should_not_application_and_return_202(Type $var = null)
+    public function test_create_expire_date_of_application_should_not_application_and_return_202()
     {
         $roleStd = Role::where('role_name', 'student')->first();
         $user = factory(User::class)->create([
@@ -252,7 +252,7 @@ class ApplicationTest extends TestCase
         $this->assertEquals($actual['message'], $expect);
     }
 
-    public function test_update_expire_date_of_application_should_not_application_and_return_202(Type $var = null)
+    public function test_update_expire_date_of_application_should_not_application_and_return_202()
     {
         $roleStd = Role::where('role_name', 'student')->first();
         $user = factory(User::class)->create([
