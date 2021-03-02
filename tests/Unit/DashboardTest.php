@@ -30,5 +30,4 @@ class DashboardTest extends TestCase
     {
         $this->get('api/dashboard/announcements/job-positions')->assertStatus(200);
     }
-
 }
