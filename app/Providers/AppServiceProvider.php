@@ -26,7 +26,8 @@ class AppServiceProvider extends ServiceProvider
             'RolePermission',
             'Application',
             'History',
-            'Banner'
+            'Banner',
+            'Dashboard'
         );
 
         foreach ($models as $model) {
