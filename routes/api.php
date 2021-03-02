@@ -61,5 +61,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
     Route::prefix('dashboard')->group(function () {
         Route::get('stats', 'DashboardController@getStats');
+        Route::get('company-types', 'DashboardController@getCompanyTypes');
+        Route::get('students/job-positions', 'DashboardController@getStudentJobPositions');
+        Route::get('announcements/job-positions', 'DashboardController@getAnnouncementJobPositions');
     });
 // });
