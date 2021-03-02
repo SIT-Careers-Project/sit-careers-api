@@ -44,7 +44,7 @@ class DashboardRepository implements DashboardRepositoryInterface
             ->groupBy('company_type')
             ->get();
 
-        return $company_types->toArray();
+        return $company_types;
     }
 
     public function getStudentJobPositions()
