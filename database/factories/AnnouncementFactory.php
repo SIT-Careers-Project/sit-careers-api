@@ -2,6 +2,7 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
+use Carbon\Carbon;
 use Faker\Generator as Faker;
 use Faker\Provider\Uuid;
 
@@ -22,10 +23,10 @@ $factory->define(Announcement::class, function (Faker $faker) use ($factory) {
         'property' => 'คนดี ก็เพียงพอ',
         'picture' => 'path/picture',
         'start_date' => '2021-01-10 13:00:00',
-        'end_date' => '2021-02-10 18:00:00',
+        'end_date' => Carbon::now()->addDays(5),
         'salary' => '28,000',
         'welfare' => 'มีเงินเดือนให้',
-        'status' => 'เปิดรับสมัคร',
+        'status' => 'OPEN',
         'start_business_day' => 'จันทร์',
         'end_business_day' => 'ศุกร์',
         'start_business_time' => '09:00',

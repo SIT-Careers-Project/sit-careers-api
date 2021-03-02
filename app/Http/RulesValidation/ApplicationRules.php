@@ -16,7 +16,7 @@ trait ApplicationRules
         'curriculum' => 'required|string',
         'year' => 'required|string',
         'tel_no' => 'required|string',
-        'email' => 'required|email|unique:applications',
+        'email' => 'required|email',
     ];
     private $rulesUpdateApplication = [
         'announcement_id' => 'required|string',

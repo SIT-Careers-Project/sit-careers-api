@@ -12,17 +12,23 @@ use League\Flysystem\AwsS3v3\AwsS3Adapter;
 
 use App\Http\Controllers\Controller as Controller;
 use App\Repositories\ApplicationRepositoryInterface;
+use App\Repositories\AnnouncementRepositoryInterface;
+use App\Traits\Utils;
 use App\Http\RulesValidation\ApplicationRules;
 
 
 class ApplicationController extends Controller
 {
     use ApplicationRules;
-    private $application;
+    use Utils;
 
-    public function __construct(ApplicationRepositoryInterface $applicationRepo)
+    private $application;
+    private $announcement;
+
+    public function __construct(ApplicationRepositoryInterface $applicationRepo, AnnouncementRepositoryInterface $announcementRepo)
     {
         $this->application = $applicationRepo;
+        $this->announcement = $announcementRepo;
     }
 
     public function get(Request $request)
@@ -45,12 +51,25 @@ class ApplicationController extends Controller
     public function create(Request $request)
     {
         try {
-            $validated = Validator::make($request->all(), $this->rulesCreationApplication);
+            $data = $request->all();
+            $validated = Validator::make($data, $this->rulesCreationApplication);
             if ($validated->fails()) {
                 return response()->json($validated->messages(), 400);
             }
-            $created = $this->application->createApplication($request);
-            return response()->json($created, 200);
+
+            $announcement = $this->announcement->getAnnouncementById($data['announcement_id']);
+            if ($this->checkDateToDayBetweenStartAndEnd($announcement)) {
+                $created = $this->application->createApplication($request);
+                return response()->json($created, 200);
+            } else {
+                if ($announcement['status'] == "OPEN") {
+                    $announcement['status'] = "CLOSE";
+                    $this->announcement->updateAnnouncement($announcement);
+                }
+                return response()->json([
+                    "message" => "Can not application, because It was expired for application."
+                ], 202);
+            }
         } catch (\Throwable $th) {
             return response()->json([
                 "message" => "Something Wrong !",
@@ -68,8 +87,20 @@ class ApplicationController extends Controller
             if ($validated->fails()) {
                 return response()->json($validated->messages(), 400);
             }
-            $updated = $this->application->updateApplication($data);
-            return response()->json($updated, 200);
+
+            $announcement = $this->announcement->getAnnouncementById($data['announcement_id']);
+            if ($this->checkDateToDayBetweenStartAndEnd($announcement)) {
+                $updated = $this->application->updateApplication($data);
+                return response()->json($updated, 200);
+            } else {
+                if ($announcement['status'] == "OPEN") {
+                    $announcement['status'] = "CLOSE";
+                    $this->announcement->updateAnnouncement($announcement);
+                }
+                return response()->json([
+                    "message" => "Can not update application, because It was expired for application."
+                ], 202);
+            }
         } catch (\Throwable $th) {
             return response()->json([
                 "message" => "Something Wrong !",
