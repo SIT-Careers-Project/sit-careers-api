@@ -8,4 +8,5 @@ interface RolePermissionRepositoryInterface
     public function getRolePermissions();
     public function getRolePermissionsByUserId($user_id);
     public function getRolePermissions();
+    public function getRolePermissionsByUserId($user_id);
 }
