@@ -76,12 +76,13 @@ class CompanyController extends Controller
 
         if ($data['logo'] == '-' && !is_null($file)) {
             $uploaded = $storage->put('/logo/'.$companyNamePath, file_get_contents($file), 'public');
+            $data['logo'] = $companyNamePath;
         } else if ($data['logo'] !== '-' && !is_null($file)) {
             $uploaded = $storage->delete('/logo/'. $data['logo']);
             $uploaded = $storage->put('/logo/'. $companyNamePath, file_get_contents($file), 'public');
+            $data['logo'] = $companyNamePath;
         }
 
-        $data['logo'] = $companyNamePath;
         $updated = $this->company->updateCompanyById($data);
         return response()->json($updated, 200);
     }
