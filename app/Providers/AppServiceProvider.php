@@ -16,6 +16,7 @@ class AppServiceProvider extends ServiceProvider
         $models = array(
             'Company',
             'Address',
+            'Auth',
             'MOU',
             'Announcement',
             'JobPosition',
