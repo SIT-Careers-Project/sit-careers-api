@@ -55,6 +55,7 @@ Route::group(['middleware' => ['checkAuth']], function () {
     Route::delete('user/{user_id}', 'UserController@destroy');
 
     Route::get('roles', 'RoleController@get');
+    Route::get('role-permissions', 'RoleController@getRolePermissions');
 
     Route::get('histories', 'HistoryController@get');
 

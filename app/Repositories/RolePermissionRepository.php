@@ -15,6 +15,14 @@ class  RolePermissionRepository implements RolePermissionRepositoryInterface
         return $user_role_permission;
     }
 
+    public function getRolePermissions()
+    {
+        $role_permission = RolePermission::join('roles', 'roles.role_id', '=', 'role_permissions.role_id')
+                            ->join('permissions', 'permissions.permission_id', '=', 'role_permissions.permission_id')
+                            ->get();
+        return $role_permission;
+    }
+
     public function getRolePermissionsByUserId($user_id)
     {
         $user_role_permission = RolePermission::join('roles', 'roles.role_id', '=', 'role_permissions.role_id')
