@@ -90,7 +90,7 @@ class ApplicationController extends Controller
 
             $announcement = $this->announcement->getAnnouncementById($data['announcement_id']);
             if ($this->checkDateToDayBetweenStartAndEnd($announcement)) {
-                $updated = $this->application->updateApplication($data);
+                $updated = $this->application->updateApplication($request);
                 return response()->json($updated, 200);
             } else {
                 if ($announcement['status'] == "OPEN") {

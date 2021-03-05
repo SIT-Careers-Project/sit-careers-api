@@ -70,7 +70,7 @@ class ApplicationTest extends TestCase
 
         $mockData = [
             'announcement_id' => $announcement_arr,
-            'user_id' => $user->user_id,
+            'my_user_id' => $user->user_id,
             'application_date' => '2021-02-04',
             'status' => 'OPEN',
             'note' => '-',
@@ -150,7 +150,7 @@ class ApplicationTest extends TestCase
 
         $mockData = [
             'announcement_id' => $announcement_arr,
-            'user_id' => $user->user_id,
+            'my_user_id' => $user->user_id,
             'application_date' => '2021-02-04',
             'status' => '-',
             'note' => '-',
@@ -224,7 +224,7 @@ class ApplicationTest extends TestCase
 
         $mockData = [
             'announcement_id' => $announcement_arr,
-            'user_id' => $user->user_id,
+            'my_user_id' => $user->user_id,
             'application_date' => '2021-02-04',
             'status' => '-',
             'note' => '-',
@@ -296,9 +296,14 @@ class ApplicationTest extends TestCase
         $announcement = Announcement::find($response_arr['announcement_id']);
         $announcement_arr = $announcement->toArray()['announcement_id'];
 
+        factory(Application::class)->create([
+            'announcement_id' => $announcement_arr
+        ]);
+
         $mockData = [
             'announcement_id' => $announcement_arr,
-            'user_id' => $user->user_id,
+            'my_user_id' => $user->user_id,
+            'application_id' => $this->fakerApp->application_id,
             'application_date' => '2021-02-04',
             'status' => '-',
             'note' => '-',
