@@ -298,7 +298,7 @@ class ApplicationTest extends TestCase
 
         $mockData = [
             'announcement_id' => $announcement_arr,
-            'my_user_id' => $user->user_id,
+            'student_id' => $user->user_id,
             'application_date' => '2021-02-04',
             'status' => '-',
             'note' => '-',
