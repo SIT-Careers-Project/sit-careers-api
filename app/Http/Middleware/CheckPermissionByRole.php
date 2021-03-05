@@ -18,7 +18,7 @@ class CheckPermissionByRole
     public function handle($request, Closure $next, $role)
     {
         $data = $request->all();
-        $user_id = $data['user_id'];
+        $user_id = $data['my_user_id'];
         $check_role_permission = $this->role_permission->getUserRolePermissions($user_id);
 
         if (!is_null($check_role_permission) && str_contains($role, $check_role_permission['role_name'])) {
