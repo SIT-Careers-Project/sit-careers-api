@@ -22,7 +22,7 @@ class UsersTable extends Migration
             $table->string('last_name');
             $table->string('email');
             $table->string('created_by');
-            $table->text('token');
+            $table->text('token')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
