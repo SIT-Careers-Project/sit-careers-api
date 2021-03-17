@@ -30,7 +30,12 @@ class PermissionsSeeder extends Seeder
             'create_academic_application',
             'update_academic_application',
             'delete_academic_application',
-            'access_dashboard'
+            'access_academic_banner',
+            'create_academic_banner',
+            'update_academic_banner',
+            'delete_academic_banner',
+            'access_dashboard',
+            'access_history'
         ];
 
         foreach ($permissions_data as  $permission_data) {
