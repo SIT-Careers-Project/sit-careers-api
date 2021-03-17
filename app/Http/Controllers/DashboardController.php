@@ -2,8 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use Storage;
+
+use App\Traits\CompaniesExport;
 use App\Repositories\DashboardRepositoryInterface;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Excel;
 
 class DashboardController extends Controller
 {
@@ -40,5 +45,27 @@ class DashboardController extends Controller
         $announcement_job_position = $request->all();
         $announcement_job_position = $this->dashboard->getAnnouncementJobPositions();
         return response()->json($announcement_job_position, 200);
+    }
+
+    public function getCompaniesByFilterDate(Request $request, Excel $excel)
+    {
+        $data = $request->all();
+
+        $file_name = 'companies'. '_' . Carbon::now()->format('Y-m-d-H-i-s') . '.csv';
+        $path = '/reports/companies/';
+        $path_file_name = $path.$file_name;
+
+        $companies_excel = $excel->store(
+            new CompaniesExport($data),
+            $path_file_name,
+            'minio',
+            $writerType=\Maatwebsite\Excel\Excel::CSV,
+        );
+
+        return response()->json([
+            "message" => $path_file_name,
+            "status_uploaded_file" => $companies_excel
+        ], 200
+        );
     }
 }
