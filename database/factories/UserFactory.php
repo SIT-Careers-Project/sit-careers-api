@@ -20,6 +20,7 @@ $factory->define(User::class, function (Faker $faker) use ($factory) {
         'first_name' => 'Tassaneeewan',
         'last_name' => 'Noita',
         'email' => 'testuser@gmail.com',
+        'token' => 'testuser@gmail.com',
         'created_by' => ''
     ];
 });
