@@ -64,7 +64,8 @@ class AuthController extends Controller
         $data = $request->all();
         $url = config('app.SIT_SSO_URL').'/oauth/token?client_secret='.config('app.SIT_SSO_SECRET').'&client_id='.config('app.SIT_SSO_CLIENT_ID').'&code='.$data['code'].'&redirect_uri='.config('app.SIT_SSO_REDIRECT');
         $response = Http::get($url);
-        if ($response->successful()) {
+
+        if ($response->successful() && $data['state'] == config('app.SIT_SSO_STATE')) {
             $body = json_decode($response->body());
             $user = $this->user->getUserByEmail($body->email);
             if (is_null($user)) {
