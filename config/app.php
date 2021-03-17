@@ -56,6 +56,13 @@ return [
 
     'asset_url' => env('ASSET_URL', null),
 
+    'SIT_SSO_URL' => env('SIT_SSO_URL', ''),
+    'SIT_SSO_STATE' => env('SIT_SSO_STATE', ''),
+    'SIT_SSO_REDIRECT' => env('SIT_SSO_REDIRECT', ''),
+    'SIT_SSO_CLIENT_ID' => env('SIT_SSO_CLIENT_ID', ''),
+    'SIT_SSO_SECRET' => env('SIT_SSO_SECRET', ''),
+
+
     /*
     |--------------------------------------------------------------------------
     | Application Timezone
