@@ -17,11 +17,12 @@ class UsersTable extends Migration
             $table->uuid('user_id')->primary();
             $table->uuid('role_id')->nullable(false);
             $table->string('username');
-            $table->string('password');
+            $table->string('password')->nullable();
             $table->string('first_name');
             $table->string('last_name');
             $table->string('email');
             $table->string('created_by');
+            $table->text('token')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

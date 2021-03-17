@@ -15,13 +15,12 @@ class CheckPermissionByRole
         $this->role_permission = $role_permission_repo;
     }
 
-    public function handle($request, Closure $next, $role)
+    public function handle($request, Closure $next, $permission)
     {
         $data = $request->all();
-        $user_id = $data['my_user_id'];
-        $check_role_permission = $this->role_permission->getUserRolePermissions($user_id);
+        $check_role_permission = $this->role_permission->getUserRolePermissions($data, $permission);
 
-        if (!is_null($check_role_permission) && str_contains($role, $check_role_permission['role_name'])) {
+        if (!is_null($check_role_permission) && str_contains($permission, $check_role_permission[0]['permission_name'])) {
             return $next($request);
         }
         else {

@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Http;
 
 use App\Http\Controllers\Controller as Controller;
 use App\Repositories\AuthRepositoryInterface;
 use App\Repositories\RolePermissionRepositoryInterface;
+use App\Repositories\UserRepositoryInterface;
 
 use \Firebase\JWT\JWT;
 
@@ -16,10 +18,11 @@ class AuthController extends Controller
     private $auth;
     private $role_permission;
 
-    public function __construct(AuthRepositoryInterface $auth, RolePermissionRepositoryInterface $permission_repo)
+    public function __construct(AuthRepositoryInterface $auth, RolePermissionRepositoryInterface $permission_repo, UserRepositoryInterface $user_repo)
     {
         $this->auth = $auth;
         $this->role_permission = $permission_repo;
+        $this->user = $user_repo;
     }
 
     public function login(Request $request)
@@ -44,7 +47,7 @@ class AuthController extends Controller
                         'message' => 'login success',
                         'user' => $user,
                         'token' => $token,
-                        'permission' => $permissions
+                        'permissions' => $permissions
                     ],
                     200
                 );
@@ -56,21 +59,74 @@ class AuthController extends Controller
         }
     }
 
+    public function SITLogin(Request $request)
+    {
+        $data = $request->all();
+        $url = config('app.SIT_SSO_URL').'/oauth/token?client_secret='.config('app.SIT_SSO_SECRET').'&client_id='.config('app.SIT_SSO_CLIENT_ID').'&code='.$data['code'].'&redirect_uri='.config('app.SIT_SSO_REDIRECT');
+        $response = Http::get($url);
+        if ($response->successful()) {
+            $body = json_decode($response->body());
+            $user = $this->user->getUserByEmail($body->email);
+            if (is_null($user)) {
+                if ($body->user_type === 'st_group') {
+                    $user = $this->user->createUserฺStudentByEmail($body, 'student');
+                } else {
+                    return response()->json(
+                        [
+                            'message' => 'Unauthorized',
+                        ],
+                        401
+                    );
+                }
+            }
+            $token = $this->encode($user, env('JWT_KEY'));
+            $permissions = $this->role_permission->getRolePermissionsByUserId($user['user_id']);
+            return response()->json(
+                [
+                    'message' => 'login success',
+                    'user' => $user,
+                    'token' => $token,
+                    'permissions' => $permissions
+                ],
+                200
+            );
+        } else {
+            return response()->json(
+                [
+                    'message' => 'Unauthorized',
+                ],
+                401
+            );
+        }
+    }
+
     public function me(Request $request)
     {
         $data = $request->all();
         $data['username'] = $data['my_username'];
         $user = $this->auth->getUser($data);
         if ($user) {
-            unset($user->password);
-            unset($user->created_at);
-            unset($user->updated_at);
+            if ($user->token) {
+                $url = 'https://gatewayservice.sit.kmutt.ac.th/api/me';
+                $response = Http::withHeaders([
+                    'Authorization' => 'Bearer '.$user->token
+                ])->get($url);
+                $body = json_decode($response->body());
+                if ($response->failed()) {
+                    return response()->json(
+                        [
+                            'message' => $body->message
+                        ],
+                        401
+                    );
+                }
+            }
             $permissions = $this->role_permission->getRolePermissionsByUserId($user['user_id']);
             return response()->json(
                 [
                     'message' => 'login success',
                     'user' => $user,
-                    'permission' => $permissions
+                    'permissions' => $permissions
                 ],
                 200
             );

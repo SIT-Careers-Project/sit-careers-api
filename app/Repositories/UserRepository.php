@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 use App\Models\User;
+use App\Models\Role;
 
 class UserRepository implements UserRepositoryInterface
 {
@@ -26,6 +27,12 @@ class UserRepository implements UserRepositoryInterface
         return $user;
     }
 
+    public function getUserByEmail($email)
+    {
+        $user = User::where('email', $email)->first();
+        return $user;
+    }
+
     public function createUser($data)
     {
         $user = new User();
@@ -37,9 +44,24 @@ class UserRepository implements UserRepositoryInterface
         $user->email = $data->email;
         $user->created_by = $data->created_by ? $data->created_by : '-';
         $user->save();
-        
-        // keep for auth
-        // dd(Hash::check('2314df', $hashedPassword));
+
+        return $user;
+    }
+
+    public function createUserฺStudentByEmail($data, $role)
+    {
+        $role = Role::where('role_name', $role)->first();
+        $user = new User();
+
+        $user->role_id = $role->role_id;
+        $user->username = $data->user_id;
+        $user->email = $data->email;
+        $user->first_name = explode(" ", $data->name_th)[0];
+        $user->last_name = explode(" ", $data->name_th)[1];
+        $user->token = $data->token->token;
+        $user->created_by = '-';
+        $user->save();
+
         return $user;
     }
 
