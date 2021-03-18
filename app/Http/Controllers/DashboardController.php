@@ -8,7 +8,7 @@ use App\Traits\CompaniesExport;
 use App\Repositories\DashboardRepositoryInterface;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Maatwebsite\Excel\Excel;
+use Maatwebsite\Excel\Facades\Excel;
 
 class DashboardController extends Controller
 {
@@ -47,7 +47,7 @@ class DashboardController extends Controller
         return response()->json($announcement_job_position, 200);
     }
 
-    public function getCompaniesByFilterDate(Request $request, Excel $excel)
+    public function getCompaniesByFilterDate(Request $request)
     {
         $data = $request->all();
 
@@ -55,7 +55,7 @@ class DashboardController extends Controller
         $path = '/reports/companies/';
         $path_file_name = $path.$file_name;
 
-        $companies_excel = $excel->store(
+        $companies_excel = Excel::store(
             new CompaniesExport($data),
             $path_file_name,
             'minio',
