@@ -33,7 +33,7 @@ class  RolePermissionRepository implements RolePermissionRepositoryInterface
                                 ->join('permissions', 'permissions.permission_id', '=', 'role_permissions.permission_id')
                                 ->join('users', 'users.role_id', '=', 'role_permissions.role_id')
                                 ->where('users.user_id', $user_id)
-                                ->select('permissions.*')
+                                ->select('permissions.*', 'roles.*')
                                 ->get();
         return $user_role_permission;
     }

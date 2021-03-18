@@ -9,6 +9,7 @@ class AuthRepository implements AuthRepositoryInterface
 {
     public function getUser($data)
     {
-        return User::where('username', $data['username'])->first();
+        return User::join('roles', 'roles.role_id', '=', 'users.role_id')
+                ->where('username', $data['username'])->first();
     }
 }

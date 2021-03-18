@@ -29,7 +29,8 @@ class UserRepository implements UserRepositoryInterface
 
     public function getUserByEmail($email)
     {
-        $user = User::where('email', $email)->first();
+        $user = User::join('roles', 'roles.role_id', '=', 'users.role_id')
+                ->where('email', $email)->first();
         return $user;
     }
 
