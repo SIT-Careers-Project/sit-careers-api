@@ -39,6 +39,7 @@ class AppServiceProvider extends ServiceProvider
         }
 
         $this->app->bind("App\Traits\CompaniesExport");
+        $this->app->bind("App\Traits\AnnouncmentsExport");
     }
 
     /**

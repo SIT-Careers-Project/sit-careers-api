@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Storage;
+use Validator;
 
+use App\Http\RulesValidation\DashboardRules;
+use App\Traits\AnnouncementsExport;
 use App\Traits\CompaniesExport;
 use App\Repositories\DashboardRepositoryInterface;
 use Carbon\Carbon;
@@ -12,6 +14,7 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class DashboardController extends Controller
 {
+    use DashboardRules;
     private $dashboard;
 
     public function __construct(DashboardRepositoryInterface $dashboard_repo)
@@ -51,6 +54,11 @@ class DashboardController extends Controller
     {
         $data = $request->all();
 
+        $validated = Validator::make($data, $this->ruleExport);
+        if ($validated->fails()){
+            return response()->json($validated->messages(), 400);
+        }
+
         $file_name = 'companies'. '_' . Carbon::now()->format('Y-m-d-H-i-s') . '.csv';
         $path = '/reports/companies/';
         $path_file_name = $path.$file_name;
@@ -65,6 +73,33 @@ class DashboardController extends Controller
         return response()->json([
             "message" => $path_file_name,
             "status_uploaded_file" => $companies_excel
+        ], 200
+        );
+    }
+
+    public function getAnnouncementsByFilterDate(Request $request)
+    {
+        $data = $request->all();
+
+        $validated = Validator::make($data, $this->ruleExport);
+        if ($validated->fails()){
+            return response()->json($validated->messages(), 400);
+        }
+
+        $file_name = 'announcements'. '_' . Carbon::now()->format('Y-m-d-H-i-s') . '.csv';
+        $path = '/reports/announcements/';
+        $path_file_name = $path.$file_name;
+
+        $announcements_excel = Excel::store(
+            new AnnouncementsExport($data),
+            $path_file_name,
+            'minio',
+            $writerType=\Maatwebsite\Excel\Excel::CSV,
+        );
+
+        return response()->json([
+            "message" => $path_file_name,
+            "status_uploaded_file" => $announcements_excel
         ], 200
         );
     }
