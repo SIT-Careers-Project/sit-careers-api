@@ -69,11 +69,11 @@ class DashBoardStats implements FromCollection, WithHeadings, WithTitle
             ->whereBetween('users.created_at', [$start_date, $end_date])
             ->count();
 
-        $stats = array(
-            ['count_all_companies' => $companies,
+        $stats = array([
+            'count_all_companies' => $companies,
             'count_all_announcements' => $announcements,
-            'count_all_users' => $users],
-        );
+            'count_all_users' => $users
+        ]);
 
         return collect($stats);
     }
