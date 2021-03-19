@@ -1,5 +1,11 @@
 FROM kaotu/image-laravel:latest
 
+RUN apt-get update -y
+RUN apt-get install -y \
+        libzip-dev \
+        zip \
+  && docker-php-ext-install zip
+
 WORKDIR /app
 ENV APPLICATION_ROOT /app
 

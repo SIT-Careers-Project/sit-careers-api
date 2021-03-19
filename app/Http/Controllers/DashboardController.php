@@ -2,11 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use Validator;
+
+use App\Http\RulesValidation\DashboardRules;
+use App\Traits\AnnouncementsExport;
+use App\Traits\CompaniesExport;
 use App\Repositories\DashboardRepositoryInterface;
+use App\Traits\DashboardExport;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class DashboardController extends Controller
 {
+    use DashboardRules;
     private $dashboard;
 
     public function __construct(DashboardRepositoryInterface $dashboard_repo)
@@ -40,5 +49,83 @@ class DashboardController extends Controller
         $announcement_job_position = $request->all();
         $announcement_job_position = $this->dashboard->getAnnouncementJobPositions();
         return response()->json($announcement_job_position, 200);
+    }
+
+    public function getCompaniesByFilterDate(Request $request)
+    {
+        $data = $request->all();
+
+        $validated = Validator::make($data, $this->ruleExport);
+        if ($validated->fails()){
+            return response()->json($validated->messages(), 400);
+        }
+
+        $file_name = 'companies'. '_' . $data['start_date'] . '-' . $data['end_date'] . '.xlsx';
+        $path = '/reports/companies/';
+        $path_file_name = $path.$file_name;
+
+        $companies_excel = Excel::store(
+            new CompaniesExport($data),
+            $path_file_name,
+            'minio',
+        );
+
+        return response()->json([
+            "message" => $path_file_name,
+            "status_uploaded_file" => $companies_excel
+        ], 200
+        );
+    }
+
+    public function getAnnouncementsByFilterDate(Request $request)
+    {
+        $data = $request->all();
+
+        $validated = Validator::make($data, $this->ruleExport);
+        if ($validated->fails()){
+            return response()->json($validated->messages(), 400);
+        }
+
+        $file_name = 'announcements'. '_' . $data['start_date'] . '-' . $data['end_date'] . '.xlsx';
+        $path = '/reports/announcements/';
+        $path_file_name = $path.$file_name;
+
+        $announcements_excel = Excel::store(
+            new AnnouncementsExport($data),
+            $path_file_name,
+            'minio',
+        );
+
+        return response()->json([
+            "message" => $path_file_name,
+            "status_uploaded_file" => $announcements_excel
+        ], 200
+        );
+    }
+
+    public function getDashboardByFilterDate(Request $request)
+    {
+        $data = $request->all();
+
+        $validated = Validator::make($data, $this->ruleExport);
+        if ($validated->fails()){
+            return response()->json($validated->messages(), 400);
+        }
+
+        $file_name = 'dashboard'. '_' . $data['start_date'] . '-' . $data['end_date'] . '.xlsx';
+        $path = '/reports/dashboard/';
+        $path_file_name = $path.$file_name;
+
+        $announcements_excel = Excel::store(
+            new DashboardExport($data),
+            $path_file_name,
+            'minio',
+        );
+
+        return response()->json([
+            "message" => $path_file_name,
+            "status_uploaded_file" => $announcements_excel
+        ], 200
+        );
     }
 }
