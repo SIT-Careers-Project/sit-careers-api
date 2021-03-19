@@ -35,6 +35,7 @@ class PermissionsSeeder extends Seeder
             'update_academic_banner',
             'delete_academic_banner',
             'access_dashboard',
+            'access_dashboard_admin',
             'access_history'
         ];
 
