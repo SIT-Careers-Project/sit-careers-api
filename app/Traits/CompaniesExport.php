@@ -27,7 +27,7 @@ class CompaniesExport implements FromCollection, WithHeadings
             ->where('addresses.address_type', '=', 'company')
             ->whereBetween('companies.created_at', [$start_date, $end_date])
             ->get()
-            ->makeHidden(['company_id', 'address_id', 'mou_id', 'address_type', 'created_at', 'updated_at', 'deleted_at']);
+            ->makeHidden(['company_id', 'logo', 'address_id', 'mou_id', 'address_type', 'created_at', 'updated_at', 'deleted_at']);
 
         return $companies;
     }
