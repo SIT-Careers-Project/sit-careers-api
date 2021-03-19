@@ -15,7 +15,8 @@ class DatabaseSeeder extends Seeder
             'JobPositionsSeeder',
             'PermissionsSeeder',
             'RolesSeeder',
-            'RolePermissionsSeeder'
+            'RolePermissionsSeeder',
+            'UserSeeder'
         ]);
     }
 }
