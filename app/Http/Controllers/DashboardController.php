@@ -8,6 +8,7 @@ use App\Http\RulesValidation\DashboardRules;
 use App\Traits\AnnouncementsExport;
 use App\Traits\CompaniesExport;
 use App\Repositories\DashboardRepositoryInterface;
+use App\Traits\DashboardExport;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
@@ -95,6 +96,32 @@ class DashboardController extends Controller
             $path_file_name,
             'minio',
             $writerType=\Maatwebsite\Excel\Excel::CSV,
+        );
+
+        return response()->json([
+            "message" => $path_file_name,
+            "status_uploaded_file" => $announcements_excel
+        ], 200
+        );
+    }
+
+    public function getDashboardByFilterDate(Request $request)
+    {
+        $data = $request->all();
+
+        $validated = Validator::make($data, $this->ruleExport);
+        if ($validated->fails()){
+            return response()->json($validated->messages(), 400);
+        }
+
+        $file_name = 'dashboard'. '_' . Carbon::now()->format('Y-m-d-H-i-s') . '.xlsx';
+        $path = '/reports/dashboard/';
+        $path_file_name = $path.$file_name;
+
+        $announcements_excel = Excel::store(
+            new DashboardExport($data),
+            $path_file_name,
+            'minio',
         );
 
         return response()->json([
