@@ -22,7 +22,7 @@ class UserSeeder extends Seeder
             'first_name' => 'User',
             'last_name' => 'Test',
             'created_by' => '-',
-            'email' => 'test@mail.com'
+            'email' => 'userTest@mail.sit.coll.com'
         ]);
     }
 }
