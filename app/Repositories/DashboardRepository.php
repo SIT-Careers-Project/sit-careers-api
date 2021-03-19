@@ -40,7 +40,7 @@ class DashboardRepository implements DashboardRepositoryInterface
         $company_types = Company::join('mou', 'mou.company_id', '=', 'companies.company_id')
             ->join('addresses', 'addresses.company_id', '=', 'companies.company_id')
             ->where('addresses.address_type', '=', 'company')
-            ->selectRaw('companies.company_type, count(company_type)')
+            ->selectRaw('companies.company_type, count(company_type) as count_company_type')
             ->groupBy('company_type')
             ->get();
 
@@ -51,7 +51,7 @@ class DashboardRepository implements DashboardRepositoryInterface
     {
         $student_job_positions = Announcement::join('applications', 'applications.announcement_id', '=', 'announcements.announcement_id')
             ->join('job_positions', 'job_positions.job_position_id', '=', 'announcements.job_position_id')
-            ->selectRaw('job_positions.job_position, count(job_position)')
+            ->selectRaw('job_positions.job_position, count(job_position) as count_job_position')
             ->groupBy('job_position')
             ->get();
 
@@ -61,7 +61,7 @@ class DashboardRepository implements DashboardRepositoryInterface
     public function getAnnouncementJobPositions()
     {
         $announcement_job_positions = Announcement::join('job_positions', 'job_positions.job_position_id', '=', 'announcements.job_position_id')
-            ->selectRaw('job_positions.job_position, count(job_position)')
+            ->selectRaw('job_positions.job_position, count(job_position) as count_job_position')
             ->groupBy('job_position')
             ->get();
 
