@@ -47,7 +47,7 @@ class DashboardTest extends TestCase
 
         $response = $this->call('GET', 'api/dashboard/companies/export', $data);
 
-        $file_name = 'companies'. '_' . Carbon::now()->format('Y-m-d-H-i-s') . '.csv';
+        $file_name = 'companies'. '_' . $data['start_date'] . '-' . $data['end_date'] . '.xlsx';
         $path = '/reports/companies/';
         $path_file_name = $path.$file_name;
 
@@ -88,7 +88,7 @@ class DashboardTest extends TestCase
 
         $response = $this->call('GET', 'api/dashboard/announcements/export', $data);
 
-        $file_name = 'announcements'. '_' . Carbon::now()->format('Y-m-d-H-i-s') . '.csv';
+        $file_name = 'announcements'. '_' . $data['start_date'] . '-' . $data['end_date'] . '.xlsx';
         $path = '/reports/announcements/';
         $path_file_name = $path.$file_name;
 
@@ -129,7 +129,7 @@ class DashboardTest extends TestCase
 
         $response = $this->call('GET', 'api/dashboard/dashboard/export', $data);
 
-        $file_name = 'dashboard'. '_' . Carbon::now()->format('Y-m-d-H-i-s') . '.xlsx';
+        $file_name = 'dashboard'. '_' . $data['start_date'] . '-' . $data['end_date'] . '.xlsx';
         $path = '/reports/dashboard/';
         $path_file_name = $path.$file_name;
 
