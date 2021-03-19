@@ -70,6 +70,9 @@ Route::group(['middleware' => ['checkAuth']], function () {
             Route::get('company-types', 'DashboardController@getCompanyTypes');
             Route::get('students/job-positions', 'DashboardController@getStudentJobPositions');
             Route::get('announcements/job-positions', 'DashboardController@getAnnouncementJobPositions');
+            Route::get('companies/export', 'DashboardController@getCompaniesByFilterDate');
+            Route::get('announcements/export', 'DashboardController@getAnnouncementsByFilterDate');
+            Route::get('dashboard/export', 'DashboardController@getDashboardByFilterDate');
         });
     // });
 });

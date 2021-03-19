@@ -37,6 +37,10 @@ class AppServiceProvider extends ServiceProvider
                 "App\Repositories\\{$model}Repository"
             );
         }
+
+        $this->app->bind("App\Traits\CompaniesExport");
+        $this->app->bind("App\Traits\AnnouncmentsExport");
+        $this->app->bind("App\Traits\DashboardExport");
     }
 
     /**
