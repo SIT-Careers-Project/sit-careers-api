@@ -31,7 +31,8 @@ class RolePermissionsSeeder extends Seeder
             'access_academic_announcement',
             'access_academic_application',
             'create_academic_application',
-            'update_academic_application'
+            'update_academic_application',
+            'access_dashboard'
         ];
 
         foreach ($permissionStudent as  $permission) {
