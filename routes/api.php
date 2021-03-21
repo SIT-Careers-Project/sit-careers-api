@@ -43,7 +43,12 @@ Route::group(['middleware' => ['checkAuth']], function () {
             Route::get('application/{application_id}', 'ApplicationController@getApplicationById')->middleware(['role.permission:access_academic_application']);
             Route::post('application', 'ApplicationController@create')->middleware(['role.permission:create_academic_application']);
             Route::put('application', 'ApplicationController@update')->middleware(['role.permission:update_academic_application']);
-            Route::delete('application/{application_id}', 'ApplicationController@destroy');
+            Route::delete('application/{application_id}', 'ApplicationController@destroy')->middleware(['role.permission:delete_academic_application']);
+            
+            Route::get('resume', 'ApplicationController@get')->middleware(['role.permission:access_resume']);
+            Route::post('resume', 'ApplicationController@create')->middleware(['role.permission:create_resume']);
+            Route::put('resume', 'ApplicationController@create')->middleware(['role.permission:update_resume']);
+            Route::delete('resume/{application_id}', 'ApplicationController@destroy')->middleware(['role.permission:delete_resume']);
         });
 
         // keep for dashboard feature
