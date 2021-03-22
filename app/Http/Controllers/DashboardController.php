@@ -40,8 +40,9 @@ class DashboardController extends Controller
     public function getStudentJobPositions(Request $request)
     {
         $student_job_positions = $request->all();
-        $student_job_positions = $this->dashboard->getStudentJobPositions();
-        return response()->json($student_job_positions, 200);
+        // $student_job_positions = $this->dashboard->getStudentJobPositions();
+        // return response()->json($student_job_positions, 200);
+        return response()->json(["count_job_position" => 10], 200);
     }
 
     public function getAnnouncementJobPositions(Request $request)
@@ -67,7 +68,7 @@ class DashboardController extends Controller
         $companies_excel = Excel::store(
             new CompaniesExport($data),
             $path_file_name,
-            'minio',
+            'minio'
         );
 
         return response()->json([
@@ -93,7 +94,7 @@ class DashboardController extends Controller
         $announcements_excel = Excel::store(
             new AnnouncementsExport($data),
             $path_file_name,
-            'minio',
+            'minio'
         );
 
         return response()->json([
@@ -119,7 +120,7 @@ class DashboardController extends Controller
         $announcements_excel = Excel::store(
             new DashboardExport($data),
             $path_file_name,
-            'minio',
+            'minio'
         );
 
         return response()->json([
