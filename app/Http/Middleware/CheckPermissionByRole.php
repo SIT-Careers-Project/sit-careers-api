@@ -20,13 +20,13 @@ class CheckPermissionByRole
         $data = $request->all();
         $check_role_permission = $this->role_permission->getUserRolePermissions($data, $permission);
 
-        if (!is_null($check_role_permission) && str_contains($permission, $check_role_permission[0]['permission_name'])) {
-            return $next($request);
+        if (!$check_role_permission->isEmpty()) {
+            if (str_contains($permission, $check_role_permission[0]['permission_name'])) {
+                return $next($request);
+            }
         }
-        else {
-            return response()->json([
-                "message" => "Access Denied"
-            ], 401);
-        }
+        return response()->json([
+            "message" => "Access Denied"
+        ], 401);
     }
 }
