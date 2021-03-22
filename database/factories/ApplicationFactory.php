@@ -12,7 +12,6 @@ use App\Models\User;
 
 $factory->define(Application::class, function (Faker $faker) use ($factory) {
     return [
-        'announcement_id' => $factory->create(Announcement::class)->announcement_id,
         'student_id' => $factory->create(User::class)->user_id,
         'application_date' => '2021-02-04',
         'status' => '-',

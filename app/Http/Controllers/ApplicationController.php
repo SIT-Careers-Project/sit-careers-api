@@ -57,19 +57,8 @@ class ApplicationController extends Controller
                 return response()->json($validated->messages(), 400);
             }
 
-            $announcement = $this->announcement->getAnnouncementById($data['announcement_id']);
-            if ($this->checkDateToDayBetweenStartAndEnd($announcement)) {
-                $created = $this->application->createApplication($request);
-                return response()->json($created, 200);
-            } else {
-                if ($announcement['status'] == "OPEN") {
-                    $announcement['status'] = "CLOSE";
-                    $this->announcement->updateAnnouncement($announcement);
-                }
-                return response()->json([
-                    "message" => "Can not application, because It was expired for application."
-                ], 202);
-            }
+            $created = $this->application->createApplication($request);
+            return response()->json($created, 200);
         } catch (\Throwable $th) {
             return response()->json([
                 "message" => "Something Wrong !",
@@ -88,19 +77,8 @@ class ApplicationController extends Controller
                 return response()->json($validated->messages(), 400);
             }
 
-            $announcement = $this->announcement->getAnnouncementById($data['announcement_id']);
-            if ($this->checkDateToDayBetweenStartAndEnd($announcement)) {
-                $updated = $this->application->updateApplication($request);
-                return response()->json($updated, 200);
-            } else {
-                if ($announcement['status'] == "OPEN") {
-                    $announcement['status'] = "CLOSE";
-                    $this->announcement->updateAnnouncement($announcement);
-                }
-                return response()->json([
-                    "message" => "Can not update application, because It was expired for application."
-                ], 202);
-            }
+            $updated = $this->application->updateApplication($request);
+            return response()->json($updated, 200);
         } catch (\Throwable $th) {
             return response()->json([
                 "message" => "Something Wrong !",
