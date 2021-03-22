@@ -18,8 +18,7 @@ class ApplicationRepository implements ApplicationRepositoryInterface
 
     public function getApplications()
     {
-        $applications = Application::join('announcements', 'announcements.announcement_id','=', 'applications.announcement_id')
-                        ->join('companies', 'companies.company_id', '=', 'announcements.company_id')
+        $applications = Application::join('companies', 'companies.company_id', '=', 'announcements.company_id')
                         ->select('companies.company_name_th', 'announcements.announcement_title', 'applications.*')
                         ->get();
         return $applications;
@@ -28,7 +27,6 @@ class ApplicationRepository implements ApplicationRepositoryInterface
     public function createApplication($data)
     {
         $application = new Application();
-        $application->announcement_id = $data->announcement_id;
         $application->student_id = $data->my_user_id;
         $application->application_date = Carbon::now();
         $application->status = 'เรียกสัมภาษณ์';
