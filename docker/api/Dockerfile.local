@@ -6,6 +6,8 @@ RUN apt-get install -y \
         zip \
   && docker-php-ext-install zip
 
+RUN mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"
+
 WORKDIR /app
 ENV APPLICATION_ROOT /app
 
@@ -22,6 +24,7 @@ COPY ./resources $APPLICATION_ROOT/resources
 COPY ./storage $APPLICATION_ROOT/storage
 
 COPY ./docker/api/php-config.ini /usr/local/etc/php/conf.d/php-config.ini
+COPY ./docker/api/www.conf /usr/local/etc/php-fpm.d/www.conf
 
 COPY ./app $APPLICATION_ROOT/app
 COPY ./database $APPLICATION_ROOT/database
@@ -34,3 +37,4 @@ RUN composer install --no-scripts
 
 RUN chmod 775 -R $APPLICATION_ROOT
 RUN chmod 775 -R $APPLICATION_ROOT/storage/logs
+
