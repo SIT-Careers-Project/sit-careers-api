@@ -7,41 +7,38 @@ use Storage;
 use Config;
 
 use Illuminate\Http\Request;
-use Illuminate\Contracts\Filesystem\Filesystem;
-use League\Flysystem\AwsS3v3\AwsS3Adapter;
 
 use App\Http\Controllers\Controller as Controller;
-use App\Repositories\ApplicationRepositoryInterface;
 use App\Repositories\AnnouncementRepositoryInterface;
 use App\Traits\Utils;
-use App\Http\RulesValidation\ApplicationRules;
+use App\Http\RulesValidation\ResumeRules;
+use App\Repositories\ResumeRepositoryInterface;
 
-
-class ApplicationController extends Controller
+class ResumeController extends Controller
 {
-    use ApplicationRules;
+    use ResumeRules;
     use Utils;
 
-    private $application;
+    private $resume;
     private $announcement;
 
-    public function __construct(ApplicationRepositoryInterface $applicationRepo, AnnouncementRepositoryInterface $announcementRepo)
+    public function __construct(ResumeRepositoryInterface $resumeRepo, AnnouncementRepositoryInterface $announcementRepo)
     {
-        $this->application = $applicationRepo;
+        $this->resume = $resumeRepo;
         $this->announcement = $announcementRepo;
     }
 
     public function get(Request $request)
     {
-        $applications = $this->application->getApplications();
-        return response()->json($applications, 200);
+        $resumes = $this->resume->getResumes();
+        return response()->json($resumes, 200);
     }
 
-    public function getApplicationById(Request $request, $application_id)
+    public function getResumeById(Request $request, $resume_id)
     {
-        $applications = $this->application->getApplicationById($application_id);
-        if ($applications) {
-            return response()->json($applications, 200);
+        $resume = $this->resume->getResumeById($resume_id);
+        if ($resume) {
+            return response()->json($resume, 200);
         }
         return response()->json([
             "message" => "Not found."
@@ -52,17 +49,17 @@ class ApplicationController extends Controller
     {
         try {
             $data = $request->all();
-            $validated = Validator::make($data, $this->rulesCreationApplication);
+            $validated = Validator::make($data, $this->rulesCreationResume);
             if ($validated->fails()) {
                 return response()->json($validated->messages(), 400);
             }
 
-            $created = $this->application->createApplication($request);
+            $created = $this->resume->createResume($request);
             return response()->json($created, 200);
         } catch (\Throwable $th) {
             return response()->json([
                 "message" => "Something Wrong !",
-                "error" => $th 
+                "error" => $th
             ]
             , 500);
         }
@@ -72,35 +69,35 @@ class ApplicationController extends Controller
     {
         try {
             $data = $request->all();
-            $validated = Validator::make($data, $this->rulesUpdateApplication);
+            $validated = Validator::make($data, $this->rulesUpdateResume);
             if ($validated->fails()) {
                 return response()->json($validated->messages(), 400);
             }
 
-            $updated = $this->application->updateApplication($request);
+            $updated = $this->resume->updateResume($request);
             return response()->json($updated, 200);
         } catch (\Throwable $th) {
             return response()->json([
                 "message" => "Something Wrong !",
-                "error" => $th 
+                "error" => $th
             ]
             , 500);
         }
     }
 
-    public function destroy(Request $request, $application_id)
+    public function destroy(Request $request, $resume_id)
     {
         try {
-            $delete = $this->application->deleteApplicationById($application_id);
+            $delete = $this->resume->deleteResumeById($resume_id);
             $message = $delete;
             if ($delete) {
-                $message = 'Application has been deleted.';
+                $message = 'Resume has been deleted.';
             }
             return response()->json([ "message" => $message ], 200);
         } catch (\Throwable $th) {
             return response()->json([
                 "message" => "Something Wrong !",
-                "error" => $th 
+                "error" => $th
             ]
             , 500);
         }

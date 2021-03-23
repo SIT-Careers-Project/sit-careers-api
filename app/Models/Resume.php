@@ -3,16 +3,16 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Traits\ApplicationUuid;
+use App\Traits\ResumeUuid;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Application extends Model
+class Resume extends Model
 {
-    Use ApplicationUuid;
+    Use ResumeUuid;
     use SoftDeletes;
 
-    protected $table = 'applications';
-    protected $primaryKey = 'application_id';
+    protected $table = 'resumes';
+    protected $primaryKey = 'resume_id';
     public $incrementing = false;
 
     protected $keyType = 'uuid';

@@ -23,6 +23,7 @@ class UsersTable extends Migration
             $table->string('email');
             $table->string('created_by');
             $table->text('token')->nullable();
+            $table->text('temp_token')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

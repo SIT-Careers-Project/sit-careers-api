@@ -5,17 +5,14 @@
 use Faker\Generator as Faker;
 use Faker\Provider\Uuid;
 
-use App\Models\Announcement;
-use App\Models\Application;
+use App\Models\Resume;
 use App\Models\User;
 
 
-$factory->define(Application::class, function (Faker $faker) use ($factory) {
+$factory->define(Resume::class, function (Faker $faker) use ($factory) {
     return [
         'student_id' => $factory->create(User::class)->user_id,
-        'application_date' => '2021-02-04',
-        'status' => '-',
-        'note' => '-',
+        'resume_date' => '2021-02-04',
         'name_title' => 'นาย',
         'first_name' => 'ชาเขียว',
         'last_name' => 'มัทฉะ',
