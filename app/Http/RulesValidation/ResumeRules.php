@@ -4,10 +4,10 @@ namespace App\Http\RulesValidation;
 
 use Illuminate\Contracts\Validation\Rule;
 
-trait ApplicationRules
+trait ResumeRules
 {
-    private $rulesCreationApplication = [
-        'application_date' => 'nullable|string',
+    private $rulesCreationResume = [
+        'resume_date' => 'nullable|string',
         'status' => 'nullable|string',
         'name_title' => 'required|string',
         'first_name' => 'required|string',
@@ -17,11 +17,11 @@ trait ApplicationRules
         'tel_no' => 'required|string',
         'email' => 'required|email',
     ];
-    private $rulesUpdateApplication = [
-        'application_id' => 'required|string',
+    private $rulesUpdateResume = [
+        'resume_id' => 'required|string',
     ];
 
-    private $rulesDeleteApplication = [
-        'application_id' => 'required|string',
+    private $rulesDeleteResume = [
+        'resume_id' => 'required|string',
     ];
 }
