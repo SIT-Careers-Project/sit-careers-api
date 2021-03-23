@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class ApplicationsTable extends Migration
+class ResumeTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class ApplicationsTable extends Migration
      */
     public function up()
     {
-        Schema::create('applications', function (Blueprint $table) {
-            $table->uuid('application_id')->primary();
+        Schema::create('resumes', function (Blueprint $table) {
+            $table->uuid('resume_id')->primary();
             $table->uuid('student_id')->nullable(false);
             $table->date('application_date');
             $table->string('status');
@@ -32,7 +32,7 @@ class ApplicationsTable extends Migration
             $table->softDeletes();
         });
 
-        Schema::table('applications', function (Blueprint $table) {
+        Schema::table('resumes', function (Blueprint $table) {
             $table->foreign('student_id')->references('user_id')->on('users');
         });
     }
@@ -45,7 +45,7 @@ class ApplicationsTable extends Migration
     public function down()
     {
         Schema::disableForeignKeyConstraints();
-        Schema::dropIfExists('applications');
+        Schema::dropIfExists('resumes');
         Schema::enableForeignKeyConstraints();
     }
 }
