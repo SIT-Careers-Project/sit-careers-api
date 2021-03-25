@@ -30,6 +30,7 @@ class CompanyTest extends TestCase
     {
         $data = [
             'company_id' => $this->faker->company_id,
+            'my_user_id' => $this->fakerUser->user_id,
             'company_name_th' => 'บริษัท เทส จำกัด',
             'company_name_en' => 'Test COmpany',
             'description' => 'เป็นบริษัทพัฒนา software บริษัทใหญ่ อยู่เยอรมัน',
@@ -121,7 +122,6 @@ class CompanyTest extends TestCase
         $company = Company::find($response_arr['company_id']);
         $company_arr = $company->toArray();
 
-        // Check field that are changed
         $this->assertEquals($company_arr['company_id'], $response_arr['company_id']);
         $this->assertEquals($company_arr['company_name_th'], $response_arr['company_name_th']);
     }
