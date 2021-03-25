@@ -20,4 +20,14 @@ class Resume extends Model
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
     const DELETED_AT = 'deleted_at';
+
+    public function AnnouncementResume()
+    {
+        return $this->hasMany('App\Models\AnnouncementResume', 'announcement_resume_id');
+    }
+
+    public function User()
+    {
+        return $this->hasOne('App\Models\User', 'user_id');
+    }
 }
