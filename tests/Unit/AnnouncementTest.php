@@ -2,15 +2,15 @@
 
 namespace Tests\Unit;
 
-use App\Models\Address;
 use Tests\TestCase;
 
 use Faker\Provider\Uuid;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
 
 use App\Models\Announcement;
 use App\Models\JobType;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
+use App\Models\Address;
 
 class AnnouncementTest extends TestCase
 {

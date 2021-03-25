@@ -18,6 +18,8 @@ class DataOwnerTable extends Migration
             $table->uuid('user_id')->nullable(false);
             $table->uuid('company_id')->nullable(false);
             $table->boolean('request_delete');
+            $table->timestamps();
+            $table->softDeletes();
         });
 
         Schema::table('data_owner', function (Blueprint $table) {
