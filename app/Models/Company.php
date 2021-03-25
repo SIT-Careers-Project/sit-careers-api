@@ -40,4 +40,9 @@ class Company extends Model
     {
         return $this->hasMany('App\Models\Address', 'business_day_id');
     }
+
+    public function data_owner()
+    {
+        return $this->hasMany('App\Models\DataOwner', 'data_owner_id');
+    }
 }
