@@ -27,7 +27,7 @@ class AnnouncementResumeRepository implements AnnouncementResumeRepositoryInterf
         $announcement_resume->note = $data['note'];
         $announcement_resume->save();
 
-        return array($announcement_resume->toArray());
+        return $announcement_resume;
     }
 
     public function updateAnnouncementRusume($data)
@@ -37,6 +37,6 @@ class AnnouncementResumeRepository implements AnnouncementResumeRepositoryInterf
         $announcement_resume->note = $data['note'];
         $announcement_resume->save();
 
-        return array($announcement_resume);
+        return $announcement_resume;
     }
 }
