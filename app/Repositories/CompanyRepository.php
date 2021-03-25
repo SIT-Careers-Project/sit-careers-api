@@ -6,9 +6,15 @@ use Carbon\Carbon;
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
-use App\Models\Company;
+use App\Mail\RequestDelete;
+use App\Mail\AdminRequestDelete;
+
 use App\Models\Address;
+use App\Models\Company;
+use App\Models\User;
+use App\Models\DataOwner;
 use App\Models\MOU;
 
 class CompanyRepository implements CompanyRepositoryInterface
@@ -64,6 +70,12 @@ class CompanyRepository implements CompanyRepositoryInterface
         $address->address_type = 'company';
         $address->company_id = $company->company_id;
         $address->save();
+
+        $dataOwner = new DataOwner();
+        $dataOwner->user_id = array_key_exists('user_id', $data) ? $data['user_id'] : $data['my_user_id'];
+        $dataOwner->company_id = $company->company_id;
+        $dataOwner->request_delete = false;
+        $dataOwner->save();
 
         $mou = new MOU();
         $mou->company_id = $company->company_id;
@@ -123,6 +135,37 @@ class CompanyRepository implements CompanyRepositoryInterface
         $mou->save();
 
         return array_merge($company->toArray(),  $address->toArray(), $mou->toArray());
+    }
+
+    public function requestDelete($data)
+    {
+        $user_id = $data['my_user_id'];
+        $dataOwner = DataOwner::where('user_id', $user_id)->first();
+
+        if(is_null($dataOwner)){
+            return "Find not found company or user.";
+        }
+
+        $dataOwner->user_id = $dataOwner->user_id;
+        $dataOwner->company_id = $dataOwner->company_id;
+        $dataOwner->request_delete = true;
+        $dataOwner->save();
+
+        $userRequest = User::find($dataOwner->user_id);
+        $company = Company::find($dataOwner->company_id);
+        $dataOwnerCompany = DataOwner::where('company_id', $company->company_id)->get();
+        
+        for ($i=0; $i < count($dataOwnerCompany); $i++) {
+            $user = User::find($dataOwnerCompany[$i]->user_id);
+            $sendMailToCompany = Mail::to($user->email)->send(new RequestDelete($user, $userRequest, $company));
+        }
+        
+        $userAdmin = User::join('roles', 'roles.role_id', '=', 'users.role_id')->where('roles.role_name', 'admin')->get();
+        for ($i=0; $i < count($userAdmin); $i++) { 
+            $sendMailToAdmin = Mail::to($userAdmin[$i]->email)->send(new AdminRequestDelete($userAdmin[$i], $userRequest, $company));
+        }
+
+        return "Request to delete has been success.";
     }
 
     public function deleteCompanyById($id)
