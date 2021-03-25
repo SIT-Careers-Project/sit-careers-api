@@ -29,4 +29,14 @@ class AnnouncementResumeRepository implements AnnouncementResumeRepositoryInterf
 
         return array($announcement_resume->toArray());
     }
+
+    public function updateAnnouncementRusume($data)
+    {
+        $announcement_resume = AnnouncementResume::find($data['announcement_resume_id']);
+        $announcement_resume->status = $data['status'];
+        $announcement_resume->note = $data['note'];
+        $announcement_resume->save();
+
+        return array($announcement_resume);
+    }
 }
