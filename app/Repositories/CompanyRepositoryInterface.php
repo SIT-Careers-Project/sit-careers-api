@@ -8,5 +8,6 @@ interface CompanyRepositoryInterface
     public function getCompanyById($id);
     public function createCompany($data);
     public function updateCompanyById($data);
+    public function requestDelete($data);
     public function deleteCompanyById($id);
 }
