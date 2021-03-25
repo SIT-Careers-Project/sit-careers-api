@@ -2,7 +2,11 @@
 
 namespace Tests\Unit;
 
-use App\Models\AnnouncementResume;
+use App\Models\Address;
+use App\Models\Announcement;
+use App\Models\JobType;
+use Carbon\Carbon;
+use Faker\Provider\Uuid;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Tests\TestCase;
@@ -23,7 +27,21 @@ class AnnouncementResumeTest extends TestCase
 
     public function test_post_annoucement_resume_success_should_return_announcement_resume()
     {
-        $announcement = $this->fakerAnnouncement->toArray();
+        $company = $this->faker->toArray();
+
+        $address = factory(Address::class)->create([
+            'company_id' => $company['company_id'],
+            'address_type' => 'announcement'
+        ]);
+
+        $announcement = factory(Announcement::class)->create([
+            'company_id' => $company['company_id'],
+        ]);
+
+        $jobType = factory(JobType::class)->create([
+            'announcement_id' => $announcement['announcement_id'],
+            'job_id' => Uuid::uuid()
+        ]);
 
         $data = $this->fakerAnnouncementResume->toArray();
         $data['announcement_id'] = $announcement['announcement_id'];
@@ -39,6 +57,22 @@ class AnnouncementResumeTest extends TestCase
 
     public function test_post_annoucement_resume_failed_should_return_error_message()
     {
+        $company = $this->faker->toArray();
+
+        $address = factory(Address::class)->create([
+            'company_id' => $company['company_id'],
+            'address_type' => 'announcement'
+        ]);
+
+        $announcement = factory(Announcement::class)->create([
+            'company_id' => $company['company_id'],
+        ]);
+
+        $jobType = factory(JobType::class)->create([
+            'announcement_id' => $announcement['announcement_id'],
+            'job_id' => Uuid::uuid()
+        ]);
+
         //announcement_id doesn't unique
         $data = $this->fakerAnnouncementResume->toArray();
 
@@ -55,7 +89,41 @@ class AnnouncementResumeTest extends TestCase
         $this->assertEquals($assertion, $expected);
     }
 
-    public function test_update_announcement_resume_success_should_return_announcement_resume_that_has_been_updated(Type $var = null)
+    public function test_post_annoucement_resume_due_date_of_announcement_should_return_error_message()
+    {
+        $company = $this->faker->toArray();
+
+        $address = factory(Address::class)->create([
+            'company_id' => $company['company_id'],
+            'address_type' => 'announcement'
+        ]);
+
+        $announcement = factory(Announcement::class)->create([
+            'company_id' => $company['company_id'],
+            'start_date' => '2021-01-10 13:00:00',
+            'end_date' => Carbon::now()->subDay()
+        ]);
+
+        $jobType = factory(JobType::class)->create([
+            'announcement_id' => $announcement['announcement_id'],
+            'job_id' => Uuid::uuid()
+        ]);
+
+        $data = $this->fakerAnnouncementResume->toArray();
+        $data['announcement_id'] = $announcement['announcement_id'];
+
+        $response = $this->postJson('/api/academic-industry/application', $data);
+        $expected = json_decode($response->content(), true);
+
+        $assertion = [
+            "message" => "Can not application, because It has expired for application."
+        ];
+
+        $response->assertStatus(202);
+        $this->assertEquals($assertion, $expected);
+    }
+
+    public function test_update_announcement_resume_success_should_return_announcement_resume_that_has_been_updated()
     {
         $announcement = $this->fakerAnnouncement->toArray();
 

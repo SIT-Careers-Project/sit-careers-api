@@ -42,7 +42,7 @@ class AnnouncementResumesController extends Controller
             }
 
             $announcement = $this->announcement->getAnnouncementById($data['announcement_id']);
-            if (is_null($announcement) or $this->checkDateToDayBetweenStartAndEnd($announcement)) {
+            if ($this->checkDateToDayBetweenStartAndEnd($announcement)) {
                 $create_application = $this->announcement_resume->CreateAnnouncementResume($data);
                 return response()->json($create_application, 200);
             } else {
