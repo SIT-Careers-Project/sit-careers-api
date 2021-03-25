@@ -45,4 +45,8 @@ trait CompanyRules
     private $rulesUpdateCompanyById = [
         'company_id' => 'required|string'
     ];
+
+    private $rulesRequestDelete = [
+        'my_user_id' => 'required|string'
+    ];
 }
