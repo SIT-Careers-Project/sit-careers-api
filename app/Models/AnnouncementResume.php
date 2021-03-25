@@ -12,7 +12,7 @@ class AnnouncementResume extends Model
     use SoftDeletes;
 
     protected $table = 'announcement_resumes';
-    protected $primaryKey = 'announcement_resumes_id';
+    protected $primaryKey = 'announcement_resume_id';
     public $incrementing = false;
 
     protected $keyType = 'uuid';
