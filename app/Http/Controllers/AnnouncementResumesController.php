@@ -9,6 +9,7 @@ use App\Http\RulesValidation\AnnouncementResumeRules;
 use App\Repositories\AnnouncementRepositoryInterface;
 use App\Traits\Utils;
 use Illuminate\Http\Request;
+use Throwable;
 
 class AnnouncementResumesController extends Controller
 {
@@ -33,20 +34,28 @@ class AnnouncementResumesController extends Controller
 
     public function create(Request $request)
     {
-        $data = $request->all();
-        $validated = Validator::make($data, $this->ruleCreateAnnouncementResume);
-        if ($validated->fails()) {
-            return response()->json($validated->messages(), 400);
-        }
+        try {
+            $data = $request->all();
+            $validated = Validator::make($data, $this->ruleCreateAnnouncementResume);
+            if ($validated->fails()) {
+                return response()->json($validated->messages(), 400);
+            }
 
-        $announcement = $this->announcement->getAnnouncementById($data['announcement_id']);
-        if ($this->checkDateToDayBetweenStartAndEnd($announcement)) {
-            $create_application = $this->announcement_resume->CreateAnnouncementResume($data);
-            return response()->json($create_application, 200);
-        } else {
+            $announcement = $this->announcement->getAnnouncementById($data['announcement_id']);
+            if (is_null($announcement) or $this->checkDateToDayBetweenStartAndEnd($announcement)) {
+                $create_application = $this->announcement_resume->CreateAnnouncementResume($data);
+                return response()->json($create_application, 200);
+            } else {
+                return response()->json([
+                    "message" => "Can not application, because It has expired for application."
+                ], 202);
+            }
+        } catch (Throwable $e) {
             return response()->json([
-                "message" => "Can not application, because It has expired for application."
-            ], 202);
+                "message" => "Something Wrong !",
+                "error" => $e
+                ]
+                ,500);
         }
     }
 
@@ -55,7 +64,7 @@ class AnnouncementResumesController extends Controller
         $data = $request->all();
         $validated = Validator::make($data, $this->ruleUpdateAnnouncementResume);
         if ($validated->fails()) {
-            return response()->json()($validated->messages(), 400);
+            return response()->json($validated->messages(), 400);
         }
 
         $update_application = $this->announcement_resume->updateAnnouncementRusume($data);
