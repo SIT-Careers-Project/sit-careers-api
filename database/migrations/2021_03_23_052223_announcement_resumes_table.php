@@ -18,8 +18,8 @@ class AnnouncementResumesTable extends Migration
             $table->uuid('announcement_id')->nullable(false);
             $table->uuid('resume_id')->nullable(false);
             $table->string('message');
-            $table->string('url');
-            $table->string('read_at');
+            $table->string('status');
+            $table->string('note');
         });
 
         Schema::table('announcement_resumes', function (Blueprint $table) {

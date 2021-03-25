@@ -16,8 +16,7 @@ class ResumeTable extends Migration
         Schema::create('resumes', function (Blueprint $table) {
             $table->uuid('resume_id')->primary();
             $table->uuid('student_id')->nullable(false);
-            $table->date('application_date');
-            $table->string('status');
+            $table->date('resume_date');
             $table->string('name_title');
             $table->string('first_name');
             $table->string('last_name');
@@ -25,7 +24,6 @@ class ResumeTable extends Migration
             $table->string('year', 10);
             $table->string('email');
             $table->string('tel_no', 10);
-            $table->string('note');
             $table->string('resume_link');
             $table->string('path_file');
             $table->timestamps();
