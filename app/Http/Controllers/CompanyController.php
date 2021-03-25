@@ -14,7 +14,6 @@ use App\Http\Controllers\Controller as Controller;
 use App\Repositories\CompanyRepositoryInterface;
 use App\Http\RulesValidation\CompanyRules;
 
-
 class CompanyController extends Controller
 {
     use CompanyRules;
@@ -85,6 +84,25 @@ class CompanyController extends Controller
 
         $updated = $this->company->updateCompanyById($data);
         return response()->json($updated, 200);
+    }
+
+    public function requestDelete(Request $request)
+    {
+        try {
+            $data = $request->all();
+            $validated = Validator::make($data, $this->rulesRequestDelete);
+            if ($validated->fails()) {
+                return response()->json($validated->messages(), 400);
+            }
+            $deleted = $this->company->requestDelete($data);
+            return response()->json(['message' => $deleted], 200);
+        } catch (\Throwable $th) {
+            return response()->json([
+                "message" => "Something Wrong !",
+                "error" => $th 
+            ]
+            , 500);
+        }
     }
 
     public function destroy(Request $request)
