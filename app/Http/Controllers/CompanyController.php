@@ -94,7 +94,7 @@ class CompanyController extends Controller
             if ($validated->fails()) {
                 return response()->json($validated->messages(), 400);
             }
-            $deleted = $this->company->requestDelete($request);
+            $deleted = $this->company->requestDelete($data);
             return response()->json(['message' => $deleted], 200);
         // } catch (ErrorException $e) {
         //     return response()->json([
