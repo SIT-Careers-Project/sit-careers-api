@@ -8,7 +8,6 @@ trait ResumeRules
 {
     private $rulesCreationResume = [
         'resume_date' => 'nullable|string',
-        'status' => 'nullable|string',
         'name_title' => 'required|string',
         'first_name' => 'required|string',
         'last_name' => 'required|string',

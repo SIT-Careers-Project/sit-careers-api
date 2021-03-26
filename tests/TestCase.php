@@ -8,6 +8,7 @@ use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 
 use App\Models\Announcement;
 use App\Models\Address;
+use App\Models\AnnouncementResume;
 use App\Models\Banner;
 use App\Models\Company;
 use App\Models\JobPosition;
@@ -32,5 +33,6 @@ abstract class TestCase extends BaseTestCase
         $this->fakerUser = factory(User::class)->create();
         $this->fakerResume = factory(Resume::class)->create();
         $this->fakerBanner = factory(Banner::class)->create();
+        $this->fakerAnnouncementResume = factory(AnnouncementResume::class)->create();
     }
 }
