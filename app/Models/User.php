@@ -31,4 +31,9 @@ class User extends Model
     {
         return $this->belongsTo('App\Models\History', 'history_id');
     }
+
+    public function Resumes()
+    {
+        return $this->belongsTo('App\Models\Resume', 'resume_id');
+    }
 }

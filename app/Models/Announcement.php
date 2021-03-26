@@ -35,4 +35,9 @@ class Announcement extends Model
     {
         return $this->hasMany('App\Models\JobType', 'announcement_id');
     }
+
+    public function AnnouncementResume()
+    {
+        return $this->hasMany('App\Models\AnnouncementResume', 'announcement_resumes_id');
+    }
 }
