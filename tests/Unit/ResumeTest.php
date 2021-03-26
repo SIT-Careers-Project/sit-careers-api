@@ -51,6 +51,43 @@ class ResumeTest extends TestCase
         ]);
     }
 
+    public function test_post_duplicate_user_id_should_return_error_message()
+    {
+        $roleStd = Role::where('role_name', 'student')->first();
+        $user = factory(User::class)->create([
+            'role_id' => $roleStd->role_id,
+            'email' => 'sit-coll@gmail.com'
+        ]);
+
+        $mockData = [
+            'my_user_id' => $user->user_id,
+            'resume_date' => '2021-02-04',
+            'name_title' => 'นาย',
+            'first_name' => 'ชาเขียว',
+            'last_name' => 'มัทฉะ',
+            'curriculum' => 'IT',
+            'year' => '4',
+            'tel_no' => '0956787294',
+            'email' => 'mildHello@gmail.com',
+            'resume_link' => '-',
+            'path_file' => '-'
+        ];
+
+        $response = $this->postJson('api/academic-industry/resume', $mockData);
+        $response_dup = $this->postJson('api/academic-industry/resume', $mockData);
+
+        $expect = json_decode($response_dup->content(), true);
+
+        $assertion = [
+            "my_user_id" => [
+                "The my user id has already been taken."
+                ]
+            ];
+
+        $response_dup->assertStatus(400);
+        $this->assertEquals($assertion, $expect);
+    }
+
     public function test_get_resume_by_id_should_return_data_on_db()
     {
         $response = $this->get('api/academic-industry/resume/'.$this->fakerResume->resume_id);
