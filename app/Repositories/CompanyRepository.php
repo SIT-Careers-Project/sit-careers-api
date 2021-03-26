@@ -154,12 +154,12 @@ class CompanyRepository implements CompanyRepositoryInterface
         $userRequest = User::find($dataOwner->user_id);
         $company = Company::find($dataOwner->company_id);
         $dataOwnerCompany = DataOwner::where('company_id', $company->company_id)->get();
-        
+
         for ($i=0; $i < count($dataOwnerCompany); $i++) {
             $user = User::find($dataOwnerCompany[$i]->user_id);
             $sendMailToCompany = Mail::to($user->email)->send(new RequestDelete($user, $userRequest, $company));
         }
-        
+
         $userAdmin = User::join('roles', 'roles.role_id', '=', 'users.role_id')->where('roles.role_name', 'admin')->get();
         for ($i=0; $i < count($userAdmin); $i++) { 
             $sendMailToAdmin = Mail::to($userAdmin[$i]->email)->send(new AdminRequestDelete($userAdmin[$i], $userRequest, $company));

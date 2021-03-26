@@ -88,7 +88,7 @@ class CompanyController extends Controller
 
     public function requestDelete(Request $request)
     {
-        try {
+        // try {
             $data = $request->all();
             $validated = Validator::make($data, $this->rulesRequestDelete);
             if ($validated->fails()) {
@@ -96,13 +96,13 @@ class CompanyController extends Controller
             }
             $deleted = $this->company->requestDelete($data);
             return response()->json(['message' => $deleted], 200);
-        } catch (\Throwable $th) {
-            return response()->json([
-                "message" => "Something Wrong !",
-                "error" => $th 
-            ]
-            , 500);
-        }
+        // } catch (ErrorException $e) {
+        //     return response()->json([
+        //         "message" => "Something Wrong !",
+        //         "error" => $e->getMessage() 
+        //     ]
+        //     , 500);
+        // }
     }
 
     public function destroy(Request $request)
