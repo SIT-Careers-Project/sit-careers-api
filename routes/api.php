@@ -43,7 +43,7 @@ Route::group(['middleware' => ['checkAuth']], function () {
             Route::get('resumes', 'ResumeController@get')->middleware(['role.permission:access_resume']);
             Route::get('resume/{resume_id}', 'ResumeController@getResumeById')->middleware(['role.permission:access_resume']);
             Route::post('resume', 'ResumeController@create')->middleware(['role.permission:create_resume']);
-            Route::put('resume', 'ResumeController@create')->middleware(['role.permission:update_resume']);
+            Route::put('resume', 'ResumeController@update')->middleware(['role.permission:update_resume']);
             Route::delete('resume/{resume_id}', 'ResumeController@destroy')->middleware(['role.permission:delete_resume']);
 
             Route::get('resume', 'AnnouncementResumesController@getAnnouncementResumeByUserId')->middleware(['role.permission:access_resume']);
