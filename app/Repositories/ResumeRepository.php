@@ -42,7 +42,7 @@ class ResumeRepository implements ResumeRepositoryInterface
         $resume->year = $data->year;
         $resume->tel_no = $data->tel_no;
         $resume->resume_link = $data->resume_link;
-        $resume->path_file = $data->path_file ? $data->path_file : '';
+        $resume->path_file = $data->path_file ? $data->path_file : '-';
         $resume->save();
 
         return $resume;
