@@ -16,6 +16,11 @@ class AnnouncementResumeTest extends TestCase
     use RefreshDatabase;
     use WithoutMiddleware;
 
+    public function test_get_all_announcement_resumes()
+    {
+        $this->getJson('api/academic-industry/applications')->assertStatus(200);
+    }
+
     public function test_get_announcement_resume_by_user_id()
     {
         $id = [
