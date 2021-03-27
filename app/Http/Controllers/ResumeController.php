@@ -45,6 +45,18 @@ class ResumeController extends Controller
         ], 404);
     }
 
+    public function getResumeByUserId(Request $request)
+    {
+        $user_id = $request->all()['my_user_id'];
+        $resume = $this->resume->getResumeByUserId($user_id);
+        if ($resume) {
+            return response()->json($resume, 200);
+        }
+        return response()->json([
+            "message" => "Not found."
+        ], 404);
+    }
+
     public function create(Request $request)
     {
         try {

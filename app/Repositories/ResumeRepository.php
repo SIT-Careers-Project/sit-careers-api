@@ -14,6 +14,12 @@ class ResumeRepository implements ResumeRepositoryInterface
         return $resume;
     }
 
+    public function getResumeByUserId($user_id)
+    {
+        $resume = Resume::where('student_id', $user_id)->get();
+        return $resume;
+    }
+
     public function getResumes()
     {
         $resumes = Resume::join('announcements', 'announcements.announcement_id', '=', 'resumes.resume_id')
@@ -36,7 +42,7 @@ class ResumeRepository implements ResumeRepositoryInterface
         $resume->year = $data->year;
         $resume->tel_no = $data->tel_no;
         $resume->resume_link = $data->resume_link;
-        $resume->path_file = $data->path_file;
+        $resume->path_file = $data->path_file ? $data->path_file : '';
         $resume->save();
 
         return $resume;
