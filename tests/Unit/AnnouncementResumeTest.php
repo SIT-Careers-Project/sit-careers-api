@@ -22,7 +22,7 @@ class AnnouncementResumeTest extends TestCase
             'my_user_id' => $this->fakerUser->user_id
         ];
 
-        $this->call('GET', 'api/academic-industry/resume', $id)->assertStatus(200);
+        $this->call('GET', 'api/academic-industry/application', $id)->assertStatus(200);
     }
 
     public function test_post_annoucement_resume_success_should_return_announcement_resume()
