@@ -68,7 +68,7 @@ class AnnouncementResumeRepository implements AnnouncementResumeRepositoryInterf
             ->get();
 
         for ($i=0; $i < count($user_admin_hr); $i++) {
-            $sendMailToAdmin = Mail::to($user_admin_hr[$i]->email)->send(new RequestAnnouncementResume($user_admin_hr[$i], $announcement));
+            $sendMailToRelateUsers = Mail::to($user_admin_hr[$i]->email)->send(new RequestAnnouncementResume($user_admin_hr[$i], $announcement));
         }
 
         return "Test";
