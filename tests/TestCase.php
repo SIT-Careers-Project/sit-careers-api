@@ -14,6 +14,7 @@ use App\Models\Company;
 use App\Models\JobPosition;
 use App\Models\Resume;
 use App\Models\User;
+use App\Models\DataOwner;
 
 abstract class TestCase extends BaseTestCase
 {
@@ -31,6 +32,7 @@ abstract class TestCase extends BaseTestCase
         $this->fakerAddress = factory(Address::class)->create();
         $this->fakerAnnouncement = factory(Announcement::class)->create();
         $this->fakerUser = factory(User::class)->create();
+        $this->fakerDataOwner = factory(DataOwner::class)->create();
         $this->fakerResume = factory(Resume::class)->create();
         $this->fakerBanner = factory(Banner::class)->create();
         $this->fakerAnnouncementResume = factory(AnnouncementResume::class)->create();

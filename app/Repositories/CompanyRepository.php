@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 
 use App\Mail\RequestDelete;
+use App\Mail\CompanyDeleted;
 use App\Mail\AdminRequestDelete;
 
 use App\Models\Address;
@@ -174,10 +175,17 @@ class CompanyRepository implements CompanyRepositoryInterface
         $address = Address::where('company_id', $id)->first();
         $mou = MOU::where('company_id', $id)->first();
 
-        if($company && $address && $mou) {
+        $dataOwnerCompany = DataOwner::where('company_id', $id)->get();
+        if($company && $address && $mou && $dataOwnerCompany) {
             $deleted_company = $company->delete();
             $deleted_address = $address->delete();
             $deleted_mou = $mou->delete();
+
+            for ($i=0; $i < count($dataOwnerCompany); $i++) {
+                $user = User::find($dataOwnerCompany[$i]->user_id);
+                $sendMailToCompany = Mail::to($user->email)->send(new CompanyDeleted($user, $company));
+            }
+
             return $deleted_company && $deleted_address && $deleted_mou;
         }
 
