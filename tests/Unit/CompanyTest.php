@@ -15,6 +15,7 @@ use App\Models\Company;
 
 use App\Models\Address;
 use App\Models\MOU;
+use App\Models\DataOwner;
 
 class CompanyTest extends TestCase
 {
@@ -223,25 +224,22 @@ class CompanyTest extends TestCase
             "mou_id" => Uuid::uuid()
         ]);
 
-        $get_company_id = [
-            'company_id' => $data['company_id'],
-        ];
+        $mou = factory(DataOwner::class)->create([
+            "company_id" => $this->faker->company_id,
+            "user_id" => $this->fakerUser->user_id
+        ]);
 
         $expected_company = true;
-        $response = $this->deleteJson('api/company', $get_company_id);
+        $response = $this->deleteJson('api/company/'.$data['company_id']);
         $response_arr = json_decode($response->content(), true);
         $this->assertEquals($response_arr, $expected_company);
     }
 
     public function test_delete_company_by_id_fail_should_return_fail_message()
     {
-        $id = [
-            'company_id' => $this->faker->company_id
-        ];
-
         $expected_company = 'Find not found company or mou or address.';
 
-        $response = $this->deleteJson('api/company', $id);
+        $response = $this->deleteJson('api/company/'.$this->faker->company_id);
         $response_arr = json_decode($response->content(), true);
         $this->assertEquals($response_arr, $expected_company);
     }
