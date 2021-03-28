@@ -68,7 +68,7 @@ class AnnouncementTest extends TestCase
         $jobType = factory(JobType::class)->create([
             'job_id' => Uuid::uuid(),
             'announcement_id' => $data['announcement_id']
-            ]);
+        ]);
 
         $data['my_user_id'] = $user['user_id'];
         $data['job_type'] = $jobType['job_type'];
