@@ -17,6 +17,7 @@ class HistoriesTable extends Migration
             $table->uuid('history_id')->primary();
             $table->uuid('user_id')->nullable(false);
             $table->uuid('announcement_id')->nullable(false);
+            $table->enum('status', ['created', 'updated']);
             $table->timestamps();
             $table->softDeletes();
         });
