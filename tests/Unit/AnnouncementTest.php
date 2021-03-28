@@ -24,34 +24,25 @@ class AnnouncementTest extends TestCase
 
     public function test_post_announcement_success_should_return_announcement()
     {
-        $data = [
-            'company_id' => $this->faker->company_id,
-            'announcement_title' => 'รับสมัครงานตำแหน่ง Software Engineer',
-            'job_description' => 'เป็นซอฟ์ตแวร์เอน เอนแบบเอนเตอร์เทน',
-            'job_position_id' => $this->fakerJobPosition->job_position_id,
-            'property' => 'ขยันเป็นพอ',
-            'priority' => '-',
-            'file_picture' => '',
-            'picture' => '',
-            'start_date' => '2021-01-10 13:00:00',
-            'end_date' => '2021-03-31 17:00:00',
-            'salary' => '30,000',
-            'welfare' => 'เงินดี ไม่ต้องแย่งลงทะเบียน',
-            'status' => 'เปิดรับสมัคร',
-            'job_type' => 'WiL',
-            'address_one' => '138/2 พรีวิวหอพัก',
-            'address_two' => '-',
-            'lane' => '9',
-            'road' => 'วิภาวดีรังสิต',
-            'sub_district' => 'ดินแดง',
-            'district' => 'ดินแดง',
-            'province' => 'กรุงเทพ',
-            'postal_code' => '10400',
-            'start_business_day' => 'จันทร์',
-            'end_business_day' => 'ศุกร์',
-            'start_business_time' => '09:00',
-            'end_business_time' => '18:00',
-        ];
+        $data = $this->fakerAnnouncement->toArray();
+        $user = $this->fakerUser->toArray();
+        $company = $this->faker->toArray();
+
+        $address = factory(Address::class)->create([
+            'company_id' => $company['company_id'],
+            'address_type' => 'announcement'
+        ])->toArray();
+
+        $jobType = factory(JobType::class)->create([
+            'job_id' => Uuid::uuid(),
+            'announcement_id' => $data['announcement_id']
+            ]);
+
+        $data['my_user_id'] = $user['user_id'];
+        $data['job_type'] = $jobType['job_type'];
+        $data['priority'] = '-';
+        $data['end_date'] = '2021-03-31 17:00:00';
+        $data = array_merge($data, $address);
 
         $response = $this->postJson('api/academic-industry/announcement', $data);
         $response->assertStatus(200);
@@ -65,34 +56,25 @@ class AnnouncementTest extends TestCase
 
     public function test_get_announcement_by_company_id_should_return_data_from_db()
     {
-        $data = [
-            'company_id' => $this->faker->company_id,
-            'announcement_title' => 'รับสมัครงานตำแหน่ง Software Engineer',
-            'job_description' => 'เป็นซอฟ์ตแวร์เอน เอนแบบเอนเตอร์เทน',
-            'job_position_id' => $this->fakerJobPosition->job_position_id,
-            'property' => 'ขยันเป็นพอ',
-            'file_picture' => '',
-            'picture' => '',
-            'priority' => '-',
-            'start_date' => '2021-01-10 13:00:00',
-            'end_date' => '2021-03-31 17:00:00',
-            'salary' => '30,000',
-            'welfare' => 'เงินดี ไม่ต้องแย่งลงทะเบียน',
-            'status' => 'เปิดรับสมัคร',
-            'job_type' => 'WiL',
-            'address_one' => '138/2 พรีวิวหอพัก',
-            'address_two' => '-',
-            'lane' => '9',
-            'road' => 'วิภาวดีรังสิต',
-            'sub_district' => 'ดินแดง',
-            'district' => 'ดินแดง',
-            'province' => 'กรุงเทพ',
-            'postal_code' => '10400',
-            'start_business_day' => 'จันทร์',
-            'end_business_day' => 'ศุกร์',
-            'start_business_time' => '09:00',
-            'end_business_time' => '18:00',
-        ];
+        $data = $this->fakerAnnouncement->toArray();
+        $user = $this->fakerUser->toArray();
+        $company = $this->faker->toArray();
+
+        $address = factory(Address::class)->create([
+            'company_id' => $company['company_id'],
+            'address_type' => 'announcement'
+        ])->toArray();
+
+        $jobType = factory(JobType::class)->create([
+            'job_id' => Uuid::uuid(),
+            'announcement_id' => $data['announcement_id']
+            ]);
+
+        $data['my_user_id'] = $user['user_id'];
+        $data['job_type'] = $jobType['job_type'];
+        $data['priority'] = '-';
+        $data['end_date'] = '2021-03-31 17:00:00';
+        $data = array_merge($data, $address);
 
         $response = $this->postJson('api/academic-industry/announcement', $data);
         $response->assertStatus(200);
@@ -155,46 +137,28 @@ class AnnouncementTest extends TestCase
 
     public function test_update_announcement_success_should_return_announcement_that_has_been_updated()
     {
-        $jobType = factory(JobType::class)->create([
-            "announcement_id" => $this->fakerAnnouncement->announcement_id,
-            "job_id" => Uuid::uuid()
-        ]);
+        $data = $this->fakerAnnouncement->toArray();
+        $user = $this->fakerUser->toArray();
+        $company = $this->faker->toArray();
 
         $address = factory(Address::class)->create([
-            'company_id' => $this->faker->company_id,
+            'company_id' => $company['company_id'],
             'address_type' => 'announcement'
-        ]);
+        ])->toArray();
 
-        $data = [
-            'announcement_id' => $this->fakerAnnouncement->announcement_id,
-            'address_id' => $address->address_id,
-            'company_id' => $this->faker->company_id,
-            'announcement_title' => 'รับสมัครงานตำแหน่ง UX/UI',
-            'job_description' => 'ต้องการ UX/UI',
-            'job_position_id' => $this->fakerJobPosition->job_position_id,
-            'property' => 'ขยันเป็นพอ',
-            'priority' => '-',
-            'file_picture' => '',
-            'picture' => '',
-            'start_date' => '2021-01-10 13:00:00',
-            'end_date' => '2021-03-31 17:00:00',
-            'salary' => '30,000',
-            'welfare' => 'เงินดี ไม่ต้องแย่งลงทะเบียน',
-            'status' => 'เปิดรับสมัคร',
-            'job_type' => 'WiL',
-            'address_one' => '138/2 พรีวิวหอพัก',
-            'address_two' => '-',
-            'lane' => '9',
-            'road' => 'วิภาวดีรังสิต',
-            'sub_district' => 'ดินแดง',
-            'district' => 'ดินแดง',
-            'province' => 'กรุงเทพ',
-            'postal_code' => '10400',
-            'start_business_day' => 'จันทร์',
-            'end_business_day' => 'ศุกร์',
-            'start_business_time' => '09:00',
-            'end_business_time' => '18:00',
-        ];
+        $jobType = factory(JobType::class)->create([
+            'job_id' => Uuid::uuid(),
+            'announcement_id' => $data['announcement_id']
+            ]);
+
+        $data['my_user_id'] = $user['user_id'];
+        $data['announcement_title'] = 'รับสมัครงานตำแหน่ง UX/UI';
+        $data['job_description'] = 'ต้องการ UX/UI';
+        $data['job_type'] = $jobType['job_type'];
+        $data['priority'] = '-';
+        $data['end_date'] = '2021-03-31 17:00:00';
+        $data = array_merge($data, $address);
+
         $response = $this->putJson('api/academic-industry/announcement', $data);
         $response->assertStatus(200);
 
