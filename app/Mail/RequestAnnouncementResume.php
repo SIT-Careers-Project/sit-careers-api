@@ -34,7 +34,7 @@ class RequestAnnouncementResume extends Mailable
         return $this->subject('New Request of Application')
                 ->view('emails.request_announcement_resume', [
                     'hello_name' => $this->user->first_name,
-                    'announcement' => $this->announcement->announcement_title,
+                    'announcement_title' => $this->announcement->announcement_title,
                     'company_name_th' => $this->announcement->company_name_th,
                     'company_name_en' => $this->announcement->company_name_en,
                     'url' => env('FRONT_END_URL')
