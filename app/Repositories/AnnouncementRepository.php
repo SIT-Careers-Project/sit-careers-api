@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\DB;
 
 use App\Models\Address;
 use App\Models\Announcement;
+use App\Models\History;
 use App\Models\JobType;
 use Carbon\Carbon;
 
@@ -115,6 +116,12 @@ class AnnouncementRepository implements AnnouncementRepositoryInterface
         $jobType->job_type = $data['job_type'];
         $jobType->save();
 
+        $history = new History();
+        $history->user_id = $data['my_user_id'];
+        $history->announcement_id = $announcement->announcement_id;
+        $history->status = 'created';
+        $history->save();
+
         return array_merge($announcement->toArray(), $jobType->toArray(), $address->toArray());
     }
 
@@ -157,6 +164,12 @@ class AnnouncementRepository implements AnnouncementRepositoryInterface
         $address->company_id = $data['company_id'];
         $address->postal_code = $data['postal_code'];
         $address->save();
+
+        $history = new History();
+        $history->user_id = $data['my_user_id'];
+        $history->announcement_id = $announcement->announcement_id;
+        $history->status = 'updated';
+        $history->save();
 
         return array_merge($announcement->toArray(), $jobType->toArray(), $address->toArray());
     }
