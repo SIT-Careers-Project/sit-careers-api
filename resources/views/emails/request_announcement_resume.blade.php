@@ -31,7 +31,7 @@
     <div class="text-center">
       <p>สวัสดีคุณ {{ $hello_name }}</p>
       <p class="line-height-6">
-        มีคำขอการสมัครงานของบริษัท {{ $company_name_th }} - {{ $company_name_en }} ในประกาศ {{ $announcement }}
+        มีคำขอการสมัครงานของบริษัท {{ $company_name_th }} - {{ $company_name_en }} ในประกาศ {{ $announcement_title }}
         สามารถตรวจสอบใบสมัครได้ที่ <a href="{{ $url }}/academic-industry/applications/history">คลิก</a>
       </p>
       <p>หากมีข้อสงสัยหรือสอบถามกรุณาติดต่อ 66 2470 9850 หรือ
