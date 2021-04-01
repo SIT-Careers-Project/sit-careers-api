@@ -24,6 +24,7 @@ class UsersTable extends Migration
             $table->string('created_by');
             $table->text('token')->nullable();
             $table->text('temp_token')->nullable();
+            $table->enum('status', ['active', 'deactivate']);
             $table->timestamps();
             $table->softDeletes();
         });
