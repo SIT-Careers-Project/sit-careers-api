@@ -29,7 +29,7 @@ Route::group(['middleware' => ['checkAuth']], function () {
         Route::post('company', 'CompanyController@create')->middleware(['role.permission:create_company']);
         Route::put('company', 'CompanyController@update')->middleware(['role.permission:update_company']);
         Route::put('company/request-delete', 'CompanyController@requestDelete')->middleware(['role.permission:update_company']);
-        Route::delete('company', 'CompanyController@destroy')->middleware(['role.permission:delete_company']);
+        Route::delete('company/{company_id}', 'CompanyController@destroy')->middleware(['role.permission:delete_company']);
 
         Route::prefix('academic-industry')->group(function () {
             Route::get('job-positions', 'JobPositionController@get')->middleware(['role.permission:access_academic_announcement']);

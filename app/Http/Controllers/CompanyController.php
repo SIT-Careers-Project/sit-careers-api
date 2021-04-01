@@ -106,10 +106,9 @@ class CompanyController extends Controller
         }
     }
 
-    public function destroy(Request $request)
+    public function destroy(Request $request, $company_id)
     {
-        $id = $request->all()['company_id'];
-        $deleted = $this->company->deleteCompanyById($id);
+        $deleted = $this->company->deleteCompanyById($company_id);
         return response()->json($deleted, 200);
     }
 }
