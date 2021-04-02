@@ -47,9 +47,10 @@ Route::group(['middleware' => ['checkAuth']], function () {
             Route::put('resume', 'ResumeController@update')->middleware(['role.permission:update_resume']);
             Route::delete('resume/{resume_id}', 'ResumeController@destroy')->middleware(['role.permission:delete_resume']);
 
-            Route::get('application', 'AnnouncementResumesController@getAnnouncementResumeByUserId')->middleware(['role.permission:access_resume']);
-            Route::post('application', 'AnnouncementResumesController@create')->middleware(['role.permission:access_resume']);
-            Route::put('application', 'AnnouncementResumesController@update')->middleware(['role.permission:access_resume']);
+            Route::get('applications', 'AnnouncementResumesController@get')->middleware(['role.permission:access_announcement_resume']);
+            Route::get('application', 'AnnouncementResumesController@getAnnouncementResumeByUserId')->middleware(['role.permission:access_announcement_resume']);
+            Route::post('application', 'AnnouncementResumesController@create')->middleware(['role.permission:create_announcement_resume']);
+            Route::put('application', 'AnnouncementResumesController@update')->middleware(['role.permission:update_announcement_resume']);
         });
 
         // keep for dashboard feature
