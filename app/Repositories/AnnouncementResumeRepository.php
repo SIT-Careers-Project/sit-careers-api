@@ -2,10 +2,25 @@
 
 namespace App\Repositories;
 
+use App\Mail\RequestAnnouncementResume;
+use App\Models\Announcement;
 use App\Models\AnnouncementResume;
+use App\Models\User;
+use Illuminate\Support\Facades\Mail;
 
 class AnnouncementResumeRepository implements AnnouncementResumeRepositoryInterface
 {
+    public function getAllAnnouncementResumes()
+    {
+        $announcement_resumes = AnnouncementResume::join('resumes', 'resumes.resume_id', '=', 'announcement_resumes.resume_id')
+            ->join('announcements', 'announcements.announcement_id', '=', 'announcement_resumes.announcement_id')
+            ->join('companies', 'companies.company_id', '=', 'announcements.company_id')
+            ->select('companies.company_name_th', 'announcements.announcement_title', 'resumes.*')
+            ->get();
+
+        return $announcement_resumes;
+    }
+
     public function getAnnouncementResumeByUserId($id)
     {
         $announcement_resume = AnnouncementResume::join('resumes', 'resumes.resume_id', '=', 'announcement_resumes.resume_id')
@@ -38,5 +53,24 @@ class AnnouncementResumeRepository implements AnnouncementResumeRepositoryInterf
         $announcement_resume->save();
 
         return $announcement_resume;
+    }
+
+    public function NotificationAnnouncementResume($data)
+    {
+        $announcement = Announcement::join('companies', 'companies.company_id', '=', 'announcements.company_id')
+            ->where('announcements.announcement_id', $data['announcement_id'])
+            ->first();
+
+        $user_admin_hr = User::join('roles', 'roles.role_id', '=', 'users.role_id')
+            ->where('roles.role_name', 'admin')
+            ->oRWhere('roles.role_name', 'manager')
+            ->orWhere('roles.role_name', 'coordinator')
+            ->get();
+
+        for ($i=0; $i < count($user_admin_hr); $i++) {
+            $sendMailToRelateUsers = Mail::to($user_admin_hr[$i]->email)->send(new RequestAnnouncementResume($user_admin_hr[$i], $announcement));
+        }
+
+        return "Test";
     }
 }
