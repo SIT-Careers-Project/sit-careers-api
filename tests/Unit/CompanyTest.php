@@ -11,8 +11,9 @@ use Faker\Provider\Uuid;
 
 use App\Http\Controllers\CompanyController;
 use App\Repositories\CompanyRepository;
-use App\Models\Company;
+use App\Repositories\CompanyRepositoryInterface;
 
+use App\Models\Company;
 use App\Models\Address;
 use App\Models\MOU;
 use App\Models\DataOwner;
@@ -70,6 +71,41 @@ class CompanyTest extends TestCase
         $company_arr = $company->toArray()['company_id'];
 
         $this->assertEquals($company_arr, $response_arr['company_id']);
+    }
+
+    
+    public function test_get_all_companies_by_company_success_should_return_has_same_data_on_db()
+    {
+
+        $address = factory(Company::class)->create([
+            "company_id" => Uuid::uuid()
+        ]);
+
+        $address = factory(DataOwner::class)->create([
+            "company_id" => $this->faker->company_id,
+            "user_id" => $this->fakerUser->user_id,
+        ]);
+
+        $address = factory(Address::class)->create([
+            "company_id" => $this->faker->company_id,
+            "address_id" => Uuid::uuid()
+        ]);
+
+        $mou = factory(MOU::class)->create([
+            "company_id" => $this->faker->company_id,
+            "mou_id" => Uuid::uuid()
+        ]);
+
+        $response = $this->json('GET', 'api/company/companies', ['my_user_id' => $this->fakerUser->user_id ]);
+        $response->assertStatus(200);
+
+        $responseGetByID = json_decode($response->content(), true);
+
+        $this->assertDatabaseHas('data_owner', [
+            'data_owner_id' => $responseGetByID[0]['data_owner_id'],
+            'user_id' => $responseGetByID[0]['user_id'],
+            'company_id' => $responseGetByID[0]['company_id']
+        ]);
     }
 
     public function test_update_company_success_should_return_company_that_had_been_updated()
