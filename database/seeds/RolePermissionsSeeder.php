@@ -53,6 +53,7 @@ class RolePermissionsSeeder extends Seeder
             'access_company',
             'create_company',
             'update_company',
+            'request_delete_company',
             'access_user',
             'create_user',
             'access_resume',
@@ -73,6 +74,28 @@ class RolePermissionsSeeder extends Seeder
             $rolePermission->save();
         }
 
+        $roleCompany = Role::where('role_name', 'coordinator')->first();
+        $permissionCoordinator = [
+            'access_company',
+            'create_company',
+            'update_company',
+            'access_user',
+            'access_resume',
+            'update_resume',
+            'access_academic_announcement',
+            'create_academic_announcement',
+            'update_academic_announcement',
+            'delete_academic_announcement',
+            'access_dashboard'
+        ];
 
+        foreach ($permissionCoordinator as  $permission) {
+            $permissionId = Permission::where('permission_name', $permission)->select('permission_id')->get();
+
+            $rolePermission = new RolePermission();
+            $rolePermission->permission_id = $permissionId[0]['permission_id'];
+            $rolePermission->role_id = $roleCompany->role_id;
+            $rolePermission->save();
+        }
     }
 }

@@ -15,9 +15,11 @@ class PermissionsSeeder extends Seeder
     {
         $permissions_data = [
             'access_company',
+            'access_company_by_admin',
             'create_company',
             'update_company',
             'delete_company',
+            'request_delete_company',
             'access_user',
             'create_user',
             'update_user',
