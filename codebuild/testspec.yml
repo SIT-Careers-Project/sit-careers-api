@@ -22,6 +22,7 @@ phases:
     commands:
       - echo Run Unit Tests...
       - export IMAGE_TAG=${IMAGE_TAG}; docker-compose -f docker-compose.test.yml run --rm api php artisan test --env=testing
+      - docker-compose -f docker-compose.test.yml down
 
 cache:
   paths:

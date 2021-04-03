@@ -21,7 +21,7 @@ trait CompanyRules
         'end_business_time' => 'required|string',
         'e_mail_coordinator' => 'required|email|unique:companies',
         'e_mail_manager' => 'required|email|unique:companies',
-        'website' => 'nullable|string',
+        'website' => 'required|string',
         'tel_no' => 'required|max:10',
         'phone_no' => 'required|max:10',
         "address_one" => "required|string",

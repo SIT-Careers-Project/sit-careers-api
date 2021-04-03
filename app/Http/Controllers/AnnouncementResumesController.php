@@ -25,6 +25,13 @@ class AnnouncementResumesController extends Controller
         $this->announcement = $announcement_repo;
     }
 
+    public function get(Request $request)
+    {
+        $id = $request->all();
+        $announcement_resume = $this->announcement_resume->getAllAnnouncementResumes();
+        return response()->json($announcement_resume, 200);
+    }
+
     public function getAnnouncementResumeByUserId(Request $request)
     {
         $id = $request->all();
@@ -44,6 +51,7 @@ class AnnouncementResumesController extends Controller
             $announcement = $this->announcement->getAnnouncementById($data['announcement_id']);
             if ($this->checkDateToDayBetweenStartAndEnd($announcement)) {
                 $create_application = $this->announcement_resume->CreateAnnouncementResume($data);
+                $noti_application = $this->announcement_resume->NotificationAnnouncementResume($data);
                 return response()->json($create_application, 200);
             } else {
                 return response()->json([
