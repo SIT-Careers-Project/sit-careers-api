@@ -26,9 +26,12 @@ Route::group(['middleware' => ['checkAuth']], function () {
         Route::get('/me', 'AuthController@me');
 
         Route::get('company', 'CompanyController@get')->middleware(['role.permission:access_company']);
+        Route::get('companies', 'CompanyController@getCompanies')->middleware(['role.permission:access_company']);
+        Route::get('admin/companies', 'CompanyController@getCompanies')->middleware(['role.permission:access_company_by_admin']);
+        Route::get('company/companies', 'CompanyController@getCompaniesByUserId')->middleware(['role.permission:access_company']);
         Route::post('company', 'CompanyController@create')->middleware(['role.permission:create_company']);
         Route::put('company', 'CompanyController@update')->middleware(['role.permission:update_company']);
-        Route::put('company/request-delete', 'CompanyController@requestDelete')->middleware(['role.permission:update_company']);
+        Route::put('company/request-delete', 'CompanyController@requestDelete')->middleware(['role.permission:request_delete_company']);
         Route::delete('company/{company_id}', 'CompanyController@destroy')->middleware(['role.permission:delete_company']);
 
         Route::prefix('academic-industry')->group(function () {
@@ -51,9 +54,6 @@ Route::group(['middleware' => ['checkAuth']], function () {
             Route::post('application', 'AnnouncementResumesController@create')->middleware(['role.permission:access_resume']);
             Route::put('application', 'AnnouncementResumesController@update')->middleware(['role.permission:access_resume']);
         });
-
-        // keep for dashboard feature
-        Route::get('companies', 'CompanyController@getCompanies')->middleware(['role.permission:access_company']);
 
         Route::get('users', 'UserController@get')->middleware(['role.permission:access_user']);
         Route::get('user/{user_id}', 'UserController@getUserById')->middleware(['role.permission:access_user']);
