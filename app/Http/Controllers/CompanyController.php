@@ -42,6 +42,17 @@ class CompanyController extends Controller
         return response()->json($companies, 200);
     }
 
+    public function getCompaniesByUserId(Request $request)
+    {
+        $id = $request->all()['my_user_id'];
+        $validated = Validator::make($request->all(), $this->rulesGetCompanyByUserId);
+        if ($validated->fails()) {
+            return response()->json($validated->messages(), 400);
+        }
+        $companies = $this->company->getCompaniesByUserId($id);
+        return response()->json($companies, 200);
+    }
+
     public function create(Request $request)
     {
         $data = $request->all();

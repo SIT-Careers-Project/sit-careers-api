@@ -39,6 +39,13 @@ class CompanyRepository implements CompanyRepositoryInterface
         return $companies;
     }
 
+    public function getCompaniesByUserId($user_id) {
+        $companies = Company::join('data_owner', 'data_owner.company_id', '=', 'companies.company_id')
+                    ->where('data_owner.user_id', '=', $user_id)
+                    ->get();
+        return $companies;
+    }
+
     public function createCompany($data)
     {
         $company = new Company();
