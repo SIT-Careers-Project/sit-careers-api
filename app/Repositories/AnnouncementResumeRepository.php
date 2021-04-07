@@ -2,11 +2,13 @@
 
 namespace App\Repositories;
 
+use Illuminate\Support\Facades\Mail;
+
 use App\Mail\RequestAnnouncementResume;
 use App\Models\Announcement;
 use App\Models\AnnouncementResume;
 use App\Models\User;
-use Illuminate\Support\Facades\Mail;
+use App\Models\DataOwner;
 
 class AnnouncementResumeRepository implements AnnouncementResumeRepositoryInterface
 {
@@ -19,6 +21,21 @@ class AnnouncementResumeRepository implements AnnouncementResumeRepositoryInterf
             ->get();
 
         return $announcement_resumes;
+    }
+
+    public function getAnnouncementResumeByCompanyId($id)
+    {
+        $company = DataOwner::where('user_id', $id)->get();
+        if (!$company->isEmpty()) {
+            $announcement_resumes = AnnouncementResume::join('resumes', 'resumes.resume_id', '=', 'announcement_resumes.resume_id')
+                ->join('announcements', 'announcements.announcement_id', '=', 'announcement_resumes.announcement_id')
+                ->join('companies', 'companies.company_id', '=', 'announcements.company_id')
+                ->select('companies.company_name_th', 'announcements.announcement_title', 'resumes.*')
+                ->where('companies.company_id', '=', $company[0]->company_id)
+                ->get();
+            return $announcement_resumes;
+        }
+        return "You not have company data.";
     }
 
     public function getAnnouncementResumeByUserId($id)
