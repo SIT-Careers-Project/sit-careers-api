@@ -4,6 +4,7 @@ namespace Tests\Unit;
 
 use App\Models\Address;
 use App\Models\Announcement;
+use App\Models\AnnouncementResume;
 use App\Models\JobType;
 use Carbon\Carbon;
 use Faker\Provider\Uuid;
@@ -58,6 +59,12 @@ class AnnouncementResumeTest extends TestCase
         $this->assertDatabaseHas('announcement_resumes', [
             'announcement_resume_id' => $expected['announcement_resume_id']
         ]);
+    }
+
+    public function test_get_announcement_resume_by_company_id()
+    {
+        $response = $this->json('GET', 'api/academic-industry/company/applications', ['my_user_id' => $this->fakerDataOwner->user_id]);
+        $response->assertStatus(200);
     }
 
     public function test_post_annoucement_resume_failed_should_return_error_message()
