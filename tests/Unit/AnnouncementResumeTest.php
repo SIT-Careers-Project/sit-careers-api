@@ -18,7 +18,7 @@ class AnnouncementResumeTest extends TestCase
 
     public function test_get_all_announcement_resumes()
     {
-        $this->getJson('api/academic-industry/applications')->assertStatus(200);
+        $this->getJson('api/academic-industry/admin/applications')->assertStatus(200);
     }
 
     public function test_get_announcement_resume_by_user_id()
@@ -27,10 +27,10 @@ class AnnouncementResumeTest extends TestCase
             'my_user_id' => $this->fakerUser->user_id
         ];
 
-        $this->call('GET', 'api/academic-industry/application', $id)->assertStatus(200);
+        $this->call('GET', 'api/academic-industry/student/applications', $id)->assertStatus(200);
     }
 
-    public function test_post_annoucement_resume_success_should_return_announcement_resume()
+    public function test_post_announcement_resume_success_should_return_announcement_resume()
     {
         $company = $this->faker->toArray();
 

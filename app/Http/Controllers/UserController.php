@@ -42,7 +42,7 @@ class UserController extends Controller
             }
             $created = $this->user->createUser($request);
             return response()->json([
-                "message" => "Create user successful."
+                "message" => $created
             ], 200);
         } catch (\Throwable $th) {
             return "Something Wrong: " . $th;
