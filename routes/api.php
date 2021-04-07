@@ -50,13 +50,15 @@ Route::group(['middleware' => ['checkAuth']], function () {
             Route::put('resume', 'ResumeController@update')->middleware(['role.permission:update_resume']);
             Route::delete('resume/{resume_id}', 'ResumeController@destroy')->middleware(['role.permission:delete_resume']);
 
-            Route::get('applications', 'AnnouncementResumesController@get')->middleware(['role.permission:access_announcement_resume']);
-            Route::get('application', 'AnnouncementResumesController@getAnnouncementResumeByUserId')->middleware(['role.permission:access_announcement_resume']);
+            Route::get('admin/applications', 'AnnouncementResumesController@get')->middleware(['role.permission:access_announcement_resume_admin']);
+            // Route::get('company/applications', 'AnnouncementResumesController@getAnnouncementResumeByCompanyId')->middleware(['role.permission:access_announcement_resume_admin']);
+            Route::get('student/applications', 'AnnouncementResumesController@getAnnouncementResumeByUserId')->middleware(['role.permission:access_announcement_resume_student']);
             Route::post('application', 'AnnouncementResumesController@create')->middleware(['role.permission:create_announcement_resume']);
             Route::put('application', 'AnnouncementResumesController@update')->middleware(['role.permission:update_announcement_resume']);
         });
 
-        Route::get('users', 'UserController@get')->middleware(['role.permission:access_user']);
+        Route::get('admin/users', 'UserController@get')->middleware(['role.permission:access_user_by_admin']);
+        Route::get('company/users', 'UserController@get')->middleware(['role.permission:access_user']);
         Route::get('user/{user_id}', 'UserController@getUserById')->middleware(['role.permission:access_user']);
         Route::post('user', 'UserController@create')->middleware(['role.permission:create_user']);
         Route::put('user', 'UserController@update')->middleware(['role.permission:update_user']);

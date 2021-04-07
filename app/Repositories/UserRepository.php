@@ -36,17 +36,22 @@ class UserRepository implements UserRepositoryInterface
 
     public function createUser($data)
     {
-        $user = new User();
-        $user->role_id = $data->role_id;
-        $user->username = $data->username ? $data->username : '-';
-        $user->password = $data->password ? Hash::make($data->password) : '-';
-        $user->first_name = $data->first_name ? $data->first_name : '-';
-        $user->last_name = $data->last_name ? $data->last_name : '-';
-        $user->email = $data->email;
-        $user->created_by = $data->created_by ? $data->created_by : '-';
-        $user->save();
+        $role = Role::find($data->role_id);
 
-        return $user;
+        if ($role) {
+            $user = new User();
+            $user->role_id = $data->role_id;
+            $user->username = $data->username ? $data->username : '-';
+            $user->password = $data->password ? Hash::make($data->password) : '-';
+            $user->first_name = $data->first_name ? $data->first_name : '-';
+            $user->last_name = $data->last_name ? $data->last_name : '-';
+            $user->email = $data->email;
+            $user->created_by = $data->created_by ? $data->created_by : '-';
+            $user->save();
+    
+            return "Create user successful.";
+        }
+        return "Not fond role id.";
     }
 
     public function createUserฺStudentByEmail($data, $role)
