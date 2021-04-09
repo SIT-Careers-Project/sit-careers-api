@@ -41,9 +41,8 @@ class DashboardController extends Controller
     public function getStudentJobPositions(Request $request)
     {
         $student_job_positions = $request->all();
-        // $student_job_positions = $this->dashboard->getStudentJobPositions();
-        // return response()->json($student_job_positions, 200);
-        return response()->json(["count_job_position" => 10], 200);
+        $student_job_positions = $this->dashboard->getStudentJobPositions();
+        return response()->json($student_job_positions, 200);
     }
 
     public function getAnnouncementJobPositions(Request $request)
