@@ -50,9 +50,10 @@ class DashboardRepository implements DashboardRepositoryInterface
 
     public function getStudentJobPositions()
     {
-        $student_job_positions = AnnouncementResume::join('announcements', 'announcements.announcement_id', '=', 'announcement_resumes.announcement_id')
-            ->selectRaw('count(announcement_resume_id) as count_job_position')
-            ->groupBy('announcement_resume_id')
+        $student_job_positions = Announcement::join('announcement_resumes', 'announcement_resumes.announcement_id', '=', 'announcements.announcement_id')
+            ->join('job_positions', 'job_positions.job_position_id', '=', 'announcements.job_position_id')
+            ->selectRaw('job_positions.job_position, count(announcement_resume_id) as count_job_position')
+            ->groupBy('job_position')
             ->get();
 
         return $student_job_positions;
