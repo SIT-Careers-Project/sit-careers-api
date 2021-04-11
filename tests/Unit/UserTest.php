@@ -29,6 +29,14 @@ class UserTest extends TestCase
     public function test_post_should_return_data_on_db()
     {
         $roleAdmin = Role::where('role_name', 'admin')->first();
+        $user = factory(User::class)->create([
+            'role_id' => $roleAdmin->role_id,
+            'username' => 'test23',
+            'password' => '123',
+            'first_name' => 'Hello',
+            'last_name' => 'Noita',
+            'email' => 'hellotest@mail.com'
+        ]);
         $mockData = [
             'role_id' => $roleAdmin->role_id,
             'username' => 'mild',
@@ -36,7 +44,8 @@ class UserTest extends TestCase
             'first_name' => 'Tassaneeewan',
             'last_name' => 'Noita',
             'email' => 'test@mail.com',
-            'created_by' => ''
+            'created_by' => '',
+            'my_user_id' => $user->user_id
         ];
         $response = $this->postJson('api/user', $mockData);
         $response->assertStatus(200);
@@ -50,20 +59,17 @@ class UserTest extends TestCase
     public function test_get_user_by_id_success_should_return_data()
     {
         $roleAdmin = Role::where('role_name', 'admin')->first();
-        $mockData = [
+        $user = factory(User::class)->create([
             'role_id' => $roleAdmin->role_id,
-            'username' => 'mild',
+            'username' => 'test23',
             'password' => '123',
-            'first_name' => 'Tassaneeewan',
+            'first_name' => 'Hello',
             'last_name' => 'Noita',
-            'email' => 'test@mail.com',
-            'created_by' => ''
-        ];
-        $response = $this->postJson('api/user', $mockData);
-        $response_arr = json_decode($response->content(), true);
+            'email' => 'hellotest@mail.com'
+        ]);
 
 
-        $responseGetByID = $this->get('api/user/'.$this->fakerUser->user_id);
+        $responseGetByID = $this->get('api/user/'.$user->user_id);
         $responseGetByID = json_decode($responseGetByID->content(), true);
         $this->assertDatabaseHas('users', [
             'user_id' => $responseGetByID['user_id'],
@@ -73,25 +79,37 @@ class UserTest extends TestCase
     public function test_update_user_success_should_return_data()
     {
         $roleAdmin = Role::where('role_name', 'admin')->first();
-        $mockData = [
-            'user_id' => $this->fakerUser->user_id,
+        $user = factory(User::class)->create([
             'role_id' => $roleAdmin->role_id,
-            'username' => 'mildUpdate',
+            'username' => 'yuiyu',
+            'password' => '123',
+            'first_name' => 'Hello',
+            'last_name' => 'Noita',
+            'status' => 'deactivate',
+            'email' => 'hellotest@mail.com'
+        ]);
+
+        $mockData = [
+            'user_id' => $user->user_id,
+            'role_id' => $roleAdmin->role_id,
+            'username' => 'testUpdate123',
             'password' => '12334',
             'first_name' => 'Tassaneeewan',
             'last_name' => 'Noita',
-            'email' => 'test234@mail.com',
+            'status' => 'active',
+            'email' => '435@mail.com',
             'created_by' => '-'
         ];
 
         $response = $this->putJson('api/user', $mockData);
         $response->assertStatus(200);
 
+
         $this->assertDatabaseHas('users', [
-            'user_id' => $this->fakerUser->user_id,
+            'user_id' => $user->user_id,
             'role_id' => $roleAdmin->role_id,
-            'username' => 'mildUpdate',
-            'email' => 'test234@mail.com',
+            'username' => 'testUpdate123',
+            'first_name' => 'Tassaneeewan'
         ]);
     }
 
