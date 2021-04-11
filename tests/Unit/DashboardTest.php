@@ -82,10 +82,9 @@ class DashboardTest extends TestCase
         Excel::fake();
 
         $data = [
-            'start_date' => '2021-02-19',
-            'end_date' => '2021-02-24'
+            'start_date' => '2021-03-19',
+            'end_date' => Carbon::now()->addDays(5)->format('Y-m-d')
         ];
-
         $response = $this->call('GET', 'api/dashboard/announcements/export', $data);
 
         $file_name = 'announcements'. '_' . $data['start_date'] . '-' . $data['end_date'] . '.xlsx';

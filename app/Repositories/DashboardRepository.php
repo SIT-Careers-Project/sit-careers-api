@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Announcement;
+use App\Models\AnnouncementResume;
 use App\Models\Company;
 use App\Models\User;
 
@@ -49,9 +50,9 @@ class DashboardRepository implements DashboardRepositoryInterface
 
     public function getStudentJobPositions()
     {
-        $student_job_positions = Announcement::join('applications', 'applications.announcement_id', '=', 'announcements.announcement_id')
+        $student_job_positions = Announcement::join('announcement_resumes', 'announcement_resumes.announcement_id', '=', 'announcements.announcement_id')
             ->join('job_positions', 'job_positions.job_position_id', '=', 'announcements.job_position_id')
-            ->selectRaw('job_positions.job_position, count(job_position) as count_job_position')
+            ->selectRaw('job_positions.job_position, count(announcement_resume_id) as count_job_position')
             ->groupBy('job_position')
             ->get();
 

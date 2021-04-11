@@ -9,7 +9,7 @@ use App\Traits\AnnouncementsExport;
 use App\Traits\CompaniesExport;
 use App\Repositories\DashboardRepositoryInterface;
 use App\Traits\DashboardExport;
-use Carbon\Carbon;
+use App\Traits\Utils;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use Throwable;
@@ -17,6 +17,7 @@ use Throwable;
 class DashboardController extends Controller
 {
     use DashboardRules;
+    use Utils;
     private $dashboard;
 
     public function __construct(DashboardRepositoryInterface $dashboard_repo)
@@ -41,9 +42,8 @@ class DashboardController extends Controller
     public function getStudentJobPositions(Request $request)
     {
         $student_job_positions = $request->all();
-        // $student_job_positions = $this->dashboard->getStudentJobPositions();
-        // return response()->json($student_job_positions, 200);
-        return response()->json(["count_job_position" => 10], 200);
+        $student_job_positions = $this->dashboard->getStudentJobPositions();
+        return response()->json($student_job_positions, 200);
     }
 
     public function getAnnouncementJobPositions(Request $request)
@@ -91,6 +91,7 @@ class DashboardController extends Controller
             if ($validated->fails()){
                 return response()->json($validated->messages(), 400);
             }
+            $check_due_date = $this->checkDueDateForAnnouncement();
 
             $file_name = 'announcements'. '_' . $data['start_date'] . '-' . $data['end_date'] . '.xlsx';
             $path = '/reports/announcements/';
@@ -107,7 +108,8 @@ class DashboardController extends Controller
 
         return response()->json([
             "message" => $path_file_name,
-            "status_uploaded_file" => $announcements_excel
+            "status_uploaded_file" => $announcements_excel,
+            "status_update_expire" => $check_due_date
         ], 200
         );
     }
