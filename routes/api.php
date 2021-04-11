@@ -20,6 +20,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::post('login', 'AuthController@login');
 Route::post('/sit-login', 'AuthController@SITLogin');
+Route::get('/email/verify/{user_id}', 'AuthController@verify')->name('verification.verify');
 
 Route::group(['middleware' => ['checkAuth']], function () {
     // Route::middleware(['role.permission:admin'])->group(function () {
@@ -62,6 +63,7 @@ Route::group(['middleware' => ['checkAuth']], function () {
         Route::get('user/{user_id}', 'UserController@getUserById')->middleware(['role.permission:access_user']);
         Route::post('user', 'UserController@create')->middleware(['role.permission:create_user']);
         Route::put('user', 'UserController@update')->middleware(['role.permission:update_user']);
+        Route::put('user/first-time', 'UserController@updateFirstTime')->middleware(['role.permission:update_user']);
         Route::delete('user/{user_id}', 'UserController@destroy')->middleware(['role.permission:delete_user']);
 
         Route::get('roles', 'RoleController@get');
