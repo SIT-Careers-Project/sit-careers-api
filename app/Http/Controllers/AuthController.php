@@ -153,4 +153,22 @@ class AuthController extends Controller
         $token = JWT::encode($payload, env('JWT_SECRET'), 'HS256');
         return $token;
     }
+
+    public function verify(Request $request)
+    {
+        $user = $this->user->getUserById($request->user_id);
+        if ($user->status == "active") {
+            return response()->json(['message'=>'This account are verified.'], 204);
+        }
+        if (!is_null($user) && $request->hasValidSignature()){
+            $user->password = null;
+            $this->user->updateUser($user);
+            $token = $this->encode($user, env('JWT_KEY'));
+            return response([
+                'message'=>'Successfully verified',
+                'token' => $token
+            ], 200);
+        }
+        return response()->json(['message'=>'This link has been expired. Please contact Admin.'], 400);
+    }
 }

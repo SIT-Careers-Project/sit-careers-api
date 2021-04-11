@@ -10,5 +10,6 @@ interface UserRepositoryInterface
     public function createUserฺStudentByEmail($data, $role);
     public function createUser($data);
     public function updateUser($data);
+    public function updateUserFirstTime($data);
     public function deleteUserByUserId($user_id);
 }

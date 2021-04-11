@@ -65,6 +65,18 @@ class UserController extends Controller
         }
     }
 
+    public function updateFirstTime(Request $request)
+    {
+        try {
+            $updated = $this->user->updateUserFirstTime($request);
+            return response()->json([
+                "message" => "Update user successful."
+            ], 200);
+        } catch (\Throwable $th) {
+            return "Something Wrong: " . $th;
+        }
+    }
+
     public function destroy(Request $request, $user_id)
     {
         try {
