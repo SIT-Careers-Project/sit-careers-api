@@ -7,9 +7,15 @@ use Carbon\Carbon;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\URL;
+
+use App\Mail\VerifyEmail;
+use App\Mail\VerifyEmailWithCompany;
 
 use App\Models\User;
 use App\Models\Role;
+use App\Models\Company;
 
 class UserRepository implements UserRepositoryInterface
 {
@@ -37,18 +43,29 @@ class UserRepository implements UserRepositoryInterface
     public function createUser($data)
     {
         $role = Role::find($data->role_id);
-
         if ($role) {
             $user = new User();
             $user->role_id = $data->role_id;
-            $user->username = $data->username ? $data->username : '-';
+            $user->username = $data->username ? $data->username : $data->email;
             $user->password = $data->password ? Hash::make($data->password) : '-';
             $user->first_name = $data->first_name ? $data->first_name : '-';
             $user->last_name = $data->last_name ? $data->last_name : '-';
             $user->email = $data->email;
-            $user->created_by = $data->created_by ? $data->created_by : '-';
+            $user->status = 'deactivate';
+            $user->created_by = $data->my_user_id;
             $user->save();
-    
+
+            $urlVerify = URL::temporarySignedRoute(
+                'verification.verify', now()->addHours(24), ['user_id' => $user->user_id]
+            );
+
+            if (is_null($data->company_id)) {
+                Mail::to($user->email)->send(new VerifyEmail($user, $urlVerify));
+            } else {
+                $company = Company::find($data->company_id);
+                Mail::to($user->email)->send(new VerifyEmailWithCompany($user, $company, $urlVerify));
+            }
+
             return "Create user successful.";
         }
         return "Not fond role id.";
@@ -80,7 +97,19 @@ class UserRepository implements UserRepositoryInterface
         $user->first_name = $data->first_name ? $data->first_name : '-';
         $user->last_name = $data->last_name ? $data->last_name : '-';
         $user->email = $data->email;
+        $user->status = $data->status ? $data->status : '-';
         $user->created_by = $data->created_by ? $data->created_by : '-';
+        $user->save();
+
+        return $user;
+    }
+
+    public function updateUserFirstTime($data)
+    {
+        $user = User::find($data->my_user_id);
+        $user->role_id = $user->role_id;
+        $user->password = Hash::make($data->password);
+        $user->status = 'active';
         $user->save();
 
         return $user;
