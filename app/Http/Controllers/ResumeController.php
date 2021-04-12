@@ -13,6 +13,7 @@ use App\Repositories\AnnouncementRepositoryInterface;
 use App\Traits\Utils;
 use App\Http\RulesValidation\ResumeRules;
 use App\Repositories\ResumeRepositoryInterface;
+use Throwable;
 
 class ResumeController extends Controller
 {
@@ -66,14 +67,19 @@ class ResumeController extends Controller
                 return response()->json($validated->messages(), 400);
             }
 
-            $created = $this->resume->createResume($request);
+            $storage = Storage::disk('minio');
+            $file = $request->file('file_resume');
+            $file_type = '.pdf';
+            $resume_path = $data['my_user_id'].'_'.$data['first_name'].'_'.'resume'.$file_type;
+            if(!is_null($file)){
+                $uploaded = $storage->put('/resume/'.$resume_path, file_get_contents($file), 'public');
+                $data['path_file'] = $resume_path;
+            }
+
+            $created = $this->resume->createResume($data);
             return response()->json($created, 200);
-        } catch (\Throwable $th) {
-            return response()->json([
-                "message" => "Something Wrong !",
-                "error" => $th
-            ]
-            , 500);
+        } catch (Throwable $th) {
+            return 'Something Wrong!'.$th;
         }
     }
 
@@ -86,32 +92,49 @@ class ResumeController extends Controller
                 return response()->json($validated->messages(), 400);
             }
 
-            $updated = $this->resume->updateResume($request);
+            $storage = Storage::disk('minio');
+            $file = $request->file('file_resume');
+            $file_type = '.pdf';
+            $resume_path = $data['my_user_id'].'_'.$data['first_name'].'_'.'resume'.$file_type;
+            if(!is_null($file)){
+                $uploaded = $storage->put('/resume/'.$resume_path, file_get_contents($file), 'public');
+                $data['path_file'] = $resume_path;
+            }
+
+            $updated = $this->resume->updateResume($data);
             return response()->json($updated, 200);
-        } catch (\Throwable $th) {
-            return response()->json([
-                "message" => "Something Wrong !",
-                "error" => $th
-            ]
-            , 500);
+        } catch (Throwable $th) {
+            return 'Something Wrong!'.$th;
         }
     }
 
     public function destroy(Request $request, $resume_id)
     {
         try {
-            $delete = $this->resume->deleteResumeById($resume_id);
-            $message = $delete;
-            if ($delete) {
-                $message = 'Resume has been deleted.';
+            $storage = Storage::disk('minio');
+            $resume_id = substr($resume_id, 10);
+
+            $get_resume = $this->resume->getResumeById($resume_id);
+            if($get_resume != 'Find not found resume.'){
+                $resume_data = $get_resume->first();
+                $file_type = '.pdf';
+                $resume_path = $resume_data['student_id'].'_'.$resume_data['first_name'].'_'.'resume'.$file_type;
+
+                $delete = $this->resume->deleteResumeById($resume_id);
+                $message = $delete;
+
+                if($resume_data['path_file'] == '-') {
+                    $message = 'Resume has been deleted.';
+                }else{
+                    $deleted_resume_file = $storage->delete('/resume/'.$resume_path);
+                    $message = 'Resume has been deleted.';
+                }
+            }else{
+                return $get_resume;
             }
             return response()->json([ "message" => $message ], 200);
-        } catch (\Throwable $th) {
-            return response()->json([
-                "message" => "Something Wrong !",
-                "error" => $th
-            ]
-            , 500);
+        } catch (Throwable $th) {
+                return 'Something Wrong! '.$th;
         }
     }
 }
