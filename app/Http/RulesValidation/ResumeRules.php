@@ -20,8 +20,4 @@ trait ResumeRules
     private $rulesUpdateResume = [
         'resume_id' => 'required|string',
     ];
-
-    private $rulesDeleteResume = [
-        'resume_id' => 'required|string',
-    ];
 }
