@@ -133,12 +133,12 @@ class ResumeTest extends TestCase
 
     public function test_delete_resume_by_id_should_not_return_data_on_db_that_is_deleted()
     {
-        $response = $this->deleteJson('api/academic-industry/resume/'.$this->fakerResume->resume_id);
+        $resume = $this->fakerResume;
+        $response = $this->deleteJson('api/academic-industry/resume/'.$resume['resume_id']);
         $response = json_decode($response->content(), true);
-
         $this->assertEquals($response['message'], 'Resume has been deleted.');
         $this->assertSoftDeleted('resumes', [
-            'resume_id' => $this->fakerResume->resume_id
-        ]);
-    }
+            'resume_id' => $resume['resume_id']
+            ]);
+        }
 }
