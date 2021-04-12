@@ -112,9 +112,8 @@ class ResumeController extends Controller
     {
         try {
             $storage = Storage::disk('minio');
-            $resume_id = substr($resume_id, 10);
-
             $get_resume = $this->resume->getResumeById($resume_id);
+
             if($get_resume != 'Find not found resume.'){
                 $resume_data = $get_resume->first();
                 $file_type = '.pdf';
@@ -132,6 +131,7 @@ class ResumeController extends Controller
             }else{
                 return $get_resume;
             }
+
             return response()->json([ "message" => $message ], 200);
         } catch (Throwable $th) {
                 return 'Something Wrong! '.$th;
