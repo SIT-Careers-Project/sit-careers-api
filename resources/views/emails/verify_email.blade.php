@@ -24,23 +24,22 @@
       <p>เรียนเจ้าของ E-mail: {{ $email }}</p>
       @if ($company_name_th)
         <p class="line-height-6">
-          บริษัท {{ $company_name_th }} - {{ $company_name_en }} ได้เพิ่มคุณเป็นผู้ใช้งานในระบบ 
-          SIT-Industry Collaboration Service System สำเร็จ กรุณาไปยัง
+          บริษัท {{ $company_name_th }} - {{ $company_name_en }} ได้เพิ่มคุณเป็นผู้ใช้งานในระบบ
+          SIT Career Center สำเร็จ กรุณาไปยัง
           <a href="{{ $url }}/login/verification?urlVerify= {{ $code_verify }}">
             {{ $url }}/login/verification?urlVerify= {{ $code_verify }}
           </a> เพื่อเข้าไปทำการตั้งรหัสผ่านใหม่ของคุณ
-        </p>       
+        </p>
       @else
         <p class="line-height-6">
-          คุณถูกเพิ่มให้เป็นผู้ใช้งานในระบบ SIT-Industry Collaboration Service System กรุณาไปยัง
+          คุณถูกเพิ่มให้เป็นผู้ใช้งานในระบบ SIT Career Center กรุณาไปยัง
           <a href="{{ $url }}/login/verification?urlVerify= {{ $code_verify }}">
             {{ $url }}/login/verification?urlVerify= {{ $code_verify }}
           </a> เพื่อเข้าไปทำการตั้งรหัสผ่านใหม่ของคุณ
-        </p> 
+        </p>
       @endif
-      <p>หากมีข้อสงสัยหรือสอบถามกรุณาติดต่อ 66 2470 9850 หรือ 
-        <a href="https://www.facebook.com/SIT.Family" class="">SIT KMUTT</a>
-        Facebook Fanpage
+      <p>ทั้งนี้ หากมีข้อสงสัยหรือต้องการติดต่อสอบถามข้อมูลเพิ่มเติม สามารถติดต่อได้ที่ คุณรุ่งโรจน์ ขวัญโกมล
+        Tel: 66 2470 9887 Email: rungroj@sit.kmutt.ac.th
       </p>
       <hr style="margin-top: 6px; margin-bottom: 3px;"/>
       <p class="text-sm">© SIT-Industry Collaboration Service System</p>
