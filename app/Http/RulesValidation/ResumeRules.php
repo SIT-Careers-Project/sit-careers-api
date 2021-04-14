@@ -13,13 +13,11 @@ trait ResumeRules
         'curriculum' => 'required|string',
         'year' => 'required|string',
         'tel_no' => 'required|string',
-        'email' => 'required|email'
+        'email' => 'required|email',
+        'path_file' => 'nullable|string',
+        'file_resume' => 'nullable|mimes:pdf|max:5120'
     ];
     private $rulesUpdateResume = [
-        'resume_id' => 'required|string',
-    ];
-
-    private $rulesDeleteResume = [
         'resume_id' => 'required|string',
     ];
 }

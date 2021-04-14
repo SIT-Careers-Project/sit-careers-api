@@ -29,14 +29,14 @@
       </a>
     </div>
     <div class="text-center">
-      <p>สวัสดีคุณ {{ $hello_name }}</p>
+      <p>เรียนคุณ {{ $hello_name }}</p>
       <p class="line-height-6">
-        มีคำขอการสมัครงานของบริษัท {{ $company_name_th }} - {{ $company_name_en }} ในประกาศ {{ $announcement_title }}
-        สามารถตรวจสอบใบสมัครได้ที่ <a href="{{ $url }}/academic-industry/applications/history">คลิก</a>
+        ขณะนี้มีการส่งคำขอสมัครงาน {{ $company_name_th }} - {{ $company_name_en }} ในหน้าประกาศ {{ $announcement_title }}
+        ผ่านระบบ SIT Career Center ทางบริษัทสามารถเข้าไปตรวจสอบข้อมูลการสมัครงานได้ที่ <a href="{{ $url }}/academic-industry/applications/history">คลิก</a>
       </p>
-      <p>หากมีข้อสงสัยหรือสอบถามกรุณาติดต่อ 66 2470 9850 หรือ
-        <a href="https://www.facebook.com/SIT.Family" class="">SIT KMUTT</a>
-        Facebook Fanpage
+      <p>
+        ทั้งนี้ หากคุณ {{ $hello_name }} มีข้อสงสัยหรือต้องการติดต่อสอบถามข้อมูลเพิ่มเติม สามารถติดต่อได้ที่ คุณรุ่งโรจน์ ขวัญโกมล
+        Tel: 66 2470 9887  Email: rungroj@sit.kmutt.ac.th
       </p>
       <hr style="margin-top: 6px; margin-bottom: 3px;"/>
       <p class="text-sm">© SIT-Industry Collaboration Service System</p>

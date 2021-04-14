@@ -29,10 +29,10 @@
       </a>
     </div>
     <div class="text-center">
-      <p>สวัสดีคุณ {{ $hello_name }}</p>
+      <p>เรียน ผู้ดูแลระบบ</p>
       <p class="line-height-6">
-        แจ้งการส่งคำขอลบข้อมูลของบริษัท {{ $company_name_th }} - {{ $company_name_en }}
-        สามารถตรวจสอบข้อมูลและทำการลบข้อมูลได้ที่ <a href="{{ $url }}/company/update/{{ $company_id }}">คลิก</a>
+        {{ $company_name_th }} - {{ $company_name_en }} ได้ทำการส่งคำขอเพื่อลบข้อมูลของทางบริษัทในระบบ SIT Career Center
+        โดยทางผู้ดูแลระบบสามารถตรวจสอบข้อมูลและดำเนินการลบข้อมูลได้ที่ <a href="{{ $url }}/company/update/{{ $company_id }}">คลิก</a>
       </p>
       <hr style="margin-top: 6px; margin-bottom: 3px;"/>
       <p class="text-sm">© SIT-Industry Collaboration Service System</p>
