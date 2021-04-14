@@ -29,14 +29,14 @@
           <a href="{{ $url }}/login/verification?urlVerify= {{ $code_verify }}">
             {{ $url }}/login/verification?urlVerify= {{ $code_verify }}
           </a> เพื่อเข้าไปทำการตั้งรหัสผ่านใหม่ของคุณ
-        </p>       
+        </p>
       @else
         <p class="line-height-6">
           คุณถูกเพิ่มให้เป็นผู้ใช้งานในระบบ SIT Career Center กรุณาไปยัง
           <a href="{{ $url }}/login/verification?urlVerify= {{ $code_verify }}">
             {{ $url }}/login/verification?urlVerify= {{ $code_verify }}
           </a> เพื่อเข้าไปทำการตั้งรหัสผ่านใหม่ของคุณ
-        </p> 
+        </p>
       @endif
       <p>หากคุณมีข้อสงสัยหรือต้องการติดต่อสอบถามเพิ่มเติม สามารถติดต่อได้ที่ คุณรุ่งโรจน์ ขวัญโกมล Tel: 66 2470 9850 E-mail: 
         <a href="mailto:rungroj@sit.kmutt.ac.th">rungroj@sit.kmutt.ac.th</a>

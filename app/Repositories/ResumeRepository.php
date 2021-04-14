@@ -11,7 +11,10 @@ class ResumeRepository implements ResumeRepositoryInterface
     public function getResumeById($resume_id)
     {
         $resume = Resume::find($resume_id);
-        return $resume;
+        if($resume){
+            return $resume;
+        }
+        return "Find not found resume.";
     }
 
     public function getResumeByUserId($user_id)
@@ -32,17 +35,17 @@ class ResumeRepository implements ResumeRepositoryInterface
     public function createResume($data)
     {
         $resume = new Resume();
-        $resume->student_id = $data->my_user_id;
+        $resume->student_id = $data['my_user_id'];
         $resume->resume_date = Carbon::now();
-        $resume->name_title = $data->name_title;
-        $resume->first_name = $data->first_name;
-        $resume->email = $data->email;
-        $resume->last_name = $data->last_name;
-        $resume->curriculum = $data->curriculum;
-        $resume->year = $data->year;
-        $resume->tel_no = $data->tel_no;
-        $resume->resume_link = $data->resume_link;
-        $resume->path_file = $data->path_file ? $data->path_file : '-';
+        $resume->name_title = $data['name_title'];
+        $resume->first_name = $data['first_name'];
+        $resume->email = $data['email'];
+        $resume->last_name = $data['last_name'];
+        $resume->curriculum = $data['curriculum'];
+        $resume->year = $data['year'];
+        $resume->tel_no = $data['tel_no'];
+        $resume->resume_link = $data['resume_link'];
+        $resume->path_file = $data['path_file'] ? $data['path_file'] : '-';
         $resume->save();
 
         return $resume;
@@ -50,17 +53,17 @@ class ResumeRepository implements ResumeRepositoryInterface
 
     public function updateResume($data)
     {
-        $resume = Resume::where('resume_id', $data->resume_id)->first();
-        $resume->student_id = $data->my_user_id;
-        $resume->name_title = $data->name_title;
-        $resume->first_name = $data->first_name;
-        $resume->email = $data->email;
-        $resume->last_name = $data->last_name;
-        $resume->curriculum = $data->curriculum;
-        $resume->year = $data->year;
-        $resume->tel_no = $data->tel_no;
-        $resume->resume_link = $data->resume_link;
-        $resume->path_file = $data->path_file;
+        $resume = Resume::where('resume_id', $data['resume_id'])->first();
+        $resume->student_id = $data['my_user_id'];
+        $resume->name_title = $data['name_title'];
+        $resume->first_name = $data['first_name'];
+        $resume->email = $data['email'];
+        $resume->last_name = $data['last_name'];
+        $resume->curriculum = $data['curriculum'];
+        $resume->year = $data['year'];
+        $resume->tel_no = $data['tel_no'];
+        $resume->resume_link = $data['resume_link'];
+        $resume->path_file = $data['path_file'];
         $resume->updated_at = Carbon::now();
         $resume->save();
 
@@ -72,6 +75,8 @@ class ResumeRepository implements ResumeRepositoryInterface
         $resume = Resume::find($id);
         if ($resume) {
             $deleted = $resume->delete();
+            $resume->path_file = '';
+            $resume->save();
             return $deleted;
         }
         return "Find not found resume.";

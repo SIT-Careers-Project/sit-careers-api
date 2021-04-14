@@ -25,19 +25,18 @@
         </a>
       </div>
       <a href="{{ $url }}" target="_blank">
-        <p style="color: white;">Logo</p>
+        <p style="color: white;"/p>Logo</p>
       </a>
     </div>
     <div class="text-center">
-      <p>สวัสดีคุณ {{ $hello_name }}</p>
+      <p>เรียนคุณ {{ $user_req }}</p>
       <p class="line-height-6">
-        แจ้งการส่งคำขอลบข้อมูลของบริษัท {{ $company_name_th }} - {{ $company_name_en }} 
-        สำเร็จ เราได้ส่งคำขอลบไปยัง Admin เรียบร้อยแล้ว โดยผู้ส่งคือ {{ $user_req }}
+        ขณะนี้ได้ดำเนินการส่งคำขอลบข้อมูลของบริษัท {{ $company_name_th }} - {{ $company_name_en }}
+        ตามที่คุณ {{ $user_req }} แจ้งในระบบ SIT Career Center ไปยังผู้ดูแลระบบ เรียบร้อยแล้ว
       </p>
-      <p>กรุณารอ Admin ดำเนินการลบข้อมูลของบริษัท</p>
-      <p>หากมีข้อสงสัยหรือสอบถามกรุณาติดต่อ 66 2470 9850 หรือ 
-        <a href="https://www.facebook.com/SIT.Family" class="">SIT KMUTT</a>
-        Facebook Fanpage
+      <p>
+        ทั้งนี้ หากคุณ {{ $user_req }} มีข้อสงสัยหรือต้องการติดต่อสอบถามข้อมูลเพิ่มเติม สามารถติดต่อได้ที่ คุณรุ่งโรจน์ ขวัญโกมล
+        Tel: 66 2470 9887 Email: rungroj@sit.kmutt.ac.th
       </p>
       <hr style="margin-top: 6px; margin-bottom: 3px;"/>
       <p class="text-sm">© SIT-Industry Collaboration Service System</p>
