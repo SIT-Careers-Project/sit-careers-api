@@ -24,7 +24,7 @@
       <p>เรียนเจ้าของ E-mail: {{ $email }}</p>
       @if ($company_name_th)
         <p class="line-height-6">
-          บริษัท {{ $company_name_th }} - {{ $company_name_en }} ได้เพิ่มคุณเป็นผู้ใช้งานในระบบ
+          {{ $company_name_th }} - {{ $company_name_en }} ได้เพิ่มคุณเป็นผู้ใช้งานในระบบ 
           SIT Career Center สำเร็จ กรุณาไปยัง
           <a href="{{ $url }}/login/verification?urlVerify= {{ $code_verify }}">
             {{ $url }}/login/verification?urlVerify= {{ $code_verify }}
@@ -38,11 +38,11 @@
           </a> เพื่อเข้าไปทำการตั้งรหัสผ่านใหม่ของคุณ
         </p>
       @endif
-      <p>ทั้งนี้ หากมีข้อสงสัยหรือต้องการติดต่อสอบถามข้อมูลเพิ่มเติม สามารถติดต่อได้ที่ คุณรุ่งโรจน์ ขวัญโกมล
-        Tel: 66 2470 9887 Email: rungroj@sit.kmutt.ac.th
+      <p>ทั้งนี้ หากมีข้อสงสัยหรือต้องการติดต่อสอบถามข้อมูลเพิ่มเติม สามารถติดต่อได้ที่ คุณรุ่งโรจน์ ขวัญโกมล Tel: 66 2470 9850 E-mail: 
+        <a href="mailto:rungroj@sit.kmutt.ac.th">rungroj@sit.kmutt.ac.th</a>
       </p>
       <hr style="margin-top: 6px; margin-bottom: 3px;"/>
-      <p class="text-sm">© SIT-Industry Collaboration Service System</p>
+      <p class="text-sm">© SIT Career Center</p>
     </div>
   </body>
 </html>
