@@ -2,8 +2,6 @@
 
 namespace App\Http\RulesValidation;
 
-use Illuminate\Validation\Rule;
-
 trait AnnouncementResumeRules
 {
     private $ruleCreateAnnouncementResume = [
