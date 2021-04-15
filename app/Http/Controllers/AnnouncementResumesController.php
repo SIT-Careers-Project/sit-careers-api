@@ -55,22 +55,31 @@ class AnnouncementResumesController extends Controller
                 return response()->json($validated->messages(), 400);
             }
 
+            $announcement_resumes = $this->announcement_resume->getAnnouncementResumeByAnnouncementId($data['announcement_id']);
+            if(!$announcement_resumes->isEmpty()){
+                $exist_announcement_resumes = $this->CheckUniqueAnnouncementResumeWithAnnouncement($announcement_resumes, $data['resume_id']);
+                if ($exist_announcement_resumes == 'Exist resume id') {
+                    return response()->json([
+                        "message" => "Resume id has already exist"
+                    ], 409);
+                }
+            }
+
             $announcement = $this->announcement->getAnnouncementById($data['announcement_id']);
             if ($this->checkDateToDayBetweenStartAndEnd($announcement)) {
                 $create_application = $this->announcement_resume->CreateAnnouncementResume($data);
-                $noti_application = $this->announcement_resume->NotificationAnnouncementResume($data);
+                // $noti_application = $this->announcement_resume->NotificationAnnouncementResume($data);
                 return response()->json($create_application, 200);
             } else {
                 return response()->json([
                     "message" => "Can not application, because It has expired for application."
                 ], 202);
             }
-        } catch (Throwable $e) {
+        }catch (Throwable $e) {
             return response()->json([
                 "message" => "Something Wrong !",
-                "error" => $e
-                ]
-                ,500);
+                "error" => $e->getMessage()
+            ], 500);
         }
     }
 
