@@ -67,6 +67,7 @@ class UserRepository implements UserRepositoryInterface
                 $dataOwner = new DataOwner();
                 $dataOwner->user_id = $user->user_id;
                 $dataOwner->company_id = $company->company_id;
+                $dataOwner->request_delete = false;
                 $dataOwner->save();
 
                 Mail::to($user->email)->send(new VerifyEmailWithCompany($user, $company, $urlVerify));
