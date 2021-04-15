@@ -83,8 +83,11 @@ class AnnouncementController extends Controller
                 $data['picture'] = $imageName;
             }
             $announcement_updated = $this->announcement->updateAnnouncement($data);
-        } catch (Throwable $e) {
-            return "Something Wrong: ".$e;
+        }catch (Throwable $e) {
+            return response()->json([
+                "message" => "Something Wrong !",
+                "error" => $e->getMessage()
+            ], 500);
         }
         return response()->json($announcement_updated, 200);
     }
