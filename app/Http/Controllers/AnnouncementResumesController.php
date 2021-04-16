@@ -68,7 +68,7 @@ class AnnouncementResumesController extends Controller
             $announcement = $this->announcement->getAnnouncementById($data['announcement_id']);
             if ($this->checkDateToDayBetweenStartAndEnd($announcement)) {
                 $create_application = $this->announcement_resume->CreateAnnouncementResume($data);
-                // $noti_application = $this->announcement_resume->NotificationAnnouncementResume($data);
+                $noti_application = $this->announcement_resume->NotificationAnnouncementResume($data);
                 return response()->json($create_application, 200);
             } else {
                 return response()->json([
