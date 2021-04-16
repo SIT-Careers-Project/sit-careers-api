@@ -14,6 +14,7 @@ use App\Mail\AdminRequestDelete;
 
 use App\Models\Address;
 use App\Models\Company;
+use App\Models\Role;
 use App\Models\User;
 use App\Models\DataOwner;
 use App\Models\MOU;
@@ -22,7 +23,6 @@ class CompanyRepository implements CompanyRepositoryInterface
 {
     public function getCompanyById($id)
     {
-
         $company = Company::join('mou', 'mou.company_id', '=', 'companies.company_id')
         ->join('addresses', 'addresses.company_id', '=', 'companies.company_id')
         ->where('companies.company_id', $id)
@@ -41,6 +41,7 @@ class CompanyRepository implements CompanyRepositoryInterface
 
     public function getCompaniesByUserId($user_id) {
         $companies = Company::join('data_owner', 'data_owner.company_id', '=', 'companies.company_id')
+                    ->join('mou', 'mou.company_id', '=', 'companies.company_id')
                     ->where('data_owner.user_id', '=', $user_id)
                     ->get();
         return $companies;
@@ -79,19 +80,32 @@ class CompanyRepository implements CompanyRepositoryInterface
         $address->company_id = $company->company_id;
         $address->save();
 
+        $userID = array_key_exists('user_id', $data) ? $data['user_id'] : $data['my_user_id'];
         $dataOwner = new DataOwner();
-        $dataOwner->user_id = array_key_exists('user_id', $data) ? $data['user_id'] : $data['my_user_id'];
+        $dataOwner->user_id = $userID;
         $dataOwner->company_id = $company->company_id;
         $dataOwner->request_delete = false;
         $dataOwner->save();
 
-        $mou = new MOU();
-        $mou->company_id = $company->company_id;
-        $mou->mou_link = $data['mou_link'] == "" ? "-": $data['mou_link'];
-        $mou->mou_type = $data['mou_type'] == "" ? "-": $data['mou_type'];
-        $mou->start_date_mou = $data['start_date_mou'] == "" ? "-": $data['start_date_mou'];
-        $mou->end_date_mou = $data['end_date_mou'] == "" ? "-": $data['end_date_mou'];
-        $mou->save();
+        $user = User::find($userID);
+        $role = Role::find($user->role_id);
+        if ($role->role_name === 'admin') {
+            $mou = new MOU();
+            $mou->company_id = $company->company_id;
+            $mou->mou_link = $data['mou_link'] == "" ? "-": $data['mou_link'];
+            $mou->mou_type = $data['mou_type'] == "" ? "-": $data['mou_type'];
+            $mou->start_date_mou = $data['start_date_mou'] == "" ? "-": $data['start_date_mou'];
+            $mou->end_date_mou = $data['end_date_mou'] == "" ? "-": $data['end_date_mou'];
+            $mou->save();
+        } else {
+            $mou = new MOU();
+            $mou->company_id = $company->company_id;
+            $mou->mou_link = '-';
+            $mou->mou_type = '-';
+            $mou->start_date_mou = '-';
+            $mou->end_date_mou = '-';
+            $mou->save();
+        }
 
         return array_merge($company->toArray(),  $address->toArray(), $mou->toArray());
     }
@@ -134,13 +148,17 @@ class CompanyRepository implements CompanyRepositoryInterface
         $address->company_id = $company->company_id;
         $address->save();
 
-        $mou = MOU::where('company_id', $id)->first();
-        $mou->company_id = $company->company_id;
-        $mou->mou_link = $data['mou_link'] == "" ? "-": $data['mou_link'];
-        $mou->mou_type = $data['mou_type'] == "" ? "-": $data['mou_type'];
-        $mou->start_date_mou = $data['start_date_mou'] == "" ? "-": $data['start_date_mou'];
-        $mou->end_date_mou = $data['end_date_mou'] == "" ? "-": $data['end_date_mou'];
-        $mou->save();
+        $user = User::find($data['my_user_id']);
+        $role = Role::find($user->role_id);
+        if ($role->role_name === 'admin') {
+            $mou = MOU::where('company_id', $id)->first();
+            $mou->company_id = $company->company_id;
+            $mou->mou_link = $data['mou_link'] == "" ? "-": $data['mou_link'];
+            $mou->mou_type = $data['mou_type'] == "" ? "-": $data['mou_type'];
+            $mou->start_date_mou = $data['start_date_mou'] == "" ? "-": $data['start_date_mou'];
+            $mou->end_date_mou = $data['end_date_mou'] == "" ? "-": $data['end_date_mou'];
+            $mou->save();
+        }
 
         return array_merge($company->toArray(),  $address->toArray(), $mou->toArray());
     }
