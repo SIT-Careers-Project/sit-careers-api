@@ -4,7 +4,6 @@ namespace Tests\Unit;
 
 use App\Models\Address;
 use App\Models\Announcement;
-use App\Models\AnnouncementResume;
 use App\Models\JobType;
 use Carbon\Carbon;
 use Faker\Provider\Uuid;
@@ -50,6 +49,7 @@ class AnnouncementResumeTest extends TestCase
         ]);
 
         $data = $this->fakerAnnouncementResume->toArray();
+        $data['resume_id'] = $this->fakerResume->resume_id;
         $data['announcement_id'] = $announcement['announcement_id'];
 
         $response = $this->postJson('/api/academic-industry/application', $data);
@@ -67,7 +67,7 @@ class AnnouncementResumeTest extends TestCase
         $response->assertStatus(200);
     }
 
-    public function test_post_annoucement_resume_failed_should_return_error_message()
+    public function test_post_exist_resume_on_announcement_resume_failed_should_return_error_message()
     {
         $company = $this->faker->toArray();
 
@@ -85,19 +85,16 @@ class AnnouncementResumeTest extends TestCase
             'job_id' => Uuid::uuid()
         ]);
 
-        //announcement_id doesn't unique
         $data = $this->fakerAnnouncementResume->toArray();
 
         $response = $this->postJson('/api/academic-industry/application', $data);
         $expected = json_decode($response->content(), true);
 
         $assertion = [
-            "announcement_id" => [
-                "The announcement id has already been taken."
-                ]
+            "message" => "Resume id has already exist"
             ];
 
-        $response->assertStatus(400);
+        $response->assertStatus(409);
         $this->assertEquals($assertion, $expected);
     }
 
