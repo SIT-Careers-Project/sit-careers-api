@@ -23,6 +23,13 @@ class AnnouncementResumeRepository implements AnnouncementResumeRepositoryInterf
         return $announcement_resumes;
     }
 
+    public function getAnnouncementResumeByAnnouncementId($announcement_id)
+    {
+        $announcement_resume = AnnouncementResume::where('announcement_resumes.announcement_id', $announcement_id)->get();
+
+        return $announcement_resume;
+    }
+
     public function getAnnouncementResumeByCompanyId($id)
     {
         $company = DataOwner::where('user_id', $id)->get();

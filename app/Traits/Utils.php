@@ -1,13 +1,9 @@
 <?php
 
-
 namespace App\Traits;
 
 use App\Models\Announcement;
 use Carbon\Carbon;
-
-use Illuminate\Support\Str;
-use App\Repositories\AnnouncementRepositoryInterface;
 
 trait Utils
 {
@@ -24,11 +20,20 @@ trait Utils
             if(!$this->checkDateToDayBetweenStartAndEnd($announcement)){
                 $announcement->status = 'CLOSE';
                 $announcement->save();
-                $message = 'Expired announcements have been updated status';
-            }else {
-                $message = 'Not have expired announcements';
+                return 'Expired announcements have been updated status';
             }
         }
-        return $message;
+        return 'Not have expired announcements';
+    }
+
+    public function CheckUniqueAnnouncementResumeWithAnnouncement($announcement_resumes, $new_resume_id)
+    {
+        $arr_announcement_resumes = $announcement_resumes->toArray();
+        for($i=0; $i < count($arr_announcement_resumes); $i++){
+            if(!is_null($arr_announcement_resumes) && $arr_announcement_resumes[$i]['resume_id'] == $new_resume_id){
+                return 'Exist resume id';
+            }
+        }
+        return 'Not have resume id in announcement';
     }
 }

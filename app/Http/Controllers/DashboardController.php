@@ -102,8 +102,11 @@ class DashboardController extends Controller
                 $path_file_name,
                 'minio'
             );
-        } catch (Throwable $e) {
-            return "Something Wrong: ".$e;
+        }catch (Throwable $e) {
+            return response()->json([
+                "message" => "Something Wrong !",
+                "error" => $e->getMessage()
+            ], 500);
         }
 
         return response()->json([
