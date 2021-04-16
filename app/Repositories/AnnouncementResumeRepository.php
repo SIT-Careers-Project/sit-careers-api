@@ -17,7 +17,7 @@ class AnnouncementResumeRepository implements AnnouncementResumeRepositoryInterf
         $announcement_resumes = AnnouncementResume::join('resumes', 'resumes.resume_id', '=', 'announcement_resumes.resume_id')
             ->join('announcements', 'announcements.announcement_id', '=', 'announcement_resumes.announcement_id')
             ->join('companies', 'companies.company_id', '=', 'announcements.company_id')
-            ->select('companies.company_name_th', 'announcements.announcement_title', 'resumes.*')
+            ->select('companies.company_name_th', 'announcements.announcement_title', 'resumes.*', 'announcement_resumes.*')
             ->get();
 
         return $announcement_resumes;
