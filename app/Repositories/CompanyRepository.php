@@ -158,9 +158,10 @@ class CompanyRepository implements CompanyRepositoryInterface
             $mou->start_date_mou = $data['start_date_mou'] == "" ? "-": $data['start_date_mou'];
             $mou->end_date_mou = $data['end_date_mou'] == "" ? "-": $data['end_date_mou'];
             $mou->save();
+            return array_merge($company->toArray(),  $address->toArray(), $mou->toArray());
         }
-
-        return array_merge($company->toArray(),  $address->toArray(), $mou->toArray());
+        
+        return array_merge($company->toArray(),  $address->toArray());
     }
 
     public function requestDelete($data)
