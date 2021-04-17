@@ -15,6 +15,7 @@ use App\Mail\AdminRequestDelete;
 use App\Models\Address;
 use App\Models\Company;
 use App\Models\User;
+use App\Models\Role;
 use App\Models\DataOwner;
 use App\Models\MOU;
 
@@ -79,11 +80,37 @@ class CompanyRepository implements CompanyRepositoryInterface
         $address->company_id = $company->company_id;
         $address->save();
 
-        $dataOwner = new DataOwner();
-        $dataOwner->user_id = array_key_exists('user_id', $data) ? $data['user_id'] : $data['my_user_id'];
-        $dataOwner->company_id = $company->company_id;
-        $dataOwner->request_delete = false;
-        $dataOwner->save();
+        $userID = array_key_exists('user_id', $data) ? $data['user_id'] : $data['my_user_id'];
+        $findUser = User::where('created_by', '=', $userID)->get();
+        $role = Role::find($data['my_role_id']);
+        if ($role->role_name === 'manager') {
+            for ($i=0; $i < count($findUser); $i++) { 
+                $dataOwner = new DataOwner();
+                $dataOwner->user_id = $findUser[$i]->user_id;
+                $dataOwner->company_id = $company->company_id;
+                $dataOwner->request_delete = false;
+                $dataOwner->save();
+            }
+            $dataOwner = new DataOwner();
+            $dataOwner->user_id = $userID;
+            $dataOwner->company_id = $company->company_id;
+            $dataOwner->request_delete = false;
+            $dataOwner->save();
+        } else if ($role->role_name === 'coordinator') {
+            $myData = User::find($userID);
+
+            $dataOwner = new DataOwner();
+            $dataOwner->user_id = $myData->created_by;
+            $dataOwner->company_id = $company->company_id;
+            $dataOwner->request_delete = false;
+            $dataOwner->save();
+
+            $dataOwner = new DataOwner();
+            $dataOwner->user_id = $userID;
+            $dataOwner->company_id = $company->company_id;
+            $dataOwner->request_delete = false;
+            $dataOwner->save();
+        }
 
         $mou = new MOU();
         $mou->company_id = $company->company_id;
