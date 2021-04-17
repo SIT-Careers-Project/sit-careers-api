@@ -42,6 +42,17 @@ class AnnouncementResumeTest extends TestCase
         $this->getJson('api/academic-industry/admin/application/'.$id)->assertStatus(200);
     }
 
+    public function test_get_announcement_resume_id_by_company_id()
+    {
+        $id = $this->fakerAnnouncementResume->announcement_resume_id;
+        $user_company = [
+            'my_user_id' => $this->fakerDataOwner->user_id
+        ];
+
+        $response = $this->json('GET', 'api/academic-industry/admin/application/'.$id, $user_company);
+        $response->assertStatus(200);
+    }
+
     public function test_post_announcement_resume_success_should_return_announcement_resume()
     {
         $company = $this->faker->toArray();
