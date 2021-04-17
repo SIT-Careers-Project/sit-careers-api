@@ -137,6 +137,6 @@ class AnnouncementResumeRepository implements AnnouncementResumeRepositoryInterf
             $sendMailToRelateUsers = Mail::to($user_admin_hr[$i]->email)->send(new RequestAnnouncementResume($user_admin_hr[$i], $announcement));
         }
 
-        return "Test";
+        return "Notification sent to the users success";
     }
 }
