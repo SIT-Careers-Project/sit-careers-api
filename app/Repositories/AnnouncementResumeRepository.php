@@ -69,6 +69,23 @@ class AnnouncementResumeRepository implements AnnouncementResumeRepositoryInterf
         return $announcement_resume;
     }
 
+    public function getAnnouncementResumeByIdForCompanyId($data, $announcement_resume_id)
+    {
+        $company = DataOwner::where('user_id', $data['my_user_id'])->get();
+        if (!$company->isEmpty()) {
+            $announcement_resumes = AnnouncementResume::join('resumes', 'resumes.resume_id', '=', 'announcement_resumes.resume_id')
+                ->join('announcements', 'announcements.announcement_id', '=', 'announcement_resumes.announcement_id')
+                ->join('companies', 'companies.company_id', '=', 'announcements.company_id')
+                ->select('companies.company_name_th', 'announcements.announcement_title', 'resumes.*')
+                ->where('companies.company_id', '=', $company[0]->company_id)
+                ->where('announcement_resumes.announcement_resume_id', $announcement_resume_id)
+                ->get();
+
+            return $announcement_resumes;
+        }
+        return "You not have company data.";
+    }
+
     public function CreateAnnouncementResume($data)
     {
         $announcement_resume = new AnnouncementResume();

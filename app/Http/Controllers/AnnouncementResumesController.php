@@ -52,6 +52,13 @@ class AnnouncementResumesController extends Controller
         return response()->json($announcement_resume, 200);
     }
 
+    public function getAnnouncementResumeByIdForCompanyId(Request $request, $announcement_resume_id)
+    {
+        $data = $request->all();
+        $announcement_resume = $this->announcement_resume->getAnnouncementResumeByIdForCompanyId($data, $announcement_resume_id);
+        return response()->json($announcement_resume, 200);
+    }
+
     public function create(Request $request)
     {
         try {
