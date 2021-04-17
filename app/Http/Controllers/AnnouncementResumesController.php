@@ -27,7 +27,7 @@ class AnnouncementResumesController extends Controller
 
     public function get(Request $request)
     {
-        $id = $request->all();
+        $data = $request->all();
         $announcement_resume = $this->announcement_resume->getAllAnnouncementResumes();
         return response()->json($announcement_resume, 200);
     }
@@ -43,6 +43,12 @@ class AnnouncementResumesController extends Controller
     {
         $id = $request->all()['my_user_id'];
         $announcement_resume = $this->announcement_resume->getAnnouncementResumeByCompanyId($id);
+        return response()->json($announcement_resume, 200);
+    }
+
+    public function getAnnouncementResumeById(Request $request, $announcement_resume_id)
+    {
+        $announcement_resume = $this->announcement_resume->getAnnouncementResumeById($announcement_resume_id);
         return response()->json($announcement_resume, 200);
     }
 

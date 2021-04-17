@@ -54,6 +54,7 @@ Route::group(['middleware' => ['checkAuth']], function () {
             Route::get('admin/applications', 'AnnouncementResumesController@get')->middleware(['role.permission:access_announcement_resume_by_admin']);
             Route::get('company/applications', 'AnnouncementResumesController@getAnnouncementResumeByCompanyId')->middleware(['role.permission:access_announcement_resume_by_company']);
             Route::get('student/applications', 'AnnouncementResumesController@getAnnouncementResumeByUserId')->middleware(['role.permission:access_announcement_resume_by_student']);
+            Route::get('admin/application/{announcement_resume_id}', 'AnnouncementResumesController@getAnnouncementResumeById')->middleware(['role.permission:access_announcement_resume_by_admin']);
             Route::post('application', 'AnnouncementResumesController@create')->middleware(['role.permission:create_announcement_resume']);
             Route::put('application', 'AnnouncementResumesController@update')->middleware(['role.permission:update_announcement_resume']);
         });
