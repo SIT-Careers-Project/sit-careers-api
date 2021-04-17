@@ -30,6 +30,18 @@ class AnnouncementResumeTest extends TestCase
         $this->call('GET', 'api/academic-industry/student/applications', $id)->assertStatus(200);
     }
 
+    public function test_get_announcement_resume_by_company_id()
+    {
+        $response = $this->json('GET', 'api/academic-industry/company/applications', ['my_user_id' => $this->fakerDataOwner->user_id]);
+        $response->assertStatus(200);
+    }
+
+    public function test_get_announcement_resume_id()
+    {
+        $id = $this->fakerAnnouncementResume->announcement_resume_id;
+        $this->getJson('api/academic-industry/admin/application/'.$id)->assertStatus(200);
+    }
+
     public function test_post_announcement_resume_success_should_return_announcement_resume()
     {
         $company = $this->faker->toArray();
@@ -59,12 +71,6 @@ class AnnouncementResumeTest extends TestCase
         $this->assertDatabaseHas('announcement_resumes', [
             'announcement_resume_id' => $expected['announcement_resume_id']
         ]);
-    }
-
-    public function test_get_announcement_resume_by_company_id()
-    {
-        $response = $this->json('GET', 'api/academic-industry/company/applications', ['my_user_id' => $this->fakerDataOwner->user_id]);
-        $response->assertStatus(200);
     }
 
     public function test_post_exist_resume_on_announcement_resume_failed_should_return_error_message()
