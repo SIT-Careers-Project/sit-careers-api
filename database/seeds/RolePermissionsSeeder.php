@@ -53,7 +53,7 @@ class RolePermissionsSeeder extends Seeder
             'update_company',
             'request_delete_company',
             'access_user',
-            'create_user',
+            'create_user_by_manager',
             'update_user',
             'access_academic_announcement',
             'access_academic_announcement_by_company',
