@@ -59,9 +59,10 @@ Route::group(['middleware' => ['checkAuth']], function () {
         });
 
         Route::get('admin/users', 'UserController@get')->middleware(['role.permission:access_user_by_admin']);
-        Route::get('company/users', 'UserController@get')->middleware(['role.permission:access_user']);
+        Route::get('company/users', 'UserController@getUserByManager')->middleware(['role.permission:access_user']);
         Route::get('user/{user_id}', 'UserController@getUserById')->middleware(['role.permission:access_user']);
-        Route::post('user', 'UserController@create')->middleware(['role.permission:create_user']);
+        Route::post('user', 'UserController@create')->middleware(['role.permission:create_user_by_admin']);
+        Route::post('company/user', 'UserController@createUserByManger')->middleware(['role.permission:create_user_by_manager']);
         Route::put('user', 'UserController@update')->middleware(['role.permission:update_user']);
         Route::put('user/first-time', 'UserController@updateFirstTime')->middleware(['role.permission:update_user']);
         Route::delete('user/{user_id}', 'UserController@destroy')->middleware(['role.permission:delete_user']);
