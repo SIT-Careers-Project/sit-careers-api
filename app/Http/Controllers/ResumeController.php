@@ -78,8 +78,11 @@ class ResumeController extends Controller
 
             $created = $this->resume->createResume($data);
             return response()->json($created, 200);
-        } catch (Throwable $th) {
-            return 'Something Wrong!'.$th;
+        }catch (Throwable $e) {
+            return response()->json([
+                "message" => "Something Wrong !",
+                "error" => $e->getMessage()
+            ], 500);
         }
     }
 
@@ -103,8 +106,11 @@ class ResumeController extends Controller
 
             $updated = $this->resume->updateResume($data);
             return response()->json($updated, 200);
-        } catch (Throwable $th) {
-            return 'Something Wrong!'.$th;
+        }catch (Throwable $e) {
+            return response()->json([
+                "message" => "Something Wrong !",
+                "error" => $e->getMessage()
+            ], 500);
         }
     }
 
@@ -133,8 +139,11 @@ class ResumeController extends Controller
             }
 
             return response()->json([ "message" => $message ], 200);
-        } catch (Throwable $th) {
-                return 'Something Wrong! '.$th;
+        }catch (Throwable $e) {
+            return response()->json([
+                "message" => "Something Wrong !",
+                "error" => $e->getMessage()
+            ], 500);
         }
     }
 }

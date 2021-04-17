@@ -17,6 +17,7 @@ use App\Models\User;
 use App\Models\Role;
 use App\Models\DataOwner;
 use App\Models\Company;
+use App\Models\DataOwner;
 
 class UserRepository implements UserRepositoryInterface
 {
@@ -70,6 +71,12 @@ class UserRepository implements UserRepositoryInterface
                 Mail::to($user->email)->send(new VerifyEmail($user, $urlVerify));
             } else {
                 $company = Company::find($data->company_id);
+                $dataOwner = new DataOwner();
+                $dataOwner->user_id = $user->user_id;
+                $dataOwner->company_id = $company->company_id;
+                $dataOwner->request_delete = false;
+                $dataOwner->save();
+
                 Mail::to($user->email)->send(new VerifyEmailWithCompany($user, $company, $urlVerify));
             }
 

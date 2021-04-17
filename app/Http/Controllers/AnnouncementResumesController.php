@@ -27,7 +27,7 @@ class AnnouncementResumesController extends Controller
 
     public function get(Request $request)
     {
-        $id = $request->all();
+        $data = $request->all();
         $announcement_resume = $this->announcement_resume->getAllAnnouncementResumes();
         return response()->json($announcement_resume, 200);
     }
@@ -46,6 +46,26 @@ class AnnouncementResumesController extends Controller
         return response()->json($announcement_resume, 200);
     }
 
+    public function getAnnouncementResumeById(Request $request, $announcement_resume_id)
+    {
+        $announcement_resume = $this->announcement_resume->getAnnouncementResumeById($announcement_resume_id);
+        return response()->json($announcement_resume, 200);
+    }
+
+    public function getAnnouncementResumeByIdForCompanyId(Request $request, $announcement_resume_id)
+    {
+        $data = $request->all();
+        $announcement_resume = $this->announcement_resume->getAnnouncementResumeByIdForCompanyId($data, $announcement_resume_id);
+        return response()->json($announcement_resume, 200);
+    }
+
+    public function getAnnouncementResumeByIdForUserId(Request $request, $announcement_resume_id)
+    {
+        $data = $request->all();
+        $announcement_resume = $this->announcement_resume->getAnnouncementResumeByIdForUserId($data, $announcement_resume_id);
+        return response()->json($announcement_resume, 200);
+    }
+
     public function create(Request $request)
     {
         try {
@@ -53,6 +73,16 @@ class AnnouncementResumesController extends Controller
             $validated = Validator::make($data, $this->ruleCreateAnnouncementResume);
             if ($validated->fails()) {
                 return response()->json($validated->messages(), 400);
+            }
+
+            $announcement_resumes = $this->announcement_resume->getAnnouncementResumeByAnnouncementId($data['announcement_id']);
+            if(!$announcement_resumes->isEmpty()){
+                $exist_announcement_resumes = $this->CheckUniqueAnnouncementResumeWithAnnouncement($announcement_resumes, $data['resume_id']);
+                if ($exist_announcement_resumes == 'Exist resume id') {
+                    return response()->json([
+                        "message" => "Resume id has already exist"
+                    ], 409);
+                }
             }
 
             $announcement = $this->announcement->getAnnouncementById($data['announcement_id']);
@@ -65,12 +95,11 @@ class AnnouncementResumesController extends Controller
                     "message" => "Can not application, because It has expired for application."
                 ], 202);
             }
-        } catch (Throwable $e) {
+        }catch (Throwable $e) {
             return response()->json([
                 "message" => "Something Wrong !",
-                "error" => $e
-                ]
-                ,500);
+                "error" => $e->getMessage()
+            ], 500);
         }
     }
 

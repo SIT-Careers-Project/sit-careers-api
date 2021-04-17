@@ -9,9 +9,9 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller as Controller;
 use App\Repositories\UserRepositoryInterface;
 use App\Http\RulesValidation\UserRules;
+use Throwable;
 
-
-class UserController extends Controller 
+class UserController extends Controller
 {
     use UserRules;
     private $user;
@@ -50,8 +50,11 @@ class UserController extends Controller
             return response()->json([
                 "message" => $created
             ], 200);
-        } catch (\Throwable $th) {
-            return "Something Wrong: " . $th;
+        }catch (Throwable $e) {
+            return response()->json([
+                "message" => "Something Wrong !",
+                "error" => $e->getMessage()
+            ], 500);
         }
     }
 
@@ -81,8 +84,11 @@ class UserController extends Controller
             return response()->json([
                 "message" => "Update user successful."
             ], 200);
-        } catch (\Throwable $th) {
-            return "Something Wrong: " . $th;
+        }catch (Throwable $e) {
+            return response()->json([
+                "message" => "Something Wrong !",
+                "error" => $e->getMessage()
+            ], 500);
         }
     }
 
@@ -93,8 +99,11 @@ class UserController extends Controller
             return response()->json([
                 "message" => "Update user successful."
             ], 200);
-        } catch (\Throwable $th) {
-            return "Something Wrong: " . $th;
+        }catch (Throwable $e) {
+            return response()->json([
+                "message" => "Something Wrong !",
+                "error" => $e->getMessage()
+            ], 500);
         }
     }
 
@@ -107,8 +116,11 @@ class UserController extends Controller
                 $message = 'User has been deleted.';
             }
             return response()->json([ "message" => $message ], 200);
-        } catch (\Throwable $th) {
-            return "Something Wrong: " . $th;
+        }catch (Throwable $e) {
+            return response()->json([
+                "message" => "Something Wrong !",
+                "error" => $e->getMessage()
+            ], 500);
         }
     }
 

@@ -117,8 +117,14 @@ class CompanyTest extends TestCase
         ]);
     }
 
-    public function test_update_company_success_should_return_company_that_had_been_updated()
+    public function test_update_company_by_admin_success_should_return_company_that_had_been_updated()
     {
+        $roleStd = Role::where('role_name', 'admin')->first();
+        $user = factory(User::class)->create([
+            'role_id' => $roleStd->role_id,
+            'email' => 'sit-coll@gmail.com'
+        ]);
+
         $address = factory(Address::class)->create([
             "company_id" => $this->faker->company_id,
             "address_id" => Uuid::uuid()
@@ -131,6 +137,7 @@ class CompanyTest extends TestCase
 
         $data = [
             'company_id' => $this->faker->company_id,
+            'my_user_id' => $user->user_id,
             'company_name_th' => 'บริษัท ฮัลโหล จำกัด',
             'company_name_en' => 'TEST COMPANY',
             'description' => 'เป็นบริษัทพัฒนา software บริษัทใหญ่ อยู่เยอรมัน',
@@ -168,8 +175,74 @@ class CompanyTest extends TestCase
         $company = Company::find($response_arr['company_id']);
         $company_arr = $company->toArray();
 
-        $this->assertEquals($company_arr['company_id'], $response_arr['company_id']);
-        $this->assertEquals($company_arr['company_name_th'], $response_arr['company_name_th']);
+        $this->assertDatabaseHas('companies', [
+            'company_id' => $response_arr['company_id'],
+            'company_name_th' => $response_arr['company_name_th'],
+        ]);
+        $this->assertDatabaseHas('mou', [
+            'start_date_mou' => $response_arr['start_date_mou'],
+            'end_date_mou' => $response_arr['end_date_mou'],
+        ]);
+    }
+
+    public function test_update_company_by_company_success_should_return_company_that_had_been_updated()
+    {
+        $roleStd = Role::where('role_name', 'manager')->first();
+        $user = factory(User::class)->create([
+            'role_id' => $roleStd->role_id,
+            'email' => 'sit-coll@gmail.com'
+        ]);
+
+        $address = factory(Address::class)->create([
+            "company_id" => $this->faker->company_id,
+            "address_id" => Uuid::uuid()
+        ]);
+
+        $mou = factory(MOU::class)->create([
+            "company_id" => $this->faker->company_id,
+            "mou_id" => Uuid::uuid()
+        ]);
+
+        $data = [
+            'company_id' => $this->faker->company_id,
+            'my_user_id' => $user->user_id,
+            'company_name_th' => 'บริษัท ฮัลโหล จำกัด',
+            'company_name_en' => 'TEST COMPANY',
+            'description' => 'เป็นบริษัทพัฒนา software บริษัทใหญ่ อยู่เยอรมัน',
+            'about_us' => 'อยากเท่ อยากเจ๋ง มาเข้าบริษัทนี้',
+            'company_image_logo' => '',
+            'logo' => '',
+            'company_type' => 'Technology',
+            'start_business_day' => 'จันทร์',
+            'end_business_day' => 'ศุกร์',
+            'start_business_time' => '07:00',
+            'end_business_time' => '18:00',
+            'e_mail_coordinator' => 'test@gmail.com',
+            'e_mail_manager' => 'company@gmail.com',
+            'tel_no' => '0988882356',
+            'phone_no' => '0298987645',
+            'website' => 'http://test.com',
+            "address_one" => "138/2 พรีวิวหอพัก",
+            "address_two" => "-",
+            "lane" => "9",
+            "road" => "วิภาวดีรังสิต",
+            "sub_district" => "ดินแดง",
+            "district" => "ดินแดง",
+            "province" => "กรุงเทพ",
+            "postal_code" => "10400"
+        ];
+
+        $response = $this->putJson('api/company', $data);
+        $response->assertStatus(200);
+
+        $response_arr = json_decode($response->content(), true);
+        $company = Company::find($response_arr['company_id']);
+        $company_arr = $company->toArray();
+
+        $this->assertDatabaseHas('companies', [
+            'company_id' => $response_arr['company_id'],
+            'company_name_th' => $response_arr['company_name_th'],
+        ]);
     }
 
     public function test_post_company_not_have_some_field_should_return_status_400()
