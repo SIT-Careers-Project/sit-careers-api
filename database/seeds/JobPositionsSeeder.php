@@ -16,8 +16,20 @@ class JobPositionsSeeder extends Seeder
     {
         $job_positions_seed = [
             'Software Engineer',
-            'UX/UI',
-            'Infrastructure'
+            'UX/UI Designer',
+            'Infrastructure',
+            'Computer programmer',
+            'Cloud System Engineer',
+            'Tester',
+            'Web developer',
+            'IT Support',
+            'Systems analyst',
+            'Network engineer',
+            'Database administrator',
+            'IT security',
+            'Data scientist',
+            'Applications Engineer',
+            'Other'
         ];
         $date = Carbon::today();
         for ($i = 0; $i < count($job_positions_seed); $i++){
