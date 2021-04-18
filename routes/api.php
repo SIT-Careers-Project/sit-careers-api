@@ -38,7 +38,7 @@ Route::group(['middleware' => ['checkAuth']], function () {
         Route::prefix('academic-industry')->group(function () {
             Route::get('job-positions', 'JobPositionController@get')->middleware(['role.permission:access_academic_announcement']);
             Route::get('announcement', 'AnnouncementController@get')->middleware(['role.permission:access_academic_announcement']);
-            Route::get('announcements/{company_id}', 'AnnouncementController@getAnnouncementByCompanyId')->middleware(['role.permission:access_academic_announcement']);
+            Route::get('company/announcements', 'AnnouncementController@getAnnouncementByCompanyId')->middleware(['role.permission:access_academic_announcement']);
             Route::get('announcements', 'AnnouncementController@getAnnouncements')->middleware(['role.permission:access_academic_announcement']);
             Route::post('announcement', 'AnnouncementController@create')->middleware(['role.permission:create_academic_announcement']);
             Route::put('announcement', 'AnnouncementController@update')->middleware(['role.permission:update_academic_announcement']);
