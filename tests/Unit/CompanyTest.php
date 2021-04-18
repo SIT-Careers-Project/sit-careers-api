@@ -32,9 +32,16 @@ class CompanyTest extends TestCase
 
     public function test_post_company_success_should_return_company()
     {
+        $roleStd = Role::where('role_name', 'admin')->first();
+        $user = factory(User::class)->create([
+            'role_id' => $roleStd->role_id,
+            'email' => 'sit-coll@gmail.com'
+        ]);
+
         $data = [
             'company_id' => $this->faker->company_id,
-            'my_user_id' => $this->fakerUser->user_id,
+            'my_user_id' => $user->user_id,
+            'my_role_id' => $user->role_id,
             'company_name_th' => 'บริษัท เทส จำกัด',
             'company_name_en' => 'Test COmpany',
             'description' => 'เป็นบริษัทพัฒนา software บริษัทใหญ่ อยู่เยอรมัน',

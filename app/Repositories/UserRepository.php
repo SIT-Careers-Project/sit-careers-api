@@ -15,8 +15,8 @@ use App\Mail\VerifyEmailWithCompany;
 
 use App\Models\User;
 use App\Models\Role;
-use App\Models\Company;
 use App\Models\DataOwner;
+use App\Models\Company;
 
 class UserRepository implements UserRepositoryInterface
 {
@@ -39,6 +39,12 @@ class UserRepository implements UserRepositoryInterface
         $user = User::join('roles', 'roles.role_id', '=', 'users.role_id')
                 ->where('email', $email)->first();
         return $user;
+    }
+
+    public function getUserByManager($data) {
+        $users = User::join('roles', 'roles.role_id', '=', 'users.role_id')
+                ->where('created_by', '=', $data->my_user_id)->get();
+        return $users;
     }
 
     public function createUser($data)
@@ -67,6 +73,44 @@ class UserRepository implements UserRepositoryInterface
                 $dataOwner = new DataOwner();
                 $dataOwner->user_id = $user->user_id;
                 $dataOwner->company_id = $company->company_id;
+                $dataOwner->request_delete = false;
+                $dataOwner->save();
+
+                Mail::to($user->email)->send(new VerifyEmailWithCompany($user, $company, $urlVerify));
+            }
+
+            return "Create user successful.";
+        }
+        return "Not fond role id.";
+    }
+
+    public function createUserByManger($data) {
+        $role = Role::where('role_name', 'coordinator')->first();
+        if ($role) {
+            $user = new User();
+            $user->role_id = $role->role_id;
+            $user->username = $data->username ? $data->username : $data->email;
+            $user->password = $data->password ? Hash::make($data->password) : '-';
+            $user->first_name = $data->first_name ? $data->first_name : '-';
+            $user->last_name = $data->last_name ? $data->last_name : '-';
+            $user->email = $data->email;
+            $user->status = 'deactivate';
+            $user->created_by = $data->my_user_id;
+            $user->save();
+
+            $urlVerify = URL::temporarySignedRoute(
+                'verification.verify', now()->addHours(24), ['user_id' => $user->user_id]
+            );
+
+            $dataOwnerManager = DataOwner::where('user_id', $data->my_user_id)->first();
+
+            if (is_null($dataOwnerManager)) {
+                Mail::to($user->email)->send(new VerifyEmail($user, $urlVerify));
+            } else {
+                $company = Company::find($dataOwnerManager->company_id);
+                $dataOwner = new DataOwner();
+                $dataOwner->user_id = $user->user_id;
+                $dataOwner->company_id = $dataOwnerManager->company_id;
                 $dataOwner->request_delete = false;
                 $dataOwner->save();
 

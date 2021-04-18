@@ -33,6 +33,12 @@ class UserController extends Controller
         return response()->json($user, 200);
     }
 
+    public function getUserByManager(Request $request)
+    {
+        $user = $this->user->getUserByManager($request);
+        return response()->json($user, 200);
+    }
+
     public function create(Request $request)
     {
         try {
@@ -41,6 +47,21 @@ class UserController extends Controller
                 return response()->json($validated->messages(), 400);
             }
             $created = $this->user->createUser($request);
+            return response()->json([
+                "message" => $created
+            ], 200);
+        }catch (Throwable $e) {
+            return response()->json([
+                "message" => "Something Wrong !",
+                "error" => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function createUserByManger(Request $request)
+    {
+        try {
+            $created = $this->user->createUserByManger($request);
             return response()->json([
                 "message" => $created
             ], 200);

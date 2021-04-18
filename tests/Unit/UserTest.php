@@ -26,7 +26,7 @@ class UserTest extends TestCase
         $this->get('api/company/users')->assertStatus(200);
     }
 
-    public function test_post_should_return_data_on_db()
+    public function test_post_user_by_admin_should_return_data_on_db()
     {
         $roleAdmin = Role::where('role_name', 'admin')->first();
         $user = factory(User::class)->create([
@@ -53,6 +53,33 @@ class UserTest extends TestCase
         $response_arr = json_decode($response->content(), true);
 
         $this->assertEquals($response_arr['message'], 'Create user successful.');
+    }
+
+    public function test_post_user_by_manager_should_return_data_on_db()
+    {
+        $role = Role::where('role_name', 'manager')->first();
+        $user = factory(User::class)->create([
+            'role_id' => $role->role_id,
+            'username' => 'test23',
+            'password' => '123',
+            'first_name' => 'Hello',
+            'last_name' => 'Noita',
+            'email' => 'testpostby.manager@mail.com'
+        ]);
+        $mockData = [
+            'email' => 'testpostuserbymanager@gmail.com',
+            'my_user_id' => $user->user_id,
+            'my_role_id' => $user->role_id
+        ];
+        $response = $this->postJson('api/company/user', $mockData);
+        $response->assertStatus(200);
+
+        $response_arr = json_decode($response->content(), true);
+
+        $this->assertEquals($response_arr['message'], 'Create user successful.');
+        $this->assertDatabaseHas('users', [
+            'email' => $mockData['email'],
+        ]);
     }
 
 
