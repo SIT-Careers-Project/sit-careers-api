@@ -49,6 +49,8 @@ trait AnnouncementRules
         'welfare' => 'required|string',
         'status' => 'required|string',
         'job_type' => 'required|string',
+        'job_position_id' => 'required|string',
+        'address_id' => 'required|string',
         'address_one' => 'required|string',
         'address_two' => 'nullable|string',
         'lane' => 'nullable|string',
