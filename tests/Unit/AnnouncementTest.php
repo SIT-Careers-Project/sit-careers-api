@@ -59,6 +59,41 @@ class AnnouncementTest extends TestCase
 
     public function test_get_announcement_by_company_id_should_return_data_from_db()
     {
+        $data = $this->fakerAnnouncement->toArray();
+        $user = $this->fakerUser->toArray();
+        $company = $this->faker->toArray();
+
+        $address = factory(Address::class)->create([
+            'company_id' => $company['company_id'],
+            'address_type' => 'announcement'
+        ])->toArray();
+
+        $jobType = factory(JobType::class)->create([
+            'job_id' => Uuid::uuid(),
+            'announcement_id' => $data['announcement_id']
+        ]);
+
+        $data['my_user_id'] = $user['user_id'];
+        $data['job_type'] = $jobType['job_type'];
+        $data['priority'] = '-';
+        $data['end_date'] = '2021-03-31 17:00:00';
+        $data = array_merge($data, $address);
+
+        $response = $this->postJson('api/academic-industry/announcement', $data);
+        $response->assertStatus(200);
+
+        $response = $this->get('api/academic-industry/announcements/'.$this->faker->company_id);
+        $response->assertStatus(200);
+
+        $responseGetByID = json_decode($response->content(), true);
+
+        $this->assertDatabaseHas('announcements', [
+            'announcement_id' => $responseGetByID[0]['announcement_id']
+        ]);
+    }
+
+    public function test_get_announcement_by_user_id_should_return_data_from_db()
+    {
         $role = Role::where('role_name', 'manager')->first();
         $user = factory(User::class)->create([
             'role_id' => $role->role_id,
