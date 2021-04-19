@@ -11,6 +11,9 @@ use Illuminate\Foundation\Testing\WithoutMiddleware;
 use App\Models\Announcement;
 use App\Models\JobType;
 use App\Models\Address;
+use App\Models\Role;
+use App\Models\User;
+use App\Models\DataOwner;
 
 class AnnouncementTest extends TestCase
 {
@@ -56,14 +59,24 @@ class AnnouncementTest extends TestCase
 
     public function test_get_announcement_by_company_id_should_return_data_from_db()
     {
+        $role = Role::where('role_name', 'manager')->first();
+        $user = factory(User::class)->create([
+            'role_id' => $role->role_id,
+            'email' => 'sit-coll@gmail.com'
+        ]);
+
         $data = $this->fakerAnnouncement->toArray();
-        $user = $this->fakerUser->toArray();
         $company = $this->faker->toArray();
 
         $address = factory(Address::class)->create([
             'company_id' => $company['company_id'],
             'address_type' => 'announcement'
         ])->toArray();
+
+        $dataOwner = factory(DataOwner::class)->create([
+            'company_id' => $company['company_id'],
+            'user_id' => $user['user_id'],
+        ]);
 
         $jobType = factory(JobType::class)->create([
             'job_id' => Uuid::uuid(),
@@ -79,11 +92,10 @@ class AnnouncementTest extends TestCase
         $response = $this->postJson('api/academic-industry/announcement', $data);
         $response->assertStatus(200);
 
-        $response = $this->get('api/academic-industry/announcements/'.$this->faker->company_id);
+        $response = $this->json('GET', 'api/academic-industry/company/announcements', ['my_user_id' => $user['user_id']]);
         $response->assertStatus(200);
-
+        
         $responseGetByID = json_decode($response->content(), true);
-
         $this->assertDatabaseHas('announcements', [
             'announcement_id' => $responseGetByID[0]['announcement_id']
         ]);
@@ -214,6 +226,9 @@ class AnnouncementTest extends TestCase
         $assertion = [
             "announcement_id" => [
                 "The announcement id field is required."
+            ],
+            "address_id" => [
+                "The address id field is required."
             ],
             "property" => [
                 "The property field is required."

@@ -35,7 +35,8 @@ class AnnouncementController extends Controller
 
     public function getAnnouncementByCompanyId(Request $request)
     {
-        $announcements = $this->announcement->getAnnouncementByCompanyId($request);
+        $data = $request->all();
+        $announcements = $this->announcement->getAnnouncementByCompanyId($data);
         return response()->json($announcements, 200);
     }
 
@@ -67,7 +68,7 @@ class AnnouncementController extends Controller
     public function update(Request $request)
     {
         $data = $request->all();
-        // try {
+        try {
             $validated = Validator::make($data, $this->rulesUpdateAnnouncementById);
             if ($validated->fails()) {
                 return response()->json($validated->messages(), 400);
@@ -83,13 +84,13 @@ class AnnouncementController extends Controller
                 $data['picture'] = $imageName;
             }
             $announcement_updated = $this->announcement->updateAnnouncement($data);
-        // }catch (Throwable $e) {
-        //     return response()->json([
-        //         "message" => "Something Wrong !",
-        //         "error" => $e->getMessage()
-        //     ], 500);
-        // }
-        // return response()->json($announcement_updated, 200);
+        }catch (Throwable $e) {
+            return response()->json([
+                "message" => "Something Wrong !",
+                "error" => $e->getMessage()
+            ], 500);
+        }
+        return response()->json($announcement_updated, 200);
     }
 
     public function destroy(Request $request)

@@ -58,7 +58,7 @@ class AnnouncementRepository implements AnnouncementRepositoryInterface
 
     public function getAnnouncementByCompanyId($data)
     {
-        $dataOwner = DataOwner::where('user_id', $data->my_user_id)->get();
+        $dataOwner = DataOwner::where('user_id', $data['my_user_id'])->get();
         $announcements = [];
         for ($i=0; $i < count($dataOwner); $i++) { 
             $announcements[$i] = Announcement::join('companies', 'companies.company_id', '=', 'announcements.company_id')
