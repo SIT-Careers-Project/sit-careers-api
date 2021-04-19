@@ -33,9 +33,10 @@ class AnnouncementController extends Controller
         return response()->json($announcement, 200);
     }
 
-    public function getAnnouncementByCompanyId(Request $request, $company_id)
+    public function getAnnouncementByCompanyId(Request $request)
     {
-        $announcements = $this->announcement->getAnnouncementByCompanyId($company_id);
+        $data = $request->all();
+        $announcements = $this->announcement->getAnnouncementByCompanyId($data);
         return response()->json($announcements, 200);
     }
 

@@ -8,6 +8,7 @@ use App\Models\Address;
 use App\Models\Announcement;
 use App\Models\History;
 use App\Models\JobType;
+use App\Models\DataOwner;
 use Carbon\Carbon;
 
 class AnnouncementRepository implements AnnouncementRepositoryInterface
@@ -55,25 +56,29 @@ class AnnouncementRepository implements AnnouncementRepositoryInterface
         return $announcements;
     }
 
-    public function getAnnouncementByCompanyId($company_id)
+    public function getAnnouncementByCompanyId($data)
     {
-        $announcements = Announcement::join('companies', 'companies.company_id', '=', 'announcements.company_id')
-                        ->join('job_types', 'job_types.announcement_id', '=', 'announcements.announcement_id')
-                        ->join('job_positions', 'job_positions.job_position_id', '=', 'announcements.job_position_id')
-                        ->where('announcements.company_id', $company_id)
-                        ->select(
-                            'announcements.announcement_title',
-                            'announcements.announcement_id',
-                            'announcements.start_date',
-                            'announcements.end_date',
-                            'companies.company_name_th',
-                            'companies.company_name_en',
-                            'companies.logo',
-                            'job_positions.job_position',
-                            'job_types.job_type'
-                        )
-                        ->get();
-        return $announcements;
+        $dataOwner = DataOwner::where('user_id', $data['my_user_id'])->get();
+        $announcements = [];
+        for ($i=0; $i < count($dataOwner); $i++) { 
+            $announcements[$i] = Announcement::join('companies', 'companies.company_id', '=', 'announcements.company_id')
+                            ->join('job_types', 'job_types.announcement_id', '=', 'announcements.announcement_id')
+                            ->join('job_positions', 'job_positions.job_position_id', '=', 'announcements.job_position_id')
+                            ->where('announcements.company_id', $dataOwner[$i]->company_id)
+                            ->select(
+                                'announcements.announcement_title',
+                                'announcements.announcement_id',
+                                'announcements.start_date',
+                                'announcements.end_date',
+                                'companies.company_name_th',
+                                'companies.company_name_en',
+                                'companies.logo',
+                                'job_positions.job_position',
+                                'job_types.job_type'
+                            )
+                            ->get();
+        }
+        return collect($announcements)->flatten(1);
     }
 
     public function createAnnouncement($data)
@@ -132,7 +137,6 @@ class AnnouncementRepository implements AnnouncementRepositoryInterface
         $announcement->announcement_title = $data['announcement_title'];
         $announcement->job_description = $data['job_description'];
         $announcement->job_position_id = $data['job_position_id'];
-        $announcement->company_id = $data['company_id'];
         $announcement->property = $data['property'];
         $announcement->priority = $data['priority'] == "" ? "-": $data['priority'];
         $announcement->picture = $data['picture'] == "" ? "-": $data['picture'];
