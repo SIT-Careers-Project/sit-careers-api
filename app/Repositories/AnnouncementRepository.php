@@ -8,6 +8,8 @@ use App\Models\Address;
 use App\Models\Announcement;
 use App\Models\History;
 use App\Models\JobType;
+use App\Models\Role;
+use App\Models\User;
 use App\Models\DataOwner;
 use Carbon\Carbon;
 
@@ -104,6 +106,16 @@ class AnnouncementRepository implements AnnouncementRepositoryInterface
 
     public function createAnnouncement($data)
     {
+        $user = User::find($data['my_user_id']);
+        $dataOwner = DataOwner::where('user_id', $user->user_id)->first();
+        $roleOfUser = Role::where('role_id', $user->role_id)->first();
+
+        if ($roleOfUser->role_name === 'admin') {
+            $company_id = $data['company_id'];
+        } else if ($roleOfUser->role_name === 'manager' || $roleOfUser->role_name === 'coordinator') {
+            $company_id = $dataOwner->company_id;
+        }
+
         $address = new Address();
         $address->address_one = $data['address_one'];
         $address->address_two = $data['address_two'] == "" ? "-": $data['address_two'];
@@ -114,11 +126,11 @@ class AnnouncementRepository implements AnnouncementRepositoryInterface
         $address->province = $data['province'];
         $address->postal_code = $data['postal_code'];
         $address->address_type = 'announcement';
-        $address->company_id =  $data['company_id'];
+        $address->company_id =  $company_id;
         $address->save();
 
         $announcement = new Announcement();
-        $announcement->company_id = $data['company_id'];
+        $announcement->company_id = $company_id;
         $announcement->address_id = $address->address_id;
         $announcement->announcement_title = $data['announcement_title'];
         $announcement->job_description = $data['job_description'];
@@ -186,7 +198,6 @@ class AnnouncementRepository implements AnnouncementRepositoryInterface
         $address->sub_district = $data['sub_district'];
         $address->district = $data['district'];
         $address->province = $data['province'];
-        $address->company_id = $data['company_id'];
         $address->postal_code = $data['postal_code'];
         $address->save();
 
