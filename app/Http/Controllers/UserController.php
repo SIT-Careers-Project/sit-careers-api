@@ -107,10 +107,11 @@ class UserController extends Controller
         }
     }
 
-    public function destroy(Request $request, $user_id)
+    public function destroy(Request $request)
     {
+        $data = $request->all();
         try {
-            $deleted = $this->user->deleteUserByUserId($user_id);
+            $deleted = $this->user->deleteUserByUserId($data);
             $message = $deleted;
             if ($deleted) {
                 $message = 'User has been deleted.';
