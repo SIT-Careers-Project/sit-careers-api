@@ -13,5 +13,5 @@ interface AnnouncementResumeRepositoryInterface
     public function getAnnouncementResumeByIdForUserId($data, $announcement_resume_id);
     public function CreateAnnouncementResume($data);
     public function updateAnnouncementRusume($data);
-    public function NotificationAnnouncementResume($data);
+    public function SendMailNotificationAnnouncementResume($data);
 }

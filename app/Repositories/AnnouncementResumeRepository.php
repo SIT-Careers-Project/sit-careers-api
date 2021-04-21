@@ -9,6 +9,7 @@ use App\Models\Announcement;
 use App\Models\AnnouncementResume;
 use App\Models\User;
 use App\Models\DataOwner;
+use App\Models\Notification;
 
 class AnnouncementResumeRepository implements AnnouncementResumeRepositoryInterface
 {
@@ -121,7 +122,7 @@ class AnnouncementResumeRepository implements AnnouncementResumeRepositoryInterf
         return $announcement_resume;
     }
 
-    public function NotificationAnnouncementResume($data)
+    public function SendMailNotificationAnnouncementResume($data)
     {
         $announcement = Announcement::join('companies', 'companies.company_id', '=', 'announcements.company_id')
             ->where('announcements.announcement_id', $data['announcement_id'])
