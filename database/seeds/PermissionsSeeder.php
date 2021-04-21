@@ -47,7 +47,11 @@ class PermissionsSeeder extends Seeder
             'delete_academic_banner',
             'access_dashboard',
             'access_dashboard_admin',
-            'access_history'
+            'access_history',
+            'access_notification',
+            'update_notification',
+            'delete_notification'
+
         ];
 
         foreach ($permissions_data as  $permission_data) {
