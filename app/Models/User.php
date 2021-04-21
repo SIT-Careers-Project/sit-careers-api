@@ -36,4 +36,9 @@ class User extends Model
     {
         return $this->belongsTo('App\Models\Resume', 'resume_id');
     }
+
+    public function Notification()
+    {
+        return $this->hasMany('App\Models\Notification', 'notification_id');
+    }
 }
