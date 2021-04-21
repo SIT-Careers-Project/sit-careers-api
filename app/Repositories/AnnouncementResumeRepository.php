@@ -7,9 +7,11 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\RequestAnnouncementResume;
 use App\Models\Announcement;
 use App\Models\AnnouncementResume;
+use App\Models\Company;
 use App\Models\User;
 use App\Models\DataOwner;
 use App\Models\Notification;
+use App\Models\Resume;
 
 class AnnouncementResumeRepository implements AnnouncementResumeRepositoryInterface
 {
@@ -139,5 +141,86 @@ class AnnouncementResumeRepository implements AnnouncementResumeRepositoryInterf
         }
 
         return "Notification sent to the users success";
+    }
+
+    public function CreateAdminNotification($data, $announcement_resume_id)
+    {
+        $user_admin = User::join('roles', 'roles.role_id', '=', 'users.role_id')
+            ->where('roles.role_name', 'admin')->get()->toArray();
+
+        $candidate_name = Resume::where('resume_id', $data['resume_id'])
+            ->select('first_name')
+            ->get()->toArray();
+
+        $announcement = Announcement::where('announcement_id', $data['announcement_id'])
+            ->select('company_id', 'announcement_title')
+            ->get()->toArray();
+
+        $company_name_en = Company::where('company_id', $announcement[0]['company_id'])
+            ->select('company_name_en')
+            ->get()->toArray();
+
+        for ($i=0; $i < count($user_admin); $i++) {
+            $notification = new Notification();
+            $notification->user_id = $user_admin[$i]['user_id'];
+            $notification->message = 'คุณ'.$candidate_name[0]['first_name'].' ส่งคำขอสมัครงานของบริษัท '.$company_name_en[0]['company_name_en'].
+                                    ' ในหน้าประกาศ '. $announcement[0]['announcement_title'];
+            $notification->url = env('FRONT_END_URL').'/academic-industry/applications/'.$announcement_resume_id;
+            $notification->read_at = null;
+            $notification->save();
+        }
+        return $notification;
+
+    }
+
+    public function CreateCompanyNotification($data, $announcement_resume_id)
+    {
+        $announcement = Announcement::where('announcement_id', $data['announcement_id'])
+                ->select('company_id', 'announcement_title')
+                ->get()->toArray();
+
+        $company = DataOwner::where('company_id', $announcement[0]['company_id'])->get()->toArray();
+        if(!is_null($company)){
+            $candidate_name = Resume::where('resume_id', $data['resume_id'])
+            ->select('first_name')
+            ->get()->toArray();
+
+            $company_name_en = Company::where('company_id', $announcement[0]['company_id'])
+                ->select('company_name_en')
+                ->get()->toArray();
+
+            for ($i=0; $i < count($company); $i++) {
+                $notification = new Notification();
+                $notification->user_id = $company[$i]['user_id'];
+                $notification->message = 'คุณ'.$candidate_name[0]['first_name'].' ส่งคำขอสมัครงานของบริษัท '.$company_name_en[0]['company_name_en'].
+                                        ' ในหน้าประกาศ '. $announcement[0]['announcement_title'];
+                $notification->url = env('FRONT_END_URL').'/academic-industry/applications/'.$announcement_resume_id;
+                $notification->read_at = null;
+                $notification->save();
+            }
+            return $notification;
+        }
+        return "You not have company data.";
+    }
+
+    public function CreateStudentNotification($data, $announcement_resume_id)
+    {
+        $announcement = Announcement::where('announcement_id', $data['announcement_id'])
+            ->select('company_id', 'announcement_title')
+            ->get()->toArray();
+
+        $company_name_en = Company::where('company_id', $announcement[0]['company_id'])
+            ->select('company_name_en')
+            ->get()->toArray();
+
+            $notification = new Notification();
+            $notification->user_id = $data['my_user_id'];
+            $notification->message = 'คุณส่งคำขอสมัครงานของบริษัท '.$company_name_en[0]['company_name_en'].'
+                                    ในหน้าประกาศ '.$announcement[0]['announcement_title'];
+            $notification->url = env('FRONT_END_URL').'/academic-industry/applications/'.$announcement_resume_id;
+            $notification->read_at = null;
+            $notification->save();
+
+            return $notification;
     }
 }

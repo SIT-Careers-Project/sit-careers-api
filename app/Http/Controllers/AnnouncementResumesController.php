@@ -89,6 +89,9 @@ class AnnouncementResumesController extends Controller
             if ($this->checkDateToDayBetweenStartAndEnd($announcement)) {
                 $create_application = $this->announcement_resume->CreateAnnouncementResume($data);
                 $send_mail_application = $this->announcement_resume->SendMailNotificationAnnouncementResume($data);
+                $create_admin_noti = $this->announcement_resume->CreateAdminNotification($data, $create_application['announcement_resume_id']);
+                $create_company_noti = $this->announcement_resume->CreateCompanyNotification($data, $create_application['announcement_resume_id']);
+                $create_student_noti = $this->announcement_resume->CreateStudentNotification($data, $create_application['announcement_resume_id']);
                 return response()->json($create_application, 200);
             } else {
                 return response()->json([
