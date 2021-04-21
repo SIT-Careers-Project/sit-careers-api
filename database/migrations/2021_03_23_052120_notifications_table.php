@@ -18,7 +18,9 @@ class NotificationsTable extends Migration
             $table->uuid('user_id')->nullable(false);
             $table->string('message');
             $table->string('url');
-            $table->string('read_at');
+            $table->string('read_at')->nullable(true);
+            $table->timestamps();
+            $table->softDeletes();
         });
 
         Schema::table('notifications', function (Blueprint $table) {
