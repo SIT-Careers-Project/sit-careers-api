@@ -91,6 +91,7 @@ class AnnouncementResumeTest extends TestCase
         $data = $this->fakerAnnouncementResume->toArray();
         $data['resume_id'] = $this->fakerResume->resume_id;
         $data['announcement_id'] = $announcement['announcement_id'];
+        $data['my_user_id'] = $this->fakerUser->user_id;
 
         $response = $this->postJson('/api/academic-industry/application', $data);
         $response->assertStatus(200);
@@ -120,6 +121,7 @@ class AnnouncementResumeTest extends TestCase
         ]);
 
         $data = $this->fakerAnnouncementResume->toArray();
+        $data['my_user_id'] = $this->fakerUser->user_id;
 
         $response = $this->postJson('/api/academic-industry/application', $data);
         $expected = json_decode($response->content(), true);
@@ -154,6 +156,7 @@ class AnnouncementResumeTest extends TestCase
 
         $data = $this->fakerAnnouncementResume->toArray();
         $data['announcement_id'] = $announcement['announcement_id'];
+        $data['my_user_id'] = $this->fakerUser->user_id;
 
         $response = $this->postJson('/api/academic-industry/application', $data);
         $expected = json_decode($response->content(), true);
@@ -173,6 +176,7 @@ class AnnouncementResumeTest extends TestCase
         $data = $this->fakerAnnouncementResume->toArray();
         $data['note'] = 'update note';
         $data['announcement_id'] = $announcement['announcement_id'];
+        $data['my_user_id'] = $this->fakerUser->user_id;
 
         $response = $this->putJson('/api/academic-industry/application', $data);
         $response->assertStatus(200);
@@ -191,6 +195,7 @@ class AnnouncementResumeTest extends TestCase
         $data = $this->fakerAnnouncementResume->toArray();
         $data = array_diff($data, array($data['announcement_resume_id']));
         $data['announcement_id'] = $announcement['announcement_id'];
+        $data['my_user_id'] = $this->fakerUser->user_id;
 
         $response = $this->putJson('/api/academic-industry/application', $data);
         $expected = json_decode($response->content(), true);
