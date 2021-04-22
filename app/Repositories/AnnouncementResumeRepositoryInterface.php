@@ -17,4 +17,5 @@ interface AnnouncementResumeRepositoryInterface
     public function CreateAdminNotification($data, $announcement_resume_id);
     public function CreateCompanyNotification($data, $announcement_resume_id);
     public function CreateStudentNotification($data, $announcement_resume_id);
+    public function UpdateStudentNotification($data);
 }

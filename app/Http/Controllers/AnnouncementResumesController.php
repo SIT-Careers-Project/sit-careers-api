@@ -115,6 +115,7 @@ class AnnouncementResumesController extends Controller
         }
 
         $update_application = $this->announcement_resume->updateAnnouncementRusume($data);
+        $update_student_noti = $this->announcement_resume->UpdateStudentNotification($data);
         return response()->json($update_application, 200);
     }
 }
