@@ -28,6 +28,6 @@ class History extends Model
 
     public function user()
     {
-        return $this->hasOne('App\Models\User', 'user_id');
+        return $this->belongsTo('App\Models\User', 'user_id');
     }
 }

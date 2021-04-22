@@ -28,6 +28,6 @@ class Resume extends Model
 
     public function User()
     {
-        return $this->hasOne('App\Models\User', 'user_id');
+        return $this->belongsTo('App\Models\User', 'user_id');
     }
 }

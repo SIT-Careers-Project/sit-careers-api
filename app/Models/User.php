@@ -24,7 +24,7 @@ class User extends Model
 
     public function role()
     {
-        return $this->hasOne('App\Models\Role', 'role_id');
+        return $this->belongsTo('App\Models\Role', 'role_id');
     }
 
     public function history()
@@ -40,5 +40,10 @@ class User extends Model
     public function Notification()
     {
         return $this->hasMany('App\Models\Notification', 'notification_id');
+    }
+
+    public function DataOwner()
+    {
+        return $this->hasMany('App\Models\DataOwner', 'user_id');
     }
 }

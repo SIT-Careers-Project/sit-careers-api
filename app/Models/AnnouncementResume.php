@@ -23,11 +23,11 @@ class AnnouncementResume extends Model
 
     public function Announcement()
     {
-        return $this->hashOne('App\Models\Announcement', 'announcement_id');
+        return $this->belongsTo('App\Models\Announcement', 'announcement_id');
     }
 
     public function Resume()
     {
-        return $this->hashOne('App\Models\Resume', 'resume_id');
+        return $this->belongsTo('App\Models\Resume', 'resume_id');
     }
 }
