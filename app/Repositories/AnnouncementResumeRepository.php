@@ -176,14 +176,16 @@ class AnnouncementResumeRepository implements AnnouncementResumeRepositoryInterf
     public function CreateCompanyNotification($data, $announcement_resume_id)
     {
         $announcement = Announcement::where('announcement_id', $data['announcement_id'])
-                ->select('company_id', 'announcement_title')
-                ->get()->toArray();
+            ->select('company_id', 'announcement_title')
+            ->get()->toArray();
 
         $company = DataOwner::where('company_id', $announcement[0]['company_id'])->get()->toArray();
         if(!is_null($company)){
+            $notification = [];
+
             $candidate_name = Resume::where('resume_id', $data['resume_id'])
-            ->select('first_name')
-            ->get()->toArray();
+                ->select('first_name')
+                ->get()->toArray();
 
             $company_name_en = Company::where('company_id', $announcement[0]['company_id'])
                 ->select('company_name_en')
@@ -213,15 +215,15 @@ class AnnouncementResumeRepository implements AnnouncementResumeRepositoryInterf
             ->select('company_name_en')
             ->get()->toArray();
 
-            $notification = new Notification();
-            $notification->user_id = $data['my_user_id'];
-            $notification->message = 'คุณส่งคำขอสมัครงานของบริษัท '.$company_name_en[0]['company_name_en'].'
-                                    ในหน้าประกาศ '.$announcement[0]['announcement_title'];
-            $notification->url = env('FRONT_END_URL').'/academic-industry/applications/'.$announcement_resume_id;
-            $notification->read_at = null;
-            $notification->save();
+        $notification = new Notification();
+        $notification->user_id = $data['my_user_id'];
+        $notification->message = 'คุณส่งคำขอสมัครงานของบริษัท '.$company_name_en[0]['company_name_en'].'
+                                ในหน้าประกาศ '.$announcement[0]['announcement_title'];
+        $notification->url = env('FRONT_END_URL').'/academic-industry/applications/'.$announcement_resume_id;
+        $notification->read_at = null;
+        $notification->save();
 
-            return $notification;
+        return $notification;
     }
 
     public function UpdateStudentNotification($data)
