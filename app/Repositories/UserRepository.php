@@ -23,7 +23,7 @@ class UserRepository implements UserRepositoryInterface
     public function getUsers()
     {
         $users = User::join('roles', 'roles.role_id', '=', 'users.role_id')
-                ->select('users.email', 'roles.role_name')
+                ->select('users.email', 'roles.role_name', 'users.user_id')
                 ->get();
         return $users;
     }
@@ -166,14 +166,18 @@ class UserRepository implements UserRepositoryInterface
         return $user;
     }
 
-    public function deleteUserByUserId($user_id)
+    public function deleteUserByUserId($data)
     {
-        $user = User::find($user_id);
-        if ($user) {
-            $user = $user->delete();
-            return $user;
+        $users = $data['data'];
+        for ($i=0; $i < count($users); $i++) {
+            $user = User::find($users[$i]['user_id']);
+            if ($user) {
+                $user = $user->delete();
+            } else {
+                return "Find not found User.";
+            }
         }
-         
-        return "Find not found User.";
+
+        return true;
     }
 }

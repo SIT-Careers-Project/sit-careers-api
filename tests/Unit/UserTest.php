@@ -142,7 +142,12 @@ class UserTest extends TestCase
 
     public function test_soft_delete_user_success_by_user_id()
     {
-        $response = $this->deleteJson('api/user/'.$this->fakerUser->user_id);
+        $data = [
+            "data" => array([
+                "user_id" => $this->fakerUser->user_id
+            ])
+        ];
+        $response = $this->deleteJson('api/users', $data);
         $response = json_decode($response->content(), true);
 
         $this->assertEquals($response['message'], 'User has been deleted.');

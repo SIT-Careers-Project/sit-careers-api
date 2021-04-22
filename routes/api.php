@@ -69,7 +69,7 @@ Route::group(['middleware' => ['checkAuth']], function () {
         Route::post('company/user', 'UserController@createUserByManger')->middleware(['role.permission:create_user_by_manager']);
         Route::put('user', 'UserController@update')->middleware(['role.permission:update_user']);
         Route::put('user/first-time', 'UserController@updateFirstTime')->middleware(['role.permission:update_user']);
-        Route::delete('user/{user_id}', 'UserController@destroy')->middleware(['role.permission:delete_user']);
+        Route::delete('users', 'UserController@destroy')->middleware(['role.permission:delete_user']);
 
         Route::get('roles', 'RoleController@get');
         Route::get('role-permissions', 'RoleController@getRolePermissions');
