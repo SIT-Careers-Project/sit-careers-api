@@ -51,7 +51,6 @@ class PermissionsSeeder extends Seeder
             'access_notification',
             'update_notification',
             'delete_notification'
-
         ];
 
         foreach ($permissions_data as  $permission_data) {

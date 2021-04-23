@@ -217,8 +217,8 @@ class AnnouncementResumeRepository implements AnnouncementResumeRepositoryInterf
 
         $notification = new Notification();
         $notification->user_id = $data['my_user_id'];
-        $notification->message = 'คุณส่งคำขอสมัครงานของบริษัท '.$company_name_en[0]['company_name_en'].'
-                                ในหน้าประกาศ '.$announcement[0]['announcement_title'];
+        $notification->message = 'คุณส่งคำขอสมัครงานของบริษัท '.$company_name_en[0]['company_name_en'].
+                                'ในหน้าประกาศ '.$announcement[0]['announcement_title'];
         $notification->url = env('FRONT_END_URL').'/academic-industry/applications/'.$announcement_resume_id;
         $notification->read_at = null;
         $notification->save();
@@ -244,8 +244,8 @@ class AnnouncementResumeRepository implements AnnouncementResumeRepositoryInterf
 
         $notification = new Notification();
         $notification->user_id = $student_id[0]['student_id'];
-        $notification->message = 'คำขอสมัครงานของบริษัท '.$company_name_en[0]['company_name_en'].'
-                                ในหน้าประกาศ '.$announcement[0]['announcement_title'].' ที่คุณสมัครมีการอัปเดตสถานะ';
+        $notification->message = 'คำขอสมัครงานของบริษัท '.$company_name_en[0]['company_name_en'].
+                                'ในหน้าประกาศ '.$announcement[0]['announcement_title'].' ที่คุณสมัครมีการอัปเดตสถานะ';
         $notification->url = env('FRONT_END_URL').'/academic-industry/applications/'.$data['announcement_resume_id'];
         $notification->read_at = null;
         $notification->save();
