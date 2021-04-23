@@ -29,7 +29,8 @@ class AppServiceProvider extends ServiceProvider
             'History',
             'Banner',
             'Dashboard',
-            'AnnouncementResume'
+            'AnnouncementResume',
+            'Notification'
         );
 
         foreach ($models as $model) {

@@ -2,17 +2,17 @@
 
 namespace App\Models;
 
+use App\Traits\NotificationUuid;
 use Illuminate\Database\Eloquent\Model;
-use App\Traits\ResumeUuid;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Resume extends Model
+class Notification extends Model
 {
-    Use ResumeUuid;
+    Use NotificationUuid;
     use SoftDeletes;
 
-    protected $table = 'resumes';
-    protected $primaryKey = 'resume_id';
+    protected $table = 'notifications';
+    protected $primaryKey = 'notification_id';
     public $incrementing = false;
 
     protected $keyType = 'uuid';
@@ -20,11 +20,6 @@ class Resume extends Model
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
     const DELETED_AT = 'deleted_at';
-
-    public function AnnouncementResume()
-    {
-        return $this->hasMany('App\Models\AnnouncementResume', 'announcement_resume_id');
-    }
 
     public function User()
     {

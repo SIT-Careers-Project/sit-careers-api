@@ -34,7 +34,8 @@ class RolePermissionsSeeder extends Seeder
             'create_resume',
             'update_resume',
             'access_announcement_resume_by_student',
-            'create_announcement_resume'
+            'create_announcement_resume',
+            'access_notification'
         ];
 
         foreach ($permissionStudent as  $permission) {
@@ -62,7 +63,9 @@ class RolePermissionsSeeder extends Seeder
             'delete_academic_announcement',
             'access_dashboard',
             'access_announcement_resume_by_company',
-            'update_announcement_resume'
+            'update_announcement_resume',
+            'access_notification',
+            'update_notification',
         ];
 
         foreach ($permissionManager as  $permission) {
@@ -88,7 +91,9 @@ class RolePermissionsSeeder extends Seeder
             'delete_academic_announcement',
             'access_dashboard',
             'access_announcement_resume_by_company',
-            'update_announcement_resume'
+            'update_announcement_resume',
+            'access_notification',
+            'update_notification',
         ];
 
         foreach ($permissionCoordinator as  $permission) {

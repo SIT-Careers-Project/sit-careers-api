@@ -90,5 +90,7 @@ Route::group(['middleware' => ['checkAuth']], function () {
             Route::get('announcements/export', 'DashboardController@getAnnouncementsByFilterDate');
             Route::get('dashboard/export', 'DashboardController@getDashboardByFilterDate');
         });
+
+        Route::get('notifications', 'NotificationController@get')->middleware(['role.permission:access_notification']);
     // });
 });
