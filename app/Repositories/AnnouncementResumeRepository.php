@@ -129,15 +129,22 @@ class AnnouncementResumeRepository implements AnnouncementResumeRepositoryInterf
         $announcement = Announcement::join('companies', 'companies.company_id', '=', 'announcements.company_id')
             ->where('announcements.announcement_id', $data['announcement_id'])
             ->first();
+        $announcement_arr = $announcement->toArray();
 
-        $user_admin_hr = User::join('roles', 'roles.role_id', '=', 'users.role_id')
+        $user_admin = User::join('roles', 'roles.role_id', '=', 'users.role_id')
             ->where('roles.role_name', 'admin')
-            ->oRWhere('roles.role_name', 'manager')
-            ->orWhere('roles.role_name', 'coordinator')
             ->get();
 
-        for ($i=0; $i < count($user_admin_hr); $i++) {
-            $sendMailToRelateUsers = Mail::to($user_admin_hr[$i]->email)->send(new RequestAnnouncementResume($user_admin_hr[$i], $announcement));
+        for ($i=0; $i < count($user_admin); $i++) {
+            $send_mail_to_admin = Mail::to($user_admin[$i]->email)->send(new RequestAnnouncementResume($user_admin[$i], $announcement));
+        }
+
+        $company = DataOwner::where('company_id', $announcement_arr['company_id'])->get();
+        if(!$company->isEmpty()) {
+            for ($i=0; $i < count($company); $i++) {
+                $user_company = User::find($company[$i]['user_id']);
+                $send_mail_to_company = Mail::to($user_company->email)->send(new RequestAnnouncementResume($user_company, $announcement));
+            }
         }
 
         return "Notification sent to the users success";
