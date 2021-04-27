@@ -29,11 +29,16 @@ class BannerController extends Controller
         return response()->json($banners, 200);
     }
 
-    public function getBannerById(Request $request)
+    public function getBannerById(Request $request, $banner_id)
     {
         $id = $request->all();
-        $banner = $this->banner->getBannerById($id['banner_id']);
-        return response()->json($banner, 200);
+        $banner = $this->banner->getBannerById($banner_id);
+        if ($banner) {
+            return response()->json($banner, 200);
+        }
+        return response()->json([
+            "message" => "Not found."
+        ], 404);
     }
 
     public function create(Request $request)

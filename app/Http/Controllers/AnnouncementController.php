@@ -22,15 +22,16 @@ class AnnouncementController extends Controller
         $this->announcement = $announcement_repo;
     }
 
-    public function get(Request $request)
+    public function get(Request $request, $announcement_id)
     {
-        $id = $request->all();
-        $validated = Validator::make($id, $this->rulesGetAnnouncementById);
-        if ($validated->fails()) {
-            return response()->json($validated->messages(), 400);
+        $data = $request->all();
+        $announcement = $this->announcement->getAnnouncementById($announcement_id);
+        if ($announcement) {
+            return response()->json($announcement, 200);
         }
-        $announcement = $this->announcement->getAnnouncementById($id['announcement_id']);
-        return response()->json($announcement, 200);
+        return response()->json([
+            "message" => "Not found."
+        ], 404);
     }
 
     public function getAnnouncementByCompanyId(Request $request, $company_id)
