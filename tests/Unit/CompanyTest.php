@@ -82,7 +82,6 @@ class CompanyTest extends TestCase
         $this->assertEquals($company_arr, $response_arr['company_id']);
     }
 
-    
     public function test_get_all_companies_by_company_success_should_return_has_same_data_on_db()
     {
 

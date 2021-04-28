@@ -37,7 +37,7 @@ Route::group(['middleware' => ['checkAuth']], function () {
 
         Route::prefix('academic-industry')->group(function () {
             Route::get('job-positions', 'JobPositionController@get')->middleware(['role.permission:access_academic_announcement']);
-            Route::get('announcement', 'AnnouncementController@get')->middleware(['role.permission:access_academic_announcement']);
+            Route::get('announcement/{announcement_id}', 'AnnouncementController@get')->middleware(['role.permission:access_academic_announcement']);
             Route::get('announcements/{company_id}', 'AnnouncementController@getAnnouncementByCompanyId')->middleware(['role.permission:access_academic_announcement']);
             Route::get('company/announcements', 'AnnouncementController@getAnnouncementByUserId')->middleware(['role.permission:access_academic_announcement']);
             Route::get('announcements', 'AnnouncementController@getAnnouncements')->middleware(['role.permission:access_academic_announcement']);
@@ -77,7 +77,7 @@ Route::group(['middleware' => ['checkAuth']], function () {
         Route::get('histories', 'HistoryController@get')->middleware(['role.permission:access_history']);
 
         Route::get('banners', 'BannerController@get')->middleware(['role.permission:access_academic_banner']);
-        Route::get('banner', 'BannerController@getBannerById')->middleware(['role.permission:access_academic_banner']);
+        Route::get('banner/{banner_id}', 'BannerController@getBannerById')->middleware(['role.permission:access_academic_banner']);
         Route::post('banner', 'BannerController@create')->middleware(['role.permission:create_academic_banner']);
         Route::delete('banner', 'BannerController@destroy')->middleware(['role.permission:delete_academic_banner']);
 
