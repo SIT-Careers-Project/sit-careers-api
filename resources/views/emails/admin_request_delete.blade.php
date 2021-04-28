@@ -35,7 +35,7 @@
         โดยทางผู้ดูแลระบบสามารถตรวจสอบข้อมูลและดำเนินการลบข้อมูลได้ที่ <a href="{{ $url }}/company/update/{{ $company_id }}">คลิก</a>
       </p>
       <hr style="margin-top: 6px; margin-bottom: 3px;"/>
-      <p class="text-sm">© SIT-Industry Collaboration Service System</p>
+      <p class="text-sm">© SIT Career Center</p>
     </div>
   </body>
 </html>
