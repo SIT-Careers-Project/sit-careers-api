@@ -24,4 +24,16 @@ class NotificationController extends Controller
         $notification = $this->notification->getNotificationByUserId($data);
         return response()->json($notification, 200);
     }
+
+    public function update(Request $request)
+    {
+        $data = $request->all();
+        $notification = $this->notification->updateNotificationByUserId($data);
+        if ($notification) {
+            return response()->json($notification, 200);
+        }
+        return response()->json([
+            'message' => 'Not found your notification'
+        ], 404);
+    }
 }
