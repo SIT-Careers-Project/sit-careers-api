@@ -92,5 +92,6 @@ Route::group(['middleware' => ['checkAuth']], function () {
         });
 
         Route::get('notifications', 'NotificationController@get')->middleware(['role.permission:access_notification']);
+        Route::put('notification', 'NotificationController@update')->middleware(['role.permission:update_notification']);
     // });
 });

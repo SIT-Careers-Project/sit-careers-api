@@ -172,7 +172,7 @@ class AnnouncementResumeRepository implements AnnouncementResumeRepositoryInterf
             $notification->user_id = $user_admin[$i]['user_id'];
             $notification->message = 'คุณ'.$candidate_name[0]['first_name'].' ส่งคำขอสมัครงานของบริษัท '.$company_name_en[0]['company_name_en'].
                                     ' ในหน้าประกาศ '. $announcement[0]['announcement_title'];
-            $notification->url = env('FRONT_END_URL').'/academic-industry/applications/'.$announcement_resume_id;
+            $notification->url = '/academic-industry/applications/'.$announcement_resume_id;
             $notification->read_at = null;
             $notification->save();
         }
@@ -203,7 +203,7 @@ class AnnouncementResumeRepository implements AnnouncementResumeRepositoryInterf
                 $notification->user_id = $company[$i]['user_id'];
                 $notification->message = 'คุณ'.$candidate_name[0]['first_name'].' ส่งคำขอสมัครงานของบริษัท '.$company_name_en[0]['company_name_en'].
                                         ' ในหน้าประกาศ '. $announcement[0]['announcement_title'];
-                $notification->url = env('FRONT_END_URL').'/academic-industry/applications/'.$announcement_resume_id;
+                $notification->url = '/academic-industry/applications/'.$announcement_resume_id;
                 $notification->read_at = null;
                 $notification->save();
             }
@@ -226,7 +226,7 @@ class AnnouncementResumeRepository implements AnnouncementResumeRepositoryInterf
         $notification->user_id = $data['my_user_id'];
         $notification->message = 'คุณส่งคำขอสมัครงานของบริษัท '.$company_name_en[0]['company_name_en'].
                                 'ในหน้าประกาศ '.$announcement[0]['announcement_title'];
-        $notification->url = env('FRONT_END_URL').'/academic-industry/applications/'.$announcement_resume_id;
+        $notification->url = '/academic-industry/applications/'.$announcement_resume_id;
         $notification->read_at = null;
         $notification->save();
 
@@ -253,7 +253,7 @@ class AnnouncementResumeRepository implements AnnouncementResumeRepositoryInterf
         $notification->user_id = $student_id[0]['student_id'];
         $notification->message = 'คำขอสมัครงานของบริษัท '.$company_name_en[0]['company_name_en'].
                                 'ในหน้าประกาศ '.$announcement[0]['announcement_title'].' ที่คุณสมัครมีการอัปเดตสถานะ';
-        $notification->url = env('FRONT_END_URL').'/academic-industry/applications/'.$data['announcement_resume_id'];
+        $notification->url = '/academic-industry/applications/'.$data['announcement_resume_id'];
         $notification->read_at = null;
         $notification->save();
 

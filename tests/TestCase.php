@@ -15,6 +15,7 @@ use App\Models\JobPosition;
 use App\Models\Resume;
 use App\Models\User;
 use App\Models\DataOwner;
+use App\Models\Notification;
 
 abstract class TestCase extends BaseTestCase
 {
@@ -36,5 +37,6 @@ abstract class TestCase extends BaseTestCase
         $this->fakerResume = factory(Resume::class)->create();
         $this->fakerBanner = factory(Banner::class)->create();
         $this->fakerAnnouncementResume = factory(AnnouncementResume::class)->create();
+        $this->fakerNotification = factory(Notification::class)->create();
     }
 }
