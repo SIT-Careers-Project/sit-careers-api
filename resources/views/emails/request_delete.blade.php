@@ -39,7 +39,7 @@
         Tel: 66 2470 9887 Email: rungroj@sit.kmutt.ac.th
       </p>
       <hr style="margin-top: 6px; margin-bottom: 3px;"/>
-      <p class="text-sm">© SIT-Industry Collaboration Service System</p>
+      <p class="text-sm">© SIT Career Center</p>
     </div>
   </body>
 </html>
