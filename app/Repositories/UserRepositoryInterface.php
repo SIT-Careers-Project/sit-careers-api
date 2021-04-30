@@ -13,4 +13,5 @@ interface UserRepositoryInterface
     public function updateUser($data);
     public function updateUserFirstTime($data);
     public function deleteUserByUserId($data);
+    public function updateUserStudent($data, $role);
 }
