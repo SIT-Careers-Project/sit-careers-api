@@ -79,6 +79,8 @@ class AuthController extends Controller
                         401
                     );
                 }
+            } else {
+                $this->user->updateUserStudent($body, 'student');
             }
             $token = $this->encode($user, env('JWT_KEY'));
             $permissions = $this->role_permission->getRolePermissionsByUserId($user['user_id']);
@@ -114,7 +116,6 @@ class AuthController extends Controller
                 ])->get($url);
                 $body = json_decode($response->body());
                 if ($response->failed()) {
-                    echo $response;
                     return response()->json(
                         [
                             'message' => $body->message
