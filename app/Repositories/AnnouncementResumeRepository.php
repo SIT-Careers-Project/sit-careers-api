@@ -163,15 +163,10 @@ class AnnouncementResumeRepository implements AnnouncementResumeRepositoryInterf
             ->select('company_id', 'announcement_title')
             ->get()->toArray();
 
-        $company_name_en = Company::where('company_id', $announcement[0]['company_id'])
-            ->select('company_name_en')
-            ->get()->toArray();
-
         for ($i=0; $i < count($user_admin); $i++) {
             $notification = new Notification();
             $notification->user_id = $user_admin[$i]['user_id'];
-            $notification->message = 'คุณ'.$candidate_name[0]['first_name'].' ส่งคำขอสมัครงานของบริษัท '.$company_name_en[0]['company_name_en'].
-                                    ' ในหน้าประกาศ '. $announcement[0]['announcement_title'];
+            $notification->message = 'คุณ '.$candidate_name[0]['first_name'].' ส่งคำขอสมัครประกาศ '. $announcement[0]['announcement_title'];
             $notification->url = '/academic-industry/applications/'.$announcement_resume_id;
             $notification->read_at = null;
             $notification->save();
@@ -194,15 +189,10 @@ class AnnouncementResumeRepository implements AnnouncementResumeRepositoryInterf
                 ->select('first_name')
                 ->get()->toArray();
 
-            $company_name_en = Company::where('company_id', $announcement[0]['company_id'])
-                ->select('company_name_en')
-                ->get()->toArray();
-
             for ($i=0; $i < count($company); $i++) {
                 $notification = new Notification();
                 $notification->user_id = $company[$i]['user_id'];
-                $notification->message = 'คุณ'.$candidate_name[0]['first_name'].' ส่งคำขอสมัครงานของบริษัท '.$company_name_en[0]['company_name_en'].
-                                        ' ในหน้าประกาศ '. $announcement[0]['announcement_title'];
+                $notification->message = 'คุณ '.$candidate_name[0]['first_name'].' ส่งคำขอสมัครประกาศ '. $announcement[0]['announcement_title'];
                 $notification->url = '/academic-industry/applications/'.$announcement_resume_id;
                 $notification->read_at = null;
                 $notification->save();
@@ -224,8 +214,7 @@ class AnnouncementResumeRepository implements AnnouncementResumeRepositoryInterf
 
         $notification = new Notification();
         $notification->user_id = $data['my_user_id'];
-        $notification->message = 'คุณส่งคำขอสมัครงานของบริษัท '.$company_name_en[0]['company_name_en'].
-                                'ในหน้าประกาศ '.$announcement[0]['announcement_title'];
+        $notification->message = 'คุณส่งคำขอสมัครประกาศ '.$announcement[0]['announcement_title'];
         $notification->url = '/academic-industry/applications/'.$announcement_resume_id;
         $notification->read_at = null;
         $notification->save();
@@ -241,18 +230,13 @@ class AnnouncementResumeRepository implements AnnouncementResumeRepositoryInterf
             ->select('company_id', 'announcement_title')
             ->get()->toArray();
 
-        $company_name_en = Company::where('company_id', $announcement[0]['company_id'])
-            ->select('company_name_en')
-            ->get()->toArray();
-
         $student_id = Resume::where('resume_id', $announcement_resume[0]['resume_id'])
             ->select('student_id')
             ->get()->toArray();
 
         $notification = new Notification();
         $notification->user_id = $student_id[0]['student_id'];
-        $notification->message = 'คำขอสมัครงานของบริษัท '.$company_name_en[0]['company_name_en'].
-                                'ในหน้าประกาศ '.$announcement[0]['announcement_title'].' ที่คุณสมัครมีการอัปเดตสถานะ';
+        $notification->message = 'คำขอสมัครประกาศ '.$announcement[0]['announcement_title'].' ที่คุณสมัครมีการอัปเดตสถานะ';
         $notification->url = '/academic-industry/applications/'.$data['announcement_resume_id'];
         $notification->read_at = null;
         $notification->save();
