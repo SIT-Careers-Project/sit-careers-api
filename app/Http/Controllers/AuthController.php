@@ -114,6 +114,7 @@ class AuthController extends Controller
                 ])->get($url);
                 $body = json_decode($response->body());
                 if ($response->failed()) {
+                    echo $response;
                     return response()->json(
                         [
                             'message' => $body->message
