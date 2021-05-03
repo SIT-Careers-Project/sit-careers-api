@@ -16,92 +16,71 @@ class DashboardTest extends TestCase
     use RefreshDatabase;
     use WithoutMiddleware;
 
-    public function test_get_stats_success_should_return_status_200()
-    {
-        $this->get('api/dashboard/stats')->assertStatus(200);
-    }
-
-    public function test_get_company_types_success_should_return_status_200()
-    {
-        $this->get('api/dashboard/company-types')->assertStatus(200);
-    }
-
-    public function test_get_student_job_position_success_should_return_status_200()
-    {
-        $this->get('api/dashboard/students/job-positions')->assertStatus(200);
-    }
-
-    public function test_get_announcement_job_position_success_should_return_status_200()
-    {
-        $this->get('api/dashboard/announcements/job-positions')->assertStatus(200);
-    }
-
-    public function test_export_companies_report_with_storage_success_should_return_true()
+    public function test_export_companies_report_success_should_return_true()
     {
         Excel::fake();
 
         $data = [
             'start_date' => '2021-02-19',
-            'end_date' => '2021-02-20'
+            'end_date' => '2021-02-20',
+            'name_reports' => ["company"]
         ];
 
-        $response = $this->call('GET', 'api/dashboard/companies/export', $data);
+        $response = $this->postJson('api/dashboard/report', $data);
+        $file_name = 'companies'. '_' . $data['start_date'] . '_' . $data['end_date'] . '.xlsx';
 
-        $file_name = 'companies'. '_' . $data['start_date'] . '-' . $data['end_date'] . '.xlsx';
-        $path = '/reports/companies/';
-        $path_file_name = $path.$file_name;
-
-        Excel::assertStored($path_file_name, 'minio', function(CompaniesExport $export)
+        Excel::assertDownloaded($file_name, function(CompaniesExport $export)
         {
             return true;
         });
     }
 
-    public function test_export_companies_report_with_storage_failed_should_return_error_message()
-    {
-        $data = [];
-
-        $response = $this->call('GET', 'api/dashboard/companies/export', $data);
-        $expected = json_decode($response->content(), true);
-
-        $assertion = [
-            "start_date" => [
-                "The start date field is required."
-            ],
-            "end_date" => [
-                "The end date field is required."
-            ]
-        ];
-
-        $response->assertStatus(400);
-        $this->assertEquals($assertion, $expected);
-    }
-
-    public function test_export_announcements_report_with_storage_success_should_return_true()
+    public function test_export_announcements_report_success_should_return_true()
     {
         Excel::fake();
 
         $data = [
             'start_date' => '2021-03-19',
-            'end_date' => Carbon::now()->addDays(5)->format('Y-m-d')
+            'end_date' => Carbon::now()->addDays(5)->format('Y-m-d'),
+            'name_reports' => ["announcement"]
         ];
-        $response = $this->call('GET', 'api/dashboard/announcements/export', $data);
 
-        $file_name = 'announcements'. '_' . $data['start_date'] . '-' . $data['end_date'] . '.xlsx';
-        $path = '/reports/announcements/';
-        $path_file_name = $path.$file_name;
+        $response = $this->postJson('api/dashboard/report', $data);
 
-        Excel::assertStored($path_file_name, 'minio', function(AnnouncementsExport $export)
+        $file_name = 'announcements'. '_' . $data['start_date'] . '_' . $data['end_date'] . '.xlsx';
+
+        Excel::assertDownloaded($file_name, function(AnnouncementsExport $export)
         {
             return true;
         });
     }
 
-    public function test_export_announcments_report_with_storage_failed_should_return_error_message()
+
+    public function test_export_dashboard_report_success_should_return_true()
+    {
+        Excel::fake();
+
+        $data = [
+            'start_date' => '2021-02-19',
+            'end_date' => '2021-02-24',
+            'name_reports' => ["dashboard"]
+        ];
+
+        $response = $this->postJson('api/dashboard/report', $data);
+
+        $file_name = 'dashboard'. '_' . $data['start_date'] . '_' . $data['end_date'] . '.xlsx';
+
+        Excel::assertDownloaded($file_name, function(DashboardExport $export)
+        {
+            return true;
+        });
+    }
+
+    public function test_export_dashboard_report_failed_should_return_error_message()
     {
         $data = [];
 
-        $response = $this->call('GET', 'api/dashboard/announcements/export', $data);
+        $response = $this->postJson('api/dashboard/report', $data);
         $expected = json_decode($response->content(), true);
 
         $assertion = [
@@ -110,6 +89,9 @@ class DashboardTest extends TestCase
             ],
             "end_date" => [
                 "The end date field is required."
+            ],
+            "name_reports" => [
+                "The name reports field is required."
             ]
         ];
 
@@ -117,41 +99,120 @@ class DashboardTest extends TestCase
         $this->assertEquals($assertion, $expected);
     }
 
-    public function test_export_dashboard_report_with_storage_success_should_return_true()
+    public function test_export_company_announcement_report_success_should_return_true()
     {
         Excel::fake();
 
         $data = [
             'start_date' => '2021-02-19',
-            'end_date' => '2021-02-24'
+            'end_date' => '2021-02-24',
+            'name_reports' => ["company", "announcement"]
         ];
 
-        $response = $this->call('GET', 'api/dashboard/dashboard/export', $data);
+        $file_name = 'SITCC_report.zip';
 
-        $file_name = 'dashboard'. '_' . $data['start_date'] . '-' . $data['end_date'] . '.xlsx';
-        $path = '/reports/dashboard/';
-        $path_file_name = $path.$file_name;
+        $response = $this->postJson('api/dashboard/report', $data);
 
-        Excel::assertStored($path_file_name, 'minio', function(DashboardExport $export)
-        {
-            return true;
-        });
+        $header = $response->headers->get('content-disposition');
+        $response->assertStatus(200);
+        $this->assertEquals($header, "attachment; filename=".$file_name);
     }
 
-    public function test_export_dashboard_report_with_storage_failed_should_return_error_message()
+    public function test_export_company_dashboard_report_success_should_return_true()
     {
-        $data = [];
+        Excel::fake();
 
-        $response = $this->call('GET', 'api/dashboard/dashboard/export', $data);
+        $data = [
+            'start_date' => '2021-02-19',
+            'end_date' => '2021-02-24',
+            'name_reports' => ["company", "dashboard"]
+        ];
+
+        $file_name = 'SITCC_report.zip';
+
+        $response = $this->postJson('api/dashboard/report', $data);
+
+        $header = $response->headers->get('content-disposition');
+        $response->assertStatus(200);
+        $this->assertEquals($header, "attachment; filename=".$file_name);
+    }
+
+    public function test_export_announcement_dashboard_report_success_should_return_true()
+    {
+        Excel::fake();
+
+        $data = [
+            'start_date' => '2021-02-19',
+            'end_date' => '2021-02-24',
+            'name_reports' => ["announcement", "dashboard"]
+        ];
+
+        $file_name = 'SITCC_report.zip';
+
+        $response = $this->postJson('api/dashboard/report', $data);
+
+        $header = $response->headers->get('content-disposition');
+        $response->assertStatus(200);
+        $this->assertEquals($header, "attachment; filename=".$file_name);
+    }
+
+    public function test_export_all_report_success()
+    {
+        Excel::fake();
+
+        $data = [
+            'start_date' => '2021-02-19',
+            'end_date' => '2021-02-24',
+            'name_reports' => ["all"]
+        ];
+
+        $file_name = 'SITCC_report.zip';
+
+        $response = $this->postJson('api/dashboard/report', $data);
+
+        $header = $response->headers->get('content-disposition');
+        $response->assertStatus(200);
+        $this->assertEquals($header, "attachment; filename=".$file_name);
+    }
+
+    public function test_insert_wrong_array_value_should_return_error_message()
+    {
+        Excel::fake();
+
+        $data = [
+            'start_date' => '2021-02-19',
+            'end_date' => '2021-02-24',
+            'name_reports' => ["test"]
+        ];
+
+        $response = $this->postJson('api/dashboard/report', $data);
         $expected = json_decode($response->content(), true);
 
         $assertion = [
-            "start_date" => [
-                "The start date field is required."
+            "message" => "Report not found"
+        ];
+
+        $response->assertStatus(404);
+        $this->assertEquals($assertion, $expected);
+    }
+
+    public function test_insert_array_over_limit_should_return_error_message()
+    {
+        Excel::fake();
+
+        $data = [
+            'start_date' => '2021-02-19',
+            'end_date' => '2021-02-24',
+            'name_reports' => ["company", "announcement", "dashboard", "all"]
+        ];
+
+        $response = $this->postJson('api/dashboard/report', $data);
+        $expected = json_decode($response->content(), true);
+
+        $assertion = [
+            "name_reports" => [
+                "The name reports may not have more than 3 items."
             ],
-            "end_date" => [
-                "The end date field is required."
-            ]
         ];
 
         $response->assertStatus(400);

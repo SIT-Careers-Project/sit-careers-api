@@ -5,6 +5,8 @@ namespace App\Traits;
 use App\Models\Announcement;
 use Carbon\Carbon;
 
+use Throwable;
+
 trait Utils
 {
     public function checkDateToDayBetweenStartAndEnd($data)
@@ -35,5 +37,28 @@ trait Utils
             }
         }
         return 'Not have resume id in announcement';
+    }
+
+    public function DeleteOldFiles()
+    {
+        try {
+            if (glob('../../') == 'SITCC_report.zip') {
+                $unlink_zip = unlink('../..SITCC_report.zip');
+            }
+            $unlink_zip = unlink('SITCC_report.zip');
+            $excel_files = glob('../storage/framework/laravel-excel/*');
+            foreach ($excel_files as $file) {
+                if (is_file($file)) {
+                    $unlink_excel = unlink($file);
+                }
+            }
+        }catch (Throwable $e) {
+            return response()->json([
+                "message" => "Something Wrong !",
+                "error" => $e->getMessage()
+            ], 500);
+        }
+
+        return 'Remove old files';
     }
 }
