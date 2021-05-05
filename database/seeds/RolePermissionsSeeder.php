@@ -35,7 +35,8 @@ class RolePermissionsSeeder extends Seeder
             'update_resume',
             'access_announcement_resume_by_student',
             'create_announcement_resume',
-            'access_notification'
+            'access_notification',
+            'update_notification'
         ];
 
         foreach ($permissionStudent as  $permission) {
