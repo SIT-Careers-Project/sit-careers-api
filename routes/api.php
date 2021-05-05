@@ -82,11 +82,11 @@ Route::group(['middleware' => ['checkAuth']], function () {
         Route::delete('banner', 'BannerController@destroy')->middleware(['role.permission:delete_academic_banner']);
 
         Route::group(['prefix' => 'dashboard', 'middleware' => ['role.permission:access_dashboard']], function () {
-            Route::get('stats', 'DashboardController@getStats');
+            Route::get('stats', 'DashboardController@getStats')->withoutMiddleware(['checkAuth','role.permission:access_dashboard']);
             Route::get('company-types', 'DashboardController@getCompanyTypes');
             Route::get('students/job-positions', 'DashboardController@getStudentJobPositions');
             Route::get('announcements/job-positions', 'DashboardController@getAnnouncementJobPositions');
-            Route::post('report', 'DashboardController@createReportByFilterDate');
+            Route::post('report', 'DashboardController@createReportByFilterDate')->middleware(['role.permission:access_dashboard_admin']);
         });
 
         Route::get('notifications', 'NotificationController@get')->middleware(['role.permission:access_notification']);
