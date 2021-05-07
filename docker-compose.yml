@@ -2,49 +2,32 @@ version: "3.8"
 services:
 
   api:
-    image: 192479299400.dkr.ecr.ap-southeast-1.amazonaws.com/sit-careers-api:api-dev
+    image: 192479299400.dkr.ecr.ap-southeast-1.amazonaws.com/sit-careers-api:api
     build:
       context: .
-      dockerfile: ./docker/api/Dockerfile.dev
+      dockerfile: ./docker/api/Dockerfile
     working_dir: /app
     container_name: sit-careers-api
     restart: always
+    ports:
+        - "9000"
     env_file:
-      - .env
-    volumes:
-      - ./:/app
+      - .sit-cc-api.env
     networks:
       - sit-careers
 
   api-nginx:
-    image: 192479299400.dkr.ecr.ap-southeast-1.amazonaws.com/sit-careers-api:nginx-dev
+    image: 192479299400.dkr.ecr.ap-southeast-1.amazonaws.com/sit-careers-api:nginx
     build:
       context: .
       dockerfile: ./docker/nginx/Dockerfile
     working_dir: /etc/nginx
     container_name: sit-careers-api-nginx
     restart: always
-    volumes:
-      - ./:/app
-      - ./docker/nginx/dev_api.conf:/etc/nginx/conf.d/default.conf
     ports:
       - "80:80"
     networks:
       - sit-careers
-
-  db:
-    image: mariadb:latest
-    restart: always
-    container_name: sit-careers-db
-    volumes:
-        - ./db:/var/lib/mysql
-    ports:
-        - "3306:3306"
-    environment:
-        MYSQL_DATABASE: sitcareers
-        MYSQL_ROOT_PASSWORD: root
-    networks:
-        - sit-careers
 
   phpmyadmin:
       image: phpmyadmin/phpmyadmin:latest
@@ -53,10 +36,7 @@ services:
       ports:
           - "8080:80"
       environment:
-          PMA_HOST: db
-          MYSQL_ROOT_PASSWORD: root
-      depends_on:
-          - db
+          PMA_HOST: ${DB_HOST}
       networks:
           - sit-careers
 
