@@ -6,7 +6,7 @@ RUN apt-get install -y \
         zip \
   && docker-php-ext-install zip
 
-RUN mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"
+RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 
 WORKDIR /app
 ENV APPLICATION_ROOT /app
@@ -35,8 +35,11 @@ COPY composer.json $APPLICATION_ROOT
 RUN composer update --no-scripts
 RUN composer install --no-scripts
 
-RUN chmod 775 -R $APPLICATION_ROOT
-RUN chmod 775 -R $APPLICATION_ROOT/storage/logs
+RUN php artisan config:clear
+
+RUN chown -R www-data:www-data $APPLICATION_ROOT
+RUN chmod 755 -R $APPLICATION_ROOT/storage/
 RUN chmod 775 -R $APPLICATION_ROOT/storage/framework
 RUN chmod 775 -R $APPLICATION_ROOT/public
 
+EXPOSE 9000
