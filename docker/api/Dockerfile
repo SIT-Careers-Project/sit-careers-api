@@ -39,7 +39,7 @@ RUN php artisan config:clear
 
 RUN chown -R www-data:www-data $APPLICATION_ROOT
 RUN chmod 755 -R $APPLICATION_ROOT/storage/
-RUN chmod 775 -R $APPLICATION_ROOT/storage/framework/laravel-excel
+RUN chmod 775 -R $APPLICATION_ROOT/storage/framework
 RUN chmod 775 -R $APPLICATION_ROOT/public
 
 EXPOSE 9000
