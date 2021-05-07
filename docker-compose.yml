@@ -9,6 +9,8 @@ services:
     working_dir: /app
     container_name: sit-careers-api
     restart: always
+    volumes:
+      - api:/app
     ports:
         - "9000"
     env_file:
@@ -24,6 +26,8 @@ services:
     working_dir: /etc/nginx
     container_name: sit-careers-api-nginx
     restart: always
+    volumes:
+      - api:/app
     ports:
       - "80:80"
     networks:
@@ -39,6 +43,9 @@ services:
           PMA_HOST: ${DB_HOST}
       networks:
           - sit-careers
+
+volumes:
+  api:
 
 networks:
   sit-careers:
