@@ -28,6 +28,7 @@ services:
     restart: always
     volumes:
       - api:/app
+      - /var/log/nginx:/var/log/nginx
     ports:
       - "8080:80"
     networks:
