@@ -174,7 +174,7 @@ class DashboardController extends Controller
         } catch (Throwable $e) {
             return response()->json([
                 "message" => "Something Wrong !",
-                "error" => "$e"
+                "error" => $e->getMessage()
             ], 500);
         }
     }
