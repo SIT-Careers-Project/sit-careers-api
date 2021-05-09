@@ -175,6 +175,25 @@ class DashboardTest extends TestCase
         $this->assertEquals($header, "attachment; filename=".$file_name);
     }
 
+    public function test_export_type_all_report_success()
+    {
+        Excel::fake();
+
+        $data = [
+            'start_date' => '2021-02-19',
+            'end_date' => '2021-02-24',
+            'name_reports' => ["dashboard", "announcement", "company"]
+        ];
+
+        $file_name = 'SITCC_report.zip';
+
+        $response = $this->postJson('api/dashboard/report', $data);
+
+        $header = $response->headers->get('content-disposition');
+        $response->assertStatus(200);
+        $this->assertEquals($header, "attachment; filename=".$file_name);
+    }
+
     public function test_insert_wrong_array_value_should_return_error_message()
     {
         Excel::fake();

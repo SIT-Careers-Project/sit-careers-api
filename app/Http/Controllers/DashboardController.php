@@ -119,10 +119,18 @@ class DashboardController extends Controller
         $clean_old_file = $this->DeleteOldFiles();
 
         try {
+            $sort_arr = sort($name_report);
             $zip = new ZipArchive;
 
-            if (array_slice($name_report, 0, 2) == ['company', 'announcement'] or
-                array_slice($name_report, 0, 2) == ['announcement', 'company']) {
+            if ($name_report[0] == 'all' or array_slice($name_report, 0, 3) == ['announcement', 'company', 'dashboard']) {
+                if ($zip->open($file_name_zip, ZipArchive::CREATE) === true) {
+                    $zip->addFile($this->getCompaniesByFilterDate($data)->getFile(), $file_company);
+                    $zip->addFile($this->getAnnouncementsByFilterDate($data)->getFile(), $file_announcement);
+                    $zip->addFile($this->getDashboardByFilterDate($data)->getFile(), $file_dashboard);
+                    $zip->close();
+                }
+                return response()->download($file_name_zip);
+            } elseif (array_slice($name_report, 0, 2) == ['announcement', 'company']) {
                 if ($zip->open($file_name_zip, ZipArchive::CREATE) === true) {
                     $zip->addFile($this->getCompaniesByFilterDate($data)->getFile(), $file_company);
                     $zip->addFile($this->getAnnouncementsByFilterDate($data)->getFile(), $file_announcement);
@@ -130,8 +138,7 @@ class DashboardController extends Controller
                 }
                 return response()->download($file_name_zip);
 
-            } elseif (array_slice($name_report, 0, 2) == ['company', 'dashboard'] or
-                    array_slice($name_report, 0, 2) == ['dashboard', 'company']) {
+            } elseif (array_slice($name_report, 0, 2) == ['company', 'dashboard']) {
                 if ($zip->open($file_name_zip, ZipArchive::CREATE) === true) {
                     $zip->addFile($this->getCompaniesByFilterDate($data)->getFile(), $file_company);
                     $zip->addFile($this->getDashboardByFilterDate($data)->getFile(), $file_dashboard);
@@ -139,8 +146,7 @@ class DashboardController extends Controller
                 }
                 return response()->download($file_name_zip);
 
-            } elseif (array_slice($name_report, 0, 2) == ['announcement', 'dashboard'] or
-                array_slice($name_report, 0, 2) == ['dashboard', 'announcement']) {
+            } elseif (array_slice($name_report, 0, 2) == ['announcement', 'dashboard']){
                 if ($zip->open($file_name_zip, ZipArchive::CREATE) === true) {
                     $zip->addFile($this->getAnnouncementsByFilterDate($data)->getFile(), $file_announcement);
                     $zip->addFile($this->getDashboardByFilterDate($data)->getFile(), $file_dashboard);
@@ -160,14 +166,6 @@ class DashboardController extends Controller
                 $dashboard_excel = $this->getDashboardByFilterDate($data)->getFile();
                 return response()->download($dashboard_excel, $file_dashboard);
 
-            } elseif ($name_report[0] == 'all') {
-                if ($zip->open($file_name_zip, ZipArchive::CREATE) === true) {
-                    $zip->addFile($this->getCompaniesByFilterDate($data)->getFile(), $file_company);
-                    $zip->addFile($this->getAnnouncementsByFilterDate($data)->getFile(), $file_announcement);
-                    $zip->addFile($this->getDashboardByFilterDate($data)->getFile(), $file_dashboard);
-                    $zip->close();
-                }
-                return response()->download($file_name_zip);
             } else {
                 return response()->json([
                     "message" => "Report not found",
