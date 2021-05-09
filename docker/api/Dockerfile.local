@@ -37,6 +37,6 @@ RUN composer install --no-scripts
 
 RUN chmod 775 -R $APPLICATION_ROOT
 RUN chmod 775 -R $APPLICATION_ROOT/storage/logs
-RUN chmod 775 -R $APPLICATION_ROOT/storage/framework
+RUN chmod 777 -R $APPLICATION_ROOT/storage/framework
 RUN chmod 775 -R $APPLICATION_ROOT/public
 
