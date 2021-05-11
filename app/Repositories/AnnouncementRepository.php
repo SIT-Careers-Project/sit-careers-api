@@ -83,7 +83,7 @@ class AnnouncementRepository implements AnnouncementRepositoryInterface
     {
         $dataOwner = DataOwner::where('user_id', $data['my_user_id'])->get();
         $announcements = [];
-        for ($i=0; $i < count($dataOwner); $i++) { 
+        for ($i=0; $i < count($dataOwner); $i++) {
             $announcements[$i] = Announcement::join('companies', 'companies.company_id', '=', 'announcements.company_id')
                             ->join('job_types', 'job_types.announcement_id', '=', 'announcements.announcement_id')
                             ->join('job_positions', 'job_positions.job_position_id', '=', 'announcements.job_position_id')
@@ -149,10 +149,14 @@ class AnnouncementRepository implements AnnouncementRepositoryInterface
         $announcement->end_business_time = $data['end_business_time'];
         $announcement->save();
 
-        $jobType = new JobType();
-        $jobType->announcement_id = $announcement->announcement_id;
-        $jobType->job_type = $data['job_type'];
-        $jobType->save();
+        $insertedJobType['job_type'] = [];
+        for ($i=0; $i < count($data['job_type']); $i++) {
+            $jobType = new JobType();
+            $jobType->announcement_id = $announcement->announcement_id;
+            $jobType->job_type = $data['job_type'][$i];
+            $insertedJobType['job_type'][$i] = $data['job_type'][$i];
+            $jobType->save();
+        }
 
         $history = new History();
         $history->user_id = $data['my_user_id'];
@@ -160,7 +164,7 @@ class AnnouncementRepository implements AnnouncementRepositoryInterface
         $history->status = 'created';
         $history->save();
 
-        return array_merge($announcement->toArray(), $jobType->toArray(), $address->toArray());
+        return array_merge($announcement->toArray(), $insertedJobType, $address->toArray());
     }
 
     public function updateAnnouncement($data)
@@ -185,9 +189,13 @@ class AnnouncementRepository implements AnnouncementRepositoryInterface
         $announcement->updated_at = Carbon::now();
         $announcement->save();
 
-        $jobType = JobType::where('announcement_id', $data['announcement_id'])->first();
-        $jobType->job_type = $data['job_type'];
-        $jobType->save();
+        $updatedJobType['job_type'] = [];
+        for ($i=0; $i < count($data['job_type']); $i++) {
+            $jobType = JobType::where('announcement_id', $data['announcement_id'])->get();
+            $jobType[$i]->job_type = $data['job_type'][$i];
+            $updatedJobType['job_type'][$i] = $data['job_type'][$i];
+            $jobType[$i]->save();
+        }
 
         $address = Address::where('address_type', 'announcement')
                 ->where('address_id', $data['address_id'])->first();
@@ -207,20 +215,22 @@ class AnnouncementRepository implements AnnouncementRepositoryInterface
         $history->status = 'updated';
         $history->save();
 
-        return array_merge($announcement->toArray(), $jobType->toArray(), $address->toArray());
+        return array_merge($announcement->toArray(), $updatedJobType, $address->toArray());
     }
 
     public function deleteAnnouncementById($id)
     {
         $announcement = Announcement::find($id)->first();
 
-        $jobType = JobType::where('announcement_id', $id)->first();
+        $jobType = JobType::where('announcement_id', $id)->get()->toArray();
         $address = Address::where('address_id', $announcement->address_id)->first();
 
         if($announcement && $jobType && $address){
             $deleted_address = $address->delete();
             $deleted_announcement = $announcement->delete();
-            $deleted_jobType = $jobType->delete();
+            for ($i=0; $i < count($jobType); $i++) {
+                $deleted_jobType = $jobType[$i]->delete();
+            }
             return $deleted_announcement && $deleted_jobType && $deleted_address;
         }
 
