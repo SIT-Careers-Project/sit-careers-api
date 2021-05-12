@@ -129,48 +129,45 @@ class DashboardController extends Controller
                     $zip->addFile($this->getDashboardByFilterDate($data)->getFile(), $file_dashboard);
                     $zip->close();
                 }
-                return response()->download($file_name_zip);
             } elseif (array_slice($name_report, 0, 2) == ['announcement', 'company']) {
                 if ($zip->open($file_name_zip, ZipArchive::CREATE) === true) {
                     $zip->addFile($this->getCompaniesByFilterDate($data)->getFile(), $file_company);
                     $zip->addFile($this->getAnnouncementsByFilterDate($data)->getFile(), $file_announcement);
                     $zip->close();
                 }
-                return response()->download($file_name_zip);
-
             } elseif (array_slice($name_report, 0, 2) == ['company', 'dashboard']) {
                 if ($zip->open($file_name_zip, ZipArchive::CREATE) === true) {
                     $zip->addFile($this->getCompaniesByFilterDate($data)->getFile(), $file_company);
                     $zip->addFile($this->getDashboardByFilterDate($data)->getFile(), $file_dashboard);
                     $zip->close();
                 }
-                return response()->download($file_name_zip);
-
             } elseif (array_slice($name_report, 0, 2) == ['announcement', 'dashboard']){
                 if ($zip->open($file_name_zip, ZipArchive::CREATE) === true) {
                     $zip->addFile($this->getAnnouncementsByFilterDate($data)->getFile(), $file_announcement);
                     $zip->addFile($this->getDashboardByFilterDate($data)->getFile(), $file_dashboard);
                     $zip->close();
                 }
-                return response()->download($file_name_zip);
-
             } elseif ($name_report[0] == 'company') {
-                $companies_excel = $this->getCompaniesByFilterDate($data)->getFile();
-                return response()->download($companies_excel, $file_company);
-
+                if ($zip->open($file_name_zip, ZipArchive::CREATE) === true) {
+                    $zip->addFile($this->getCompaniesByFilterDate($data)->getFile(), $file_company);
+                    $zip->close();
+                }
             } elseif ($name_report[0] == 'announcement') {
-                $announcement_excel = $this->getAnnouncementsByFilterDate($data)->getFile();
-                return response()->download($announcement_excel, $file_announcement);
-
+                if ($zip->open($file_name_zip, ZipArchive::CREATE) === true) {
+                    $zip->addFile($this->getAnnouncementsByFilterDate($data)->getFile(), $file_announcement);
+                    $zip->close();
+                }
             } elseif ($name_report[0] == 'dashboard') {
-                $dashboard_excel = $this->getDashboardByFilterDate($data)->getFile();
-                return response()->download($dashboard_excel, $file_dashboard);
-
+                if ($zip->open($file_name_zip, ZipArchive::CREATE) === true) {
+                    $zip->addFile($this->getDashboardByFilterDate($data)->getFile(), $file_dashboard);
+                    $zip->close();
+                }
             } else {
                 return response()->json([
                     "message" => "Report not found",
                 ], 404);;
             }
+            return response()->download($file_name_zip)->deleteFileAfterSend(true);
         } catch (Throwable $e) {
             return response()->json([
                 "message" => "Something Wrong !",
