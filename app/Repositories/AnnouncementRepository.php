@@ -19,10 +19,21 @@ class AnnouncementRepository implements AnnouncementRepositoryInterface
     {
         $announcement = Announcement::join('companies', 'companies.company_id', '=', 'announcements.company_id')
                         ->join('job_positions', 'job_positions.job_position_id', '=', 'announcements.job_position_id')
-                        ->join('job_types', 'job_types.announcement_id', '=', 'announcements.announcement_id')
                         ->join('addresses', 'addresses.address_id', '=', 'announcements.address_id')
                         ->where('announcements.announcement_id', $id)
-                        ->first();
+                        ->get();
+
+        $job_types = Announcement::join('job_types', 'job_types.announcement_id', '=', 'announcements.announcement_id')
+                    ->where('announcements.announcement_id', $id)
+                    ->select('job_types.job_type')
+                    ->get();
+
+        $job_type_arr['job_type'] = [];
+        foreach ($job_types as $job_type) {
+            array_push($job_type_arr['job_type'], $job_type['job_type']);
+        }
+
+        $announcement = array_merge($announcement[0]->toArray(), $job_type_arr);
         return $announcement;
     }
 
@@ -55,6 +66,7 @@ class AnnouncementRepository implements AnnouncementRepositoryInterface
                             'addresses.address_type',
                             'addresses.postal_code'
                         )->get();
+
         return $announcements;
     }
 
