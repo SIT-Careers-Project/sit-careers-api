@@ -41,7 +41,6 @@ class AnnouncementRepository implements AnnouncementRepositoryInterface
     {
         $announcements = Announcement::join('addresses', 'addresses.address_id', '=', 'announcements.address_id')
                         ->join('companies', 'companies.company_id', '=', 'announcements.company_id')
-                        ->join('job_types', 'job_types.announcement_id', '=', 'announcements.announcement_id')
                         ->join('job_positions', 'job_positions.job_position_id', '=', 'announcements.job_position_id')
                         ->where('addresses.address_type', 'announcement')
                         ->select(
@@ -51,8 +50,6 @@ class AnnouncementRepository implements AnnouncementRepositoryInterface
                             'companies.company_name_en',
                             'companies.company_name_th',
                             'companies.logo',
-                            'job_types.job_type',
-                            'job_types.job_id',
                             'job_positions.job_position',
                             'job_positions.job_position_id',
                             'addresses.address_id',
@@ -67,7 +64,13 @@ class AnnouncementRepository implements AnnouncementRepositoryInterface
                             'addresses.postal_code'
                         )->get();
 
-        return $announcements;
+        $grouped = $announcements->map(function ($announcement, $key) {
+            $jobType = JobType::where('announcement_id', $announcement['announcement_id']);
+            $announcement['job_type'] = $jobType->pluck('job_type');
+            return $announcement;
+        });
+
+        return $grouped;
     }
 
     public function getAnnouncementByCompanyId($company_id)
