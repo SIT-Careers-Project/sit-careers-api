@@ -85,7 +85,7 @@ class AnnouncementResumesController extends Controller
                 }
             }
 
-            $announcement = $this->announcement->getAnnouncementById($data['announcement_id']);
+            $announcement = $this->announcement->getAnnouncementById($data['announcement_id'])->first();
             if ($this->checkDateToDayBetweenStartAndEnd($announcement)) {
                 $create_application = $this->announcement_resume->CreateAnnouncementResume($data);
                 $send_mail_application = $this->announcement_resume->SendMailNotificationAnnouncementResume($data);
