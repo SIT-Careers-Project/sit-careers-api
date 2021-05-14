@@ -21,6 +21,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::post('login', 'AuthController@login');
 Route::post('/sit-login', 'AuthController@SITLogin');
 Route::get('/email/verify/{user_id}', 'AuthController@verify')->name('verification.verify');
+Route::get('banners', 'BannerController@get');
 
 Route::group(['middleware' => ['checkAuth']], function () {
     // Route::middleware(['role.permission:admin'])->group(function () {
@@ -76,7 +77,6 @@ Route::group(['middleware' => ['checkAuth']], function () {
 
         Route::get('histories', 'HistoryController@get')->middleware(['role.permission:access_history']);
 
-        Route::get('banners', 'BannerController@get')->middleware(['role.permission:access_academic_banner']);
         Route::get('banner/{banner_id}', 'BannerController@getBannerById')->middleware(['role.permission:access_academic_banner']);
         Route::post('banner', 'BannerController@create')->middleware(['role.permission:create_academic_banner']);
         Route::delete('banner', 'BannerController@destroy')->middleware(['role.permission:delete_academic_banner']);
