@@ -11,7 +11,7 @@ trait Utils
 {
     public function checkDateToDayBetweenStartAndEnd($data)
     {
-        return Carbon::now()->between($data['start_date'], $data['end_date']);
+        return Carbon::now()->between($data->start_date, $data->end_date);
     }
 
     public function checkDueDateForAnnouncement()

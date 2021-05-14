@@ -19,10 +19,15 @@ class AnnouncementRepository implements AnnouncementRepositoryInterface
     {
         $announcement = Announcement::join('companies', 'companies.company_id', '=', 'announcements.company_id')
                         ->join('job_positions', 'job_positions.job_position_id', '=', 'announcements.job_position_id')
-                        ->join('job_types', 'job_types.announcement_id', '=', 'announcements.announcement_id')
                         ->join('addresses', 'addresses.address_id', '=', 'announcements.address_id')
                         ->where('announcements.announcement_id', $id)
-                        ->first();
+                        ->get();
+
+        $announcement_mapping = $announcement->map(function ($announcement) {
+            $jobType = JobType::where('announcement_id', $announcement['announcement_id']);
+            $announcement['job_type'] = $jobType->pluck('job_type');
+        });
+
         return $announcement;
     }
 
@@ -30,7 +35,6 @@ class AnnouncementRepository implements AnnouncementRepositoryInterface
     {
         $announcements = Announcement::join('addresses', 'addresses.address_id', '=', 'announcements.address_id')
                         ->join('companies', 'companies.company_id', '=', 'announcements.company_id')
-                        ->join('job_types', 'job_types.announcement_id', '=', 'announcements.announcement_id')
                         ->join('job_positions', 'job_positions.job_position_id', '=', 'announcements.job_position_id')
                         ->where('addresses.address_type', 'announcement')
                         ->select(
@@ -40,8 +44,6 @@ class AnnouncementRepository implements AnnouncementRepositoryInterface
                             'companies.company_name_en',
                             'companies.company_name_th',
                             'companies.logo',
-                            'job_types.job_type',
-                            'job_types.job_id',
                             'job_positions.job_position',
                             'job_positions.job_position_id',
                             'addresses.address_id',
@@ -55,13 +57,19 @@ class AnnouncementRepository implements AnnouncementRepositoryInterface
                             'addresses.address_type',
                             'addresses.postal_code'
                         )->get();
+
+        $grouped = $announcements->map(function ($announcement) {
+            $jobType = JobType::where('announcement_id', $announcement['announcement_id']);
+            $announcement['job_type'] = $jobType->pluck('job_type');
+            return $announcement;
+        });
+
         return $announcements;
     }
 
     public function getAnnouncementByCompanyId($company_id)
     {
         $announcements = Announcement::join('companies', 'companies.company_id', '=', 'announcements.company_id')
-                        ->join('job_types', 'job_types.announcement_id', '=', 'announcements.announcement_id')
                         ->join('job_positions', 'job_positions.job_position_id', '=', 'announcements.job_position_id')
                         ->where('announcements.company_id', $company_id)
                         ->select(
@@ -73,9 +81,13 @@ class AnnouncementRepository implements AnnouncementRepositoryInterface
                             'companies.company_name_en',
                             'companies.logo',
                             'job_positions.job_position',
-                            'job_types.job_type'
-                        )
-                        ->get();
+                        )->get();
+
+        $announcement_mapping = $announcements->map(function ($announcement) {
+            $jobType = JobType::where('announcement_id', $announcement['announcement_id']);
+            $announcement['job_type'] = $jobType->pluck('job_type');
+        });
+
         return $announcements;
     }
 
@@ -83,9 +95,8 @@ class AnnouncementRepository implements AnnouncementRepositoryInterface
     {
         $dataOwner = DataOwner::where('user_id', $data['my_user_id'])->get();
         $announcements = [];
-        for ($i=0; $i < count($dataOwner); $i++) { 
+        for ($i=0; $i < count($dataOwner); $i++) {
             $announcements[$i] = Announcement::join('companies', 'companies.company_id', '=', 'announcements.company_id')
-                            ->join('job_types', 'job_types.announcement_id', '=', 'announcements.announcement_id')
                             ->join('job_positions', 'job_positions.job_position_id', '=', 'announcements.job_position_id')
                             ->where('announcements.company_id', $dataOwner[$i]->company_id)
                             ->select(
@@ -97,10 +108,16 @@ class AnnouncementRepository implements AnnouncementRepositoryInterface
                                 'companies.company_name_en',
                                 'companies.logo',
                                 'job_positions.job_position',
-                                'job_types.job_type'
                             )
                             ->get();
+
+            $announcement_mapping = $announcements[$i]->map(function ($announcement) {
+                $jobType = JobType::where('announcement_id', $announcement['announcement_id']);
+                $announcement['job_type'] = $jobType->pluck('job_type');
+            });
         }
+
+
         return collect($announcements)->flatten(1);
     }
 
@@ -149,10 +166,14 @@ class AnnouncementRepository implements AnnouncementRepositoryInterface
         $announcement->end_business_time = $data['end_business_time'];
         $announcement->save();
 
-        $jobType = new JobType();
-        $jobType->announcement_id = $announcement->announcement_id;
-        $jobType->job_type = $data['job_type'];
-        $jobType->save();
+        $insertedJobType['job_type'] = [];
+        for ($i=0; $i < count($data['job_type']); $i++) {
+            $jobType = new JobType();
+            $jobType->announcement_id = $announcement->announcement_id;
+            $jobType->job_type = $data['job_type'][$i];
+            $insertedJobType['job_type'][$i] = $jobType;
+            $jobType->save();
+        }
 
         $history = new History();
         $history->user_id = $data['my_user_id'];
@@ -160,7 +181,7 @@ class AnnouncementRepository implements AnnouncementRepositoryInterface
         $history->status = 'created';
         $history->save();
 
-        return array_merge($announcement->toArray(), $jobType->toArray(), $address->toArray());
+        return array_merge($announcement->toArray(), $insertedJobType, $address->toArray());
     }
 
     public function updateAnnouncement($data)
@@ -185,9 +206,21 @@ class AnnouncementRepository implements AnnouncementRepositoryInterface
         $announcement->updated_at = Carbon::now();
         $announcement->save();
 
-        $jobType = JobType::where('announcement_id', $data['announcement_id'])->first();
-        $jobType->job_type = $data['job_type'];
-        $jobType->save();
+        $updatedJobType['job_type'] = [];
+        $jobType = JobType::where('announcement_id', $data['announcement_id'])->get();
+        if ($jobType) {
+            for ($i=0; $i < count($jobType); $i++) {
+                $deleted_jobType = $jobType[$i]->forceDelete();
+            }
+        }
+
+        for ($i=0; $i < count($data['job_type']); $i++) {
+            $jobType = new JobType();
+            $jobType->announcement_id = $announcement->announcement_id;
+            $jobType->job_type = $data['job_type'][$i];
+            $updatedJobType['job_type'][$i] = $jobType;
+            $jobType->save();
+        }
 
         $address = Address::where('address_type', 'announcement')
                 ->where('address_id', $data['address_id'])->first();
@@ -207,23 +240,25 @@ class AnnouncementRepository implements AnnouncementRepositoryInterface
         $history->status = 'updated';
         $history->save();
 
-        return array_merge($announcement->toArray(), $jobType->toArray(), $address->toArray());
+        return array_merge($announcement->toArray(), $updatedJobType, $address->toArray());
     }
 
     public function deleteAnnouncementById($id)
     {
         $announcement = Announcement::find($id)->first();
 
-        $jobType = JobType::where('announcement_id', $id)->first();
+        $jobType = JobType::where('announcement_id', $id)->get();
         $address = Address::where('address_id', $announcement->address_id)->first();
 
-        if($announcement && $jobType && $address){
+        if($announcement&& $jobType->isNotEmpty() && $address){
+            for ($i=0; $i < count($jobType); $i++) {
+                $deleted_jobType = $jobType[$i]->delete();
+            }
             $deleted_address = $address->delete();
             $deleted_announcement = $announcement->delete();
-            $deleted_jobType = $jobType->delete();
             return $deleted_announcement && $deleted_jobType && $deleted_address;
         }
 
-        return "Find not found announcement or job type or address or business day.";
+        return "Find not found announcement or job type or address";
     }
 }
