@@ -215,10 +215,11 @@ class AnnouncementRepository implements AnnouncementRepositoryInterface
             }
         }
 
-        for ($i=0; $i < count($data['job_type']); $i++) {
+        $jsonJobType = json_decode($data['job_type']);
+        for ($i=0; $i < count($jsonJobType); $i++) {
             $jobType = new JobType();
             $jobType->announcement_id = $announcement->announcement_id;
-            $jobType->job_type = $data['job_type'][$i];
+            $jobType->job_type = $jsonJobType[$i];
             $updatedJobType['job_type'][$i] = $jobType;
             $jobType->save();
         }
