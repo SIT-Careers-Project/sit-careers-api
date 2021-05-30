@@ -42,9 +42,9 @@ class AnnouncementTest extends TestCase
         ])->toArray();
 
         $data['my_user_id'] = $user['user_id'];
-        $data['job_type'] = [
+        $data['job_type'] = json_encode([
             $jobType_1['job_type'],
-        ];
+        ]);
         $data['priority'] = '-';
         $data['end_date'] = '2021-03-31 17:00:00';
         $data = array_merge($data, $address);
@@ -88,11 +88,11 @@ class AnnouncementTest extends TestCase
         ])->toArray();
 
         $data['my_user_id'] = $user['user_id'];
-        $data['job_type'] = [
+        $data['job_type'] = json_encode([
             $jobType_1['job_type'],
             $jobType_2['job_type'],
             $jobType_3['job_type']
-        ];
+        ]);
 
         $data['priority'] = '-';
         $data['end_date'] = '2021-03-31 17:00:00';
@@ -125,9 +125,9 @@ class AnnouncementTest extends TestCase
         ]);
 
         $data['my_user_id'] = $user['user_id'];
-        $data['job_type'] = [
+        $data['job_type'] = json_encode([
             $jobType['job_type']
-        ];
+        ]);
         $data['priority'] = '-';
         $data['end_date'] = '2021-03-31 17:00:00';
         $data = array_merge($data, $address);
@@ -171,9 +171,9 @@ class AnnouncementTest extends TestCase
         ]);
 
         $data['my_user_id'] = $user['user_id'];
-        $data['job_type'] = [
+        $data['job_type'] = json_encode([
             $jobType['job_type']
-        ];
+        ]);
         $data['priority'] = '-';
         $data['end_date'] = '2021-03-31 17:00:00';
         $data = array_merge($data, $address);
@@ -218,10 +218,10 @@ class AnnouncementTest extends TestCase
         ])->toArray();
 
         $data['my_user_id'] = $user['user_id'];
-        $data['job_type'] = [
+        $data['job_type'] = json_encode([
             $jobType_1['job_type'],
             $jobType_2['job_type']
-        ];
+        ]);
         $data = array_merge($data, $address);
 
         $response = $this->postJson('api/academic-industry/announcement', $data);
@@ -259,14 +259,15 @@ class AnnouncementTest extends TestCase
         $data['my_user_id'] = $user['user_id'];
         $data['announcement_title'] = 'รับสมัครงานตำแหน่ง UX/UI';
         $data['job_description'] = 'ต้องการ UX/UI';
-        $data['job_type'] = [
+        $data['job_type'] = json_encode([
             $jobType_1['job_type']
-        ];
+        ]);
         $data['priority'] = '-';
         $data['end_date'] = '2021-03-31 17:00:00';
         $data = array_merge($data, $address);
 
         $response = $this->putJson('api/academic-industry/announcement', $data);
+        // dd($response);
         $response->assertStatus(200);
 
         $response_arr = json_decode($response->content(), true);
@@ -301,10 +302,10 @@ class AnnouncementTest extends TestCase
         $data['my_user_id'] = $user['user_id'];
         $data['announcement_title'] = 'รับสมัครงานตำแหน่ง UX/UI';
         $data['job_description'] = 'ต้องการ UX/UI';
-        $data['job_type'] = [
+        $data['job_type'] = json_encode([
             $jobType_1['job_type'],
             $jobType_2['job_type']
-        ];
+        ]);
         $data['priority'] = '-';
         $data['end_date'] = '2021-03-31 17:00:00';
         $data = array_merge($data, $address);
@@ -340,10 +341,10 @@ class AnnouncementTest extends TestCase
 
         $data = array_diff($data, array($data['announcement_id']));
         $data['my_user_id'] = $user['user_id'];
-        $data['job_type'] = [
+        $data['job_type'] = json_encode([
             $jobType_1['job_type'],
             $jobType_2['job_type']
-        ];
+        ]);
 
         $response = $this->putJson('api/academic-industry/announcement', $data);
         $expected = json_decode($response->content(), true);
@@ -387,9 +388,9 @@ class AnnouncementTest extends TestCase
             'address_type' => 'announcement'
         ]);
 
-        $data['job_type'] = [
+        $data['job_type'] = json_encode([
             $jobType['job_type']
-        ];
+        ]);
 
         $get_announcement_id = [
             'announcement_id' => $data['announcement_id']
