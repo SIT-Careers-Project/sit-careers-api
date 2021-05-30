@@ -38,10 +38,29 @@ docker-compose -f docker-compose.local.yml up
 ```bash
 docker restart sit-careers-composer
 ```
-If you face error `PermissionError on db folder` Please use
+If you want to exec to container api use
 ```bash
-sudo chown -R $USER:$USER db/
+docker exec -it sit-careers-api bash
+```
+###### Testing on local
+1. Copy .env.example to .env.testing and Change database
+```bash
+cp .env.example .env.testing
+
+DB_HOST=db
+DB_DATABASE=sitcareers_testing
+```
+> Don't forget update DB_PASSWORD
+
+2. Exec to container api
+```bash
+docker exec -it sit-careers-api bash
+```
+3. Run test
+```bash
+php artisan test --env=testing
 ```
 
+> Note: DB_DATABASE on local have 2 databases: `sitcareers`, `sitcareers_testing`
 -----
 Enjoy !! ✌

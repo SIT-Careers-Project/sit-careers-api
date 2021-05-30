@@ -26,7 +26,7 @@ return [
     |
     */
 
-    'cloud' => env('FILESYSTEM_CLOUD', 's3'),
+    'cloud' => env('FILESYSTEM_CLOUD', 'minio'),
 
     /*
     |--------------------------------------------------------------------------
@@ -55,14 +55,15 @@ return [
             'visibility' => 'public',
         ],
 
-        's3' => [
+        'minio' => [
             'driver' => 's3',
-            'key' => env('AWS_ACCESS_KEY_ID'),
-            'secret' => env('AWS_SECRET_ACCESS_KEY'),
-            'region' => env('AWS_DEFAULT_REGION'),
-            'bucket' => env('AWS_BUCKET'),
-            'url' => env('AWS_URL'),
-            'endpoint' => env('AWS_ENDPOINT'),
+            'key' => env('MINIO_KEY', ''),
+            'secret' => env('MINIO_SECRET', ''),
+            'region' => env('AWS_DEFAULT_REGION', ''),
+            'use_path_style_endpoint' => true,
+            'bucket' => env('MINIO_BUCKET', ''),
+            'url' => env('AWS_URL', ''),
+            'endpoint' => env('MINIO_ENDPOINT'),
         ],
 
     ],

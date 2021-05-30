@@ -1,0 +1,45 @@
+version: "3.8"
+services:
+
+  api:
+    image: 192479299400.dkr.ecr.ap-southeast-1.amazonaws.com/sit-careers-api:api-dev-latest
+    build:
+      context: .
+      dockerfile: ./docker/api/Dockerfile.dev
+    working_dir: /app
+    container_name: sit-careers-api
+    restart: always
+    ports:
+        - "9000"
+    env_file:
+      - .sit-cc-api.env
+    networks:
+      - sit-careers
+
+  api-nginx:
+    image: 192479299400.dkr.ecr.ap-southeast-1.amazonaws.com/sit-careers-api:nginx-dev
+    build:
+      context: .
+      dockerfile: ./docker/nginx/Dockerfile.dev
+    working_dir: /etc/nginx
+    container_name: sit-careers-api-nginx
+    restart: always
+    ports:
+      - "8080:80"
+    networks:
+      - sit-careers
+
+  phpmyadmin:
+      image: phpmyadmin/phpmyadmin:latest
+      restart: always
+      container_name: sit-careers-myadmin
+      ports:
+          - "8081:80"
+      environment:
+          PMA_HOST: ${DB_HOST}
+      networks:
+          - sit-careers
+
+networks:
+  sit-careers:
+    driver: bridge

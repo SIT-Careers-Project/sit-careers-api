@@ -1,0 +1,30 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      docker: 19
+  pre_build:
+    commands:
+      - echo Logging in Docker Hub
+      - docker login --username $USER_DOCKER_HUB -p $PASSWORD_DOCKER_HUB
+      - echo Run Test started on `date`
+      - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
+      - IMAGE_TAG=${COMMIT_HASH:=latest}
+      - cp $CODEBUILD_SRC_DIR_TESTING/.env.testing $CODEBUILD_SRC_DIR/.env.testing
+      - docker-compose -f docker-compose.test.yml up -d db
+  build:
+    commands:
+      - echo Build started on `date`
+      - echo Building the Docker image...
+      - docker build -t sit-careers-api:api-test-$IMAGE_TAG -f ./docker/api/Dockerfile.dev .
+  post_build:
+    commands:
+      - echo Run Unit Tests...
+      - export IMAGE_TAG=${IMAGE_TAG}; docker-compose -f docker-compose.test.yml run --rm api php artisan test --env=testing
+      - docker-compose -f docker-compose.test.yml down
+
+cache:
+  paths:
+    - 'vendor/*'
+    - 'db/*'

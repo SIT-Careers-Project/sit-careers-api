@@ -56,6 +56,13 @@ return [
 
     'asset_url' => env('ASSET_URL', null),
 
+    'SIT_SSO_URL' => env('SIT_SSO_URL', ''),
+    'SIT_SSO_STATE' => env('SIT_SSO_STATE', ''),
+    'SIT_SSO_REDIRECT' => env('SIT_SSO_REDIRECT', ''),
+    'SIT_SSO_CLIENT_ID' => env('SIT_SSO_CLIENT_ID', ''),
+    'SIT_SSO_SECRET' => env('SIT_SSO_SECRET', ''),
+
+
     /*
     |--------------------------------------------------------------------------
     | Application Timezone
@@ -67,7 +74,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => 'Asia/Bangkok',
 
     /*
     |--------------------------------------------------------------------------
@@ -106,7 +113,7 @@ return [
     |
     */
 
-    'faker_locale' => 'en_US',
+    'faker_locale' => 'th_TH',
 
     /*
     |--------------------------------------------------------------------------
@@ -161,6 +168,7 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
+        Maatwebsite\Excel\ExcelServiceProvider::class,
 
         /*
          * Package Service Providers...
@@ -204,6 +212,7 @@ return [
         'DB' => Illuminate\Support\Facades\DB::class,
         'Eloquent' => Illuminate\Database\Eloquent\Model::class,
         'Event' => Illuminate\Support\Facades\Event::class,
+        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
         'File' => Illuminate\Support\Facades\File::class,
         'Gate' => Illuminate\Support\Facades\Gate::class,
         'Hash' => Illuminate\Support\Facades\Hash::class,

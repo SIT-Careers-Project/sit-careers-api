@@ -1,0 +1,51 @@
+version: 0.2
+
+env:
+  variables:
+    REPOSITORY_URI: "192479299400.dkr.ecr.ap-southeast-1.amazonaws.com/sit-careers-api"
+
+phases:
+  install:
+    runtime-versions:
+      docker: 19
+  pre_build:
+    commands:
+      - echo Logging in Docker Hub
+      - docker login --username $USER_DOCKER_HUB -p $PASSWORD_DOCKER_HUB
+      - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
+      - IMAGE_TAG=${COMMIT_HASH:=latest}
+  build:
+    commands:
+      - echo Build started on `date`
+      - echo Building the Docker image...
+      - docker build -t $REPOSITORY_URI:api-dev-$IMAGE_TAG -f ./docker/api/Dockerfile.dev .
+      - docker build -t $REPOSITORY_URI:nginx-dev-$IMAGE_TAG -f ./docker/nginx/Dockerfile.dev .
+      - docker tag $REPOSITORY_URI:api-dev-$IMAGE_TAG $REPOSITORY_URI:api-dev-latest
+      - docker tag $REPOSITORY_URI:api-dev-$IMAGE_TAG $REPOSITORY_URI:api-dev-test-$IMAGE_TAG
+      - docker tag $REPOSITORY_URI:nginx-dev-$IMAGE_TAG $REPOSITORY_URI:nginx-dev-latest
+  post_build:
+    commands:
+      - echo Logging in to Amazon ECR...
+      - $(aws ecr get-login --region $AWS_DEFAULT_REGION --no-include-email)
+      - echo Build completed on `date`
+      - echo Pushing the Docker images...
+      - docker push $REPOSITORY_URI:api-dev-$IMAGE_TAG
+      - docker push $REPOSITORY_URI:nginx-dev-$IMAGE_TAG
+      - docker push $REPOSITORY_URI:api-dev-latest
+      - docker push $REPOSITORY_URI:api-dev-test-$IMAGE_TAG
+      - docker push $REPOSITORY_URI:nginx-dev-latest
+      - echo Writing image definitions file...
+      - printf '[{"name":"sit-careers-api","imageUri":"%s"},' $REPOSITORY_URI:api-dev-$IMAGE_TAG > imagedefinitions.json
+      - printf '{"name":"sit-careers-api-nginx","imageUri":"%s"}]' $REPOSITORY_URI:nginx-dev-$IMAGE_TAG >> imagedefinitions.json
+      - echo Writing image definitions for testing file...
+      - printf '[{"name":"sit-careers-api-dev-test","imageUri":"%s"},' $REPOSITORY_URI:api-dev-test-$IMAGE_TAG > imagedefinitionstesting.json
+      - printf '{"name":"sit-careers-api-nginx","imageUri":"%s"}]' $REPOSITORY_URI:nginx-dev-$IMAGE_TAG >> imagedefinitionstesting.json
+
+artifacts:
+    files:
+      - imagedefinitions.json
+      - imagedefinitionstesting.json
+
+cache:
+  paths:
+    - 'vendor/*'

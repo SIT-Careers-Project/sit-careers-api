@@ -1,0 +1,28 @@
+version: "3.8"
+services:
+
+  api:
+    image: sit-careers-api:api-test-${IMAGE_TAG}
+    working_dir: /app
+    restart: always
+    env_file:
+      - .env.testing
+    depends_on:
+      - db
+    networks:
+      - sit-careers
+
+  db:
+    image: mariadb:latest
+    restart: always
+    ports:
+        - "3306:3306"
+    environment:
+        MYSQL_DATABASE: sitcareers
+        MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+    networks:
+        - sit-careers
+
+networks:
+  sit-careers:
+    driver: bridge

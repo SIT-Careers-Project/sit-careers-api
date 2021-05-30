@@ -1,11 +1,11 @@
 version: "3.8"
 services:
-  
+
   api:
-    image: sit-careers-api:dev
+    image: sit-careers-api:local
     build:
       context: .
-      dockerfile: ./docker/api/Dockerfile
+      dockerfile: ./docker/api/Dockerfile.local
     working_dir: /app
     container_name: sit-careers-api
     restart: always
@@ -21,10 +21,10 @@ services:
       - sit-careers
 
   composer:
-    image: sit-careers-api:dev
+    image: sit-careers-api:local
     build:
       context: .
-      dockerfile: ./docker/api/Dockerfile
+      dockerfile: ./docker/api/Dockerfile.local
     working_dir: /app
     container_name: sit-careers-composer
     entrypoint:
@@ -38,16 +38,20 @@ services:
     image: mariadb:latest
     restart: always
     container_name: sit-careers-db
-    volumes:
-        - ./db:/var/lib/mysql
     ports:
         - "3306:3306"
+    entrypoint:
+      sh -c "
+        echo 'CREATE DATABASE sitcareers_testing;' > /docker-entrypoint-initdb.d/init.sql;
+        /usr/local/bin/docker-entrypoint.sh --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci"
+    volumes:
+      - sit-career-db:/var/lib/mysql
     environment:
         MYSQL_DATABASE: sitcareers
         MYSQL_ROOT_PASSWORD: root
     networks:
         - sit-careers
-    
+
   phpmyadmin:
       image: phpmyadmin/phpmyadmin:latest
       restart: always
@@ -61,7 +65,10 @@ services:
           - db
       networks:
           - sit-careers
-      
+
+volumes:
+  sit-career-db:
+
 networks:
   sit-careers:
     driver: bridge
