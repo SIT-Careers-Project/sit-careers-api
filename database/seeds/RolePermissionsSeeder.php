@@ -51,7 +51,6 @@ class RolePermissionsSeeder extends Seeder
         $roleCompany = Role::where('role_name', 'manager')->first();
         $permissionManager = [
             'access_company',
-            // 'create_company',
             'update_company',
             'request_delete_company',
             'access_user',
@@ -81,7 +80,6 @@ class RolePermissionsSeeder extends Seeder
         $roleCompany = Role::where('role_name', 'coordinator')->first();
         $permissionCoordinator = [
             'access_company',
-            // 'create_company',
             'update_company',
             'access_user',
             'update_user',
