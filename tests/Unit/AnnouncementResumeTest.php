@@ -134,7 +134,7 @@ class AnnouncementResumeTest extends TestCase
         $this->assertEquals($assertion, $expected);
     }
 
-    public function test_post_annoucement_resume_due_date_of_announcement_should_return_error_message()
+    public function test_post_announcement_resume_due_date_of_announcement_should_return_error_message()
     {
         $company = $this->faker->toArray();
 
