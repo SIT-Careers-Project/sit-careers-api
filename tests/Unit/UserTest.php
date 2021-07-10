@@ -14,6 +14,7 @@ use App\Repositories\UserRepository;
 
 use App\Models\User;
 use App\Models\Role;
+use App\Models\DataOwner;
 
 class UserTest extends TestCase
 {
@@ -39,6 +40,7 @@ class UserTest extends TestCase
         ]);
         $mockData = [
             'role_id' => $roleAdmin->role_id,
+            'company_id' => $this->faker->company_id,
             'username' => 'mild',
             'password' => '123',
             'first_name' => 'Tassaneeewan',
@@ -66,6 +68,12 @@ class UserTest extends TestCase
             'last_name' => 'Noita',
             'email' => 'testpostby.manager@mail.com'
         ]);
+
+        $dataOwner = factory(DataOwner::class)->create([
+            "company_id" => $this->faker->company_id,
+            "user_id" => $user->user_id,
+        ]);
+
         $mockData = [
             'email' => 'testpostuserbymanager@gmail.com',
             'my_user_id' => $user->user_id,
@@ -116,8 +124,14 @@ class UserTest extends TestCase
             'email' => 'hellotest@mail.com'
         ]);
 
+        $dataOwner = factory(DataOwner::class)->create([
+            "company_id" => $this->faker->company_id,
+            "user_id" => $user->user_id,
+        ]);
+
         $mockData = [
             'user_id' => $user->user_id,
+            "company_id" => $dataOwner->company_id,
             'role_id' => $roleAdmin->role_id,
             'username' => 'testUpdate123',
             'password' => '12334',

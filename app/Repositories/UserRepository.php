@@ -50,7 +50,8 @@ class UserRepository implements UserRepositoryInterface
     public function createUser($data)
     {
         $role = Role::find($data->role_id);
-        if ($role) {
+        $company = Company::find($data->company_id);
+        if ($role && !is_null($company->company_id)) {
             $user = new User();
             $user->role_id = $data->role_id;
             $user->username = $data->username ? $data->username : $data->email;
@@ -66,27 +67,25 @@ class UserRepository implements UserRepositoryInterface
                 'verification.verify', now()->addHours(24), ['user_id' => $user->user_id]
             );
 
-            if (is_null($data->company_id)) {
-                Mail::to($user->email)->send(new VerifyEmail($user, $urlVerify));
-            } else {
-                $company = Company::find($data->company_id);
-                $dataOwner = new DataOwner();
-                $dataOwner->user_id = $user->user_id;
-                $dataOwner->company_id = $company->company_id;
-                $dataOwner->request_delete = false;
-                $dataOwner->save();
+            $dataOwner = new DataOwner();
+            $dataOwner->user_id = $user->user_id;
+            $dataOwner->company_id = $company->company_id;
+            $dataOwner->request_delete = false;
+            $dataOwner->save();
 
-                Mail::to($user->email)->send(new VerifyEmailWithCompany($user, $company, $urlVerify));
-            }
+            Mail::to($user->email)->send(new VerifyEmailWithCompany($user, $company, $urlVerify));
 
             return "Create user successful.";
         }
-        return "Not fond role id.";
+        return "Not fond role or company";
     }
 
     public function createUserByManger($data) {
         $role = Role::where('role_name', 'coordinator')->first();
-        if ($role) {
+        $dataOwnerManager = DataOwner::where('user_id', $data->my_user_id)->first();
+        $company = Company::find($dataOwnerManager->company_id);
+
+        if ($role && !is_null($company->company_id)) {
             $user = new User();
             $user->role_id = $role->role_id;
             $user->username = $data->username ? $data->username : $data->email;
@@ -102,24 +101,17 @@ class UserRepository implements UserRepositoryInterface
                 'verification.verify', now()->addHours(24), ['user_id' => $user->user_id]
             );
 
-            $dataOwnerManager = DataOwner::where('user_id', $data->my_user_id)->first();
+            $dataOwner = new DataOwner();
+            $dataOwner->user_id = $user->user_id;
+            $dataOwner->company_id = $dataOwnerManager->company_id;
+            $dataOwner->request_delete = false;
+            $dataOwner->save();
 
-            if (is_null($dataOwnerManager)) {
-                Mail::to($user->email)->send(new VerifyEmail($user, $urlVerify));
-            } else {
-                $company = Company::find($dataOwnerManager->company_id);
-                $dataOwner = new DataOwner();
-                $dataOwner->user_id = $user->user_id;
-                $dataOwner->company_id = $dataOwnerManager->company_id;
-                $dataOwner->request_delete = false;
-                $dataOwner->save();
-
-                Mail::to($user->email)->send(new VerifyEmailWithCompany($user, $company, $urlVerify));
-            }
+            Mail::to($user->email)->send(new VerifyEmailWithCompany($user, $company, $urlVerify));
 
             return "Create user successful.";
         }
-        return "Not fond role id.";
+        return "Not found role id.";
     }
 
     public function createUserฺStudentByEmail($data, $role)

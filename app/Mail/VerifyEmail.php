@@ -32,7 +32,7 @@ class VerifyEmail extends Mailable
      */
     public function build()
     {
-        return $this->subject('Welcome to SIT-Industry Collaborative Service System')
+        return $this->subject('Welcome to SIT Career Center')
                 ->view('emails.verify_email', [
                     'email' => $this->user->email,
                     'company_name_th' => null,
