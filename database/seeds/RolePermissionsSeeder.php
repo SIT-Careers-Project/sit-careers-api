@@ -25,6 +25,31 @@ class RolePermissionsSeeder extends Seeder
             $rolePermission->save();
         }
 
+        $roleViewer = Role::where('role_name', 'viewer')->first();
+        $permissionsViewer = [
+            'access_company',
+            'access_company_by_admin',
+            'access_user',
+            'access_user_by_admin',
+            'access_resume',
+            'access_announcement_resume_by_admin',
+            'access_academic_announcement',
+            'access_academic_banner',
+            'access_dashboard',
+            'access_history',
+            'access_notification',
+            'update_notification'
+        ];
+
+        foreach ($permissionsViewer as $permission) {
+            $permissionId = Permission::where('permission_name', $permission)->select('permission_id')->get();
+
+            $rolePermission = new RolePermission();
+            $rolePermission->permission_id = $permissionId[0]['permission_id'];
+            $rolePermission->role_id = $roleViewer->role_id;
+            $rolePermission->save();
+        }
+
         $roleStudent = Role::where('role_name', 'student')->first();
         $permissionStudent = [
             'access_company',

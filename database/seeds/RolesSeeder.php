@@ -18,6 +18,7 @@ class RolesSeeder extends Seeder
             'student',
             'manager',
             'coordinator',
+            'viewer',
             'admin'
         ];
 
