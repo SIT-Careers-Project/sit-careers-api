@@ -111,7 +111,7 @@ class UserRepository implements UserRepositoryInterface
 
             return "Create user successful.";
         }
-        return "Not fond role id.";
+        return "Not found role id.";
     }
 
     public function createUserฺStudentByEmail($data, $role)
