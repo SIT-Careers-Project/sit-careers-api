@@ -72,6 +72,8 @@ Route::group(['middleware' => ['checkAuth']], function () {
         Route::put('user/first-time', 'UserController@updateFirstTime')->middleware(['role.permission:update_user']);
         Route::delete('users', 'UserController@destroy')->middleware(['role.permission:delete_user']);
 
+        Route::get('roles', 'RoleController@get');
+
         Route::get('histories', 'HistoryController@get')->middleware(['role.permission:access_history']);
 
         Route::get('banner/{banner_id}', 'BannerController@getBannerById')->middleware(['role.permission:access_academic_banner']);
