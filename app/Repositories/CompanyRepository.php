@@ -109,9 +109,13 @@ class CompanyRepository implements CompanyRepositoryInterface
     {
         $id = $data['company_id'];
         $company = Company::find($id);
+        $roleAdminId = Role::where('role_name', 'admin')->first();
 
-        $company->company_name_th = $data['company_name_th'];
-        $company->company_name_en = $data['company_name_en'];
+        if ($roleAdminId->role_id == $data['my_role_id']) {
+            $company->company_name_th = $data['company_name_th'];
+            $company->company_name_en = $data['company_name_en'];
+        }
+
         $company->company_type = $data['company_type'];
         $company->description = $data['description'];
         $company->about_us = $data['about_us'];
