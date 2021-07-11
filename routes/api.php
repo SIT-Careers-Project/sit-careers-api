@@ -73,7 +73,6 @@ Route::group(['middleware' => ['checkAuth']], function () {
         Route::delete('users', 'UserController@destroy')->middleware(['role.permission:delete_user']);
 
         Route::get('roles', 'RoleController@get');
-        Route::get('role-permissions', 'RoleController@getRolePermissions');
 
         Route::get('histories', 'HistoryController@get')->middleware(['role.permission:access_history']);
 
