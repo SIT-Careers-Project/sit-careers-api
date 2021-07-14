@@ -137,6 +137,7 @@ class CompanyTest extends TestCase
         $data = [
             'company_id' => $this->faker->company_id,
             'my_user_id' => $user->user_id,
+            'my_role_id' => $user->role_id,
             'company_name_th' => 'บริษัท ฮัลโหล จำกัด',
             'company_name_en' => 'TEST COMPANY',
             'description' => 'เป็นบริษัทพัฒนา software บริษัทใหญ่ อยู่เยอรมัน',
@@ -205,6 +206,7 @@ class CompanyTest extends TestCase
         $data = [
             'company_id' => $this->faker->company_id,
             'my_user_id' => $user->user_id,
+            'my_role_id' => $user->role_id,
             'company_name_th' => 'บริษัท ฮัลโหล จำกัด',
             'company_name_en' => 'TEST COMPANY',
             'description' => 'เป็นบริษัทพัฒนา software บริษัทใหญ่ อยู่เยอรมัน',
