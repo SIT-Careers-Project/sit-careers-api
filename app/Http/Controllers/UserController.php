@@ -9,11 +9,13 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller as Controller;
 use App\Repositories\UserRepositoryInterface;
 use App\Http\RulesValidation\UserRules;
+use App\Traits\Utils;
 use Throwable;
 
 class UserController extends Controller
 {
     use UserRules;
+    use Utils;
     private $user;
 
     public function __construct(UserRepositoryInterface $userRepo)
@@ -42,14 +44,26 @@ class UserController extends Controller
     public function create(Request $request)
     {
         try {
-            $validated = Validator::make($request->all(), $this->rulesCreationUser);
-            if ($validated->fails()) {
-                return response()->json($validated->messages(), 400);
+            $check_viewer_role = $this->CheckRoleViewer($request->role_id);
+            if($check_viewer_role == 'viewer'){
+                $validated = Validator::make($request->all(), $this->rulesCreationViewerUser);
+                if ($validated->fails()) {
+                    return response()->json($validated->messages(), 400);
+                }
+                $created = $this->user->createViewerUser($request);
+                return response()->json([
+                    "message" => $created
+                ], 200);
+            }else{
+                $validated = Validator::make($request->all(), $this->rulesCreationUser);
+                if ($validated->fails()) {
+                    return response()->json($validated->messages(), 400);
+                }
+                $created = $this->user->createUser($request);
+                return response()->json([
+                    "message" => $created
+                ], 200);
             }
-            $created = $this->user->createUser($request);
-            return response()->json([
-                "message" => $created
-            ], 200);
         }catch (Throwable $e) {
             return response()->json([
                 "message" => "Something Wrong !",
