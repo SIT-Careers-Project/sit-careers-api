@@ -18,4 +18,9 @@ trait UserRules
         'user_id' => 'required|string',
         'email' => 'required|email|unique:users'
     ];
+
+    private $rulesCreationViewerUser = [
+        'role_id' => 'required|string',
+        'email' => 'required|email|unique:users'
+    ];
 }

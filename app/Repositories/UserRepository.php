@@ -80,6 +80,32 @@ class UserRepository implements UserRepositoryInterface
         return "Not fond role or company";
     }
 
+    public function createViewerUser($data)
+    {
+        $role = Role::find($data->role_id);
+        if ($role) {
+            $user = new User();
+            $user->role_id = $data->role_id;
+            $user->username = $data->username ? $data->username : $data->email;
+            $user->password = $data->password ? Hash::make($data->password) : '-';
+            $user->first_name = $data->first_name ? $data->first_name : '-';
+            $user->last_name = $data->last_name ? $data->last_name : '-';
+            $user->email = $data->email;
+            $user->status = 'deactivate';
+            $user->created_by = $data->my_user_id;
+            $user->save();
+
+            $urlVerify = URL::temporarySignedRoute(
+                'verification.verify', now()->addHours(24), ['user_id' => $user->user_id]
+            );
+
+            Mail::to($user->email)->send(new VerifyEmail($user, $urlVerify));
+
+            return "Create user successful.";
+        }
+        return "Not fond role id";
+    }
+
     public function createUserByManger($data) {
         $role = Role::where('role_name', 'coordinator')->first();
         $dataOwnerManager = DataOwner::where('user_id', $data->my_user_id)->first();

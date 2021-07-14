@@ -3,6 +3,7 @@
 namespace App\Traits;
 
 use App\Models\Announcement;
+use App\Models\Role;
 use Carbon\Carbon;
 
 use Throwable;
@@ -60,5 +61,13 @@ trait Utils
         }
 
         return 'Remove old files';
+    }
+
+    public function CheckRoleViewer($request_role_id)
+    {
+        $viewer_role_id = Role::find($request_role_id)->role_id;
+        if($request_role_id == $viewer_role_id){
+            return 'viewer';
+        }
     }
 }
