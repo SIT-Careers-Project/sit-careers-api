@@ -54,7 +54,7 @@ class UserController extends Controller
                 return response()->json([
                     "message" => $created
                 ], 200);
-            }else{
+            } else {
                 $validated = Validator::make($request->all(), $this->rulesCreationUser);
                 if ($validated->fails()) {
                     return response()->json($validated->messages(), 400);
