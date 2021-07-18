@@ -21,6 +21,7 @@ $factory->define(Resume::class, function (Faker $faker) use ($factory) {
         'tel_no' => '0956787294',
         'email' => 'mild@gmail.com',
         'resume_link' => 'https://mild-resume.netlify.com/',
-        'path_file' => '-'
+        'path_file' => '-',
+        'university_name' => 'มหาวิทยาลัยเทคโนโลยีพระจอมเกล้าธนบุรี'
     ];
 });

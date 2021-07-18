@@ -26,6 +26,7 @@ class ResumeTable extends Migration
             $table->string('tel_no', 10);
             $table->string('resume_link');
             $table->string('path_file');
+            $table->string('university_name');
             $table->timestamps();
             $table->softDeletes();
         });
