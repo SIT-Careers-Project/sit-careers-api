@@ -7,9 +7,13 @@ use Validator;
 use App\Repositories\AnnouncementResumeRepositoryInterface;
 use App\Http\RulesValidation\AnnouncementResumeRules;
 use App\Repositories\AnnouncementRepositoryInterface;
+use App\Traits\AnnouncementResumeByCompanyIdReport;
+use App\Traits\AnnouncementResumesExport;
 use App\Traits\Utils;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 use Throwable;
+use ZipArchive;
 
 class AnnouncementResumesController extends Controller
 {
@@ -117,5 +121,91 @@ class AnnouncementResumesController extends Controller
         $update_application = $this->announcement_resume->updateAnnouncementRusume($data);
         $update_student_noti = $this->announcement_resume->UpdateStudentNotification($data);
         return response()->json($update_application, 200);
+    }
+
+    public function getAnnouncementResumeReport($data)
+    {
+        try {
+            $file_name = 'applications' . '_' . $data['start_date'] . '_' . $data['end_date'] . '.xlsx';
+            $announcement_resume_excel = Excel::download(new AnnouncementResumesExport($data), $file_name);
+            return $announcement_resume_excel;
+        } catch (Throwable $e) {
+            return response()->json([
+                "message" => "Something Wrong !",
+                "error" => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function getAnnouncementResumeByCompanyIdReport($data)
+    {
+        try {
+            $file_name = 'SIT_CC_Applications' . '_' . $data['start_date'] . '_' . $data['end_date'] . '.xlsx';
+            $announcement_resume_excel = Excel::download(new AnnouncementResumeByCompanyIdReport($data), $file_name);
+            return $announcement_resume_excel;
+        } catch (Throwable $e) {
+            return response()->json([
+                "message" => "Something Wrong !",
+                "error" => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function createReport(Request $request)
+    {
+        $data = $request->all();
+        $validated = Validator::make($data, $this->ruleExportAnnouncementResume);
+        if ($validated->fails()){
+            return response()->json($validated->messages(), 400);
+        }
+        $file_date = $data['start_date'] . '_' . $data['end_date'];
+        $file_name_zip = 'SIT_CC_Application_Report.zip';
+
+        $file_name = 'applications' . '_' . $file_date . '.xlsx';
+
+        $clean_old_file = $this->DeleteOldFiles();
+
+        try {
+            $zip = new ZipArchive;
+            if ($zip->open($file_name_zip, ZipArchive::CREATE) === true) {
+                $zip->addFile($this->getAnnouncementResumeReport($data)->getFile(), $file_name);
+                $zip->close();
+            }
+            return response()->download($file_name_zip)->deleteFileAfterSend(true);
+        } catch (Throwable $e) {
+            return response()->json([
+                "message" => "Something Wrong !",
+                "error" => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function createReportByCompanyId(Request $request)
+    {
+        $data = $request->all();
+        $validated = Validator::make($data, $this->ruleExportAnnouncementResume);
+        if ($validated->fails()){
+            return response()->json($validated->messages(), 400);
+        }
+        $file_date = $data['start_date'] . '_' . $data['end_date'];
+        $file_name_zip = 'SIT_CC_Application_Report.zip';
+
+        $file_name = 'applications' . '_' . $file_date . '.xlsx';
+
+        $clean_old_file = $this->DeleteOldFiles();
+
+        try {
+            $zip = new ZipArchive;
+            if ($zip->open($file_name_zip, ZipArchive::CREATE) === true) {
+                $zip->addFile($this->getAnnouncementResumeByCompanyIdReport($data)->getFile(), $file_name);
+                $zip->close();
+            }
+            return response()->download($file_name_zip)->deleteFileAfterSend(true);
+        } catch (Throwable $e) {
+            return response()->json([
+                "message" => "Something Wrong !",
+                "error" => $e->getMessage()
+            ], 500);
+        }
     }
 }
