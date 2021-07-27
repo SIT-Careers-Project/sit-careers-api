@@ -110,7 +110,7 @@ class DashboardController extends Controller
         }
         $name_report = $data['name_reports'];
         $file_date = $data['start_date'] . '_' . $data['end_date'];
-        $file_name_zip = 'SITCC_report.zip';
+        $file_name_zip = 'SIT_CC_Report.zip';
 
         $file_company = 'companies' . '_' . $file_date . '.xlsx';
         $file_announcement = 'announcement' . '_' . $file_date . '.xlsx';
