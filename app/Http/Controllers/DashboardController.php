@@ -59,14 +59,13 @@ class DashboardController extends Controller
         try {
             $file_name = 'companies' . '_' . $data['start_date'] . '_' . $data['end_date'] . '.xlsx';
             $companies_excel = Excel::download(new CompaniesExport($data), $file_name);
+            return $companies_excel;
         } catch (Throwable $e) {
             return response()->json([
                 "message" => "Something Wrong !",
                 "error" => $e->getMessage()
             ], 500);
         }
-
-        return $companies_excel;
     }
 
     public function getAnnouncementsByFilterDate($data)
@@ -76,14 +75,13 @@ class DashboardController extends Controller
 
             $file_name = 'announcements' . '_' . $data['start_date'] . '_' . $data['end_date'] . '.xlsx';
             $announcements_excel = Excel::download(new AnnouncementsExport($data), $file_name);
+            return $announcements_excel;
         } catch (Throwable $e) {
             return response()->json([
                 "message" => "Something Wrong !",
                 "error" => $e->getMessage()
             ], 500);
         }
-
-        return $announcements_excel;
     }
 
     public function getDashboardByFilterDate($data)
@@ -91,14 +89,13 @@ class DashboardController extends Controller
         try {
             $file_name = 'dashboard' . '_' . $data['start_date'] . '_' . $data['end_date'] . '.xlsx';
             $dashboard_excel = Excel::download(new DashboardExport($data), $file_name);
+            return $dashboard_excel;
         } catch (Throwable $e) {
             return response()->json([
                 "message" => "Something Wrong !",
                 "error" => $e->getMessage()
             ], 500);
         }
-
-        return $dashboard_excel;
     }
 
     public function createReportByFilterDate(Request $request)
