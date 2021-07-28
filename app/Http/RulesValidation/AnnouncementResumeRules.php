@@ -16,4 +16,9 @@ trait AnnouncementResumeRules
         'status' => 'nullable|string',
         'note' => 'nullable|string',
     ];
+
+    private $ruleExportAnnouncementResume = [
+        'start_date' => 'required|string',
+        'end_date' => 'required|string'
+    ];
 }

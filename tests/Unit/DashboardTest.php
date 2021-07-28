@@ -109,7 +109,7 @@ class DashboardTest extends TestCase
             'name_reports' => ["company", "announcement"]
         ];
 
-        $file_name = 'SITCC_report.zip';
+        $file_name = 'SIT_CC_Report.zip';
 
         $response = $this->postJson('api/dashboard/report', $data);
 
@@ -128,7 +128,7 @@ class DashboardTest extends TestCase
             'name_reports' => ["company", "dashboard"]
         ];
 
-        $file_name = 'SITCC_report.zip';
+        $file_name = 'SIT_CC_Report.zip';
 
         $response = $this->postJson('api/dashboard/report', $data);
 
@@ -147,7 +147,7 @@ class DashboardTest extends TestCase
             'name_reports' => ["announcement", "dashboard"]
         ];
 
-        $file_name = 'SITCC_report.zip';
+        $file_name = 'SIT_CC_Report.zip';
 
         $response = $this->postJson('api/dashboard/report', $data);
 
@@ -166,7 +166,7 @@ class DashboardTest extends TestCase
             'name_reports' => ["all"]
         ];
 
-        $file_name = 'SITCC_report.zip';
+        $file_name = 'SIT_CC_Report.zip';
 
         $response = $this->postJson('api/dashboard/report', $data);
 
@@ -185,7 +185,7 @@ class DashboardTest extends TestCase
             'name_reports' => ["dashboard", "announcement", "company"]
         ];
 
-        $file_name = 'SITCC_report.zip';
+        $file_name = 'SIT_CC_Report.zip';
 
         $response = $this->postJson('api/dashboard/report', $data);
 
