@@ -76,6 +76,11 @@ class UserController extends Controller
     {
         try {
             $created = $this->user->createUserByManger($request);
+            if ($created !== "Create user successful.") {
+                return response()->json([
+                    "message" => $created
+                ], 400);
+            }
             return response()->json([
                 "message" => $created
             ], 200);
