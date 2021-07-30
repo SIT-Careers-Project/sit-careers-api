@@ -109,6 +109,10 @@ class UserRepository implements UserRepositoryInterface
     public function createUserByManger($data) {
         $role = Role::where('role_name', 'coordinator')->first();
         $dataOwnerManager = DataOwner::where('user_id', $data->my_user_id)->first();
+        $companyOwner = DataOwner::where('company_id', $dataOwnerManager->company_id)->get();
+        if (count($companyOwner) >= 4) {
+            return "Limit add user. Please contact admin.";
+        }
         $company = Company::find($dataOwnerManager->company_id);
 
         if ($role && !is_null($company->company_id)) {
