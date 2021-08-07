@@ -267,7 +267,6 @@ class AnnouncementTest extends TestCase
         $data = array_merge($data, $address);
 
         $response = $this->putJson('api/academic-industry/announcement', $data);
-        // dd($response);
         $response->assertStatus(200);
 
         $response_arr = json_decode($response->content(), true);

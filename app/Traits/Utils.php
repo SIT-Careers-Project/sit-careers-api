@@ -66,9 +66,16 @@ trait Utils
     public function CheckRoleViewer($request_role_id)
     {
         $viewer_role_id = Role::where('role_name', 'viewer')->first();
-        var_dump($viewer_role_id['role_id']);
         if($request_role_id == $viewer_role_id['role_id']){
             return 'viewer';
+        }
+    }
+
+    public function CheckRoleAdmin($request_role_id)
+    {
+        $admin_role_id = Role::where('role_name', 'admin')->first();
+        if($request_role_id == $admin_role_id['role_id']){
+            return 'admin';
         }
     }
 }
