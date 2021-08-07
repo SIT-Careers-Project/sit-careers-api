@@ -52,13 +52,21 @@ class AnnouncementController extends Controller
     public function getAnnouncements(Request $request)
     {
         $announcements = $request->all();
-        $my_role_id = $announcements['my_role_id'];
-        if ($this->CheckRoleAdmin($my_role_id) == 'admin' or $this->CheckRoleViewer($my_role_id) == 'viewer') {
-            $announcements = $this->announcement->getAllAnnouncementsForAdminAndViewer();
-        } else {
+        try {
+            if ($announcements) {
+                $my_role_id = $announcements['my_role_id'];
+                if ($this->CheckRoleAdmin($my_role_id) == 'admin' or $this->CheckRoleViewer($my_role_id) == 'viewer') {
+                    $announcements = $this->announcement->getAllAnnouncementsForAdminAndViewer();
+                }
+            }
             $announcements = $this->announcement->getAllAnnouncements();
+            return response()->json($announcements, 200);
+        } catch (Throwable $e) {
+            return response()->json([
+                "message" => "Something Wrong !",
+                "error" => $e->getMessage()
+            ], 500);
         }
-        return response()->json($announcements, 200);
     }
 
     public function create(Request $request)
