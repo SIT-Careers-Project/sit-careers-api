@@ -10,11 +10,13 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller as Controller;
 use App\Repositories\AnnouncementRepositoryInterface;
 use App\Http\RulesValidation\AnnouncementRules;
+use App\Traits\Utils;
 use Throwable;
 
 class AnnouncementController extends Controller
 {
     use AnnouncementRules;
+    use Utils;
     private $announcement;
 
     public function __construct(AnnouncementRepositoryInterface $announcement_repo)
@@ -50,7 +52,12 @@ class AnnouncementController extends Controller
     public function getAnnouncements(Request $request)
     {
         $announcements = $request->all();
-        $announcements = $this->announcement->getAllAnnouncements();
+        $my_role_id = $announcements['my_role_id'];
+        if ($this->CheckRoleAdmin($my_role_id) == 'admin' or $this->CheckRoleViewer($my_role_id) == 'viewer') {
+            $announcements = $this->announcement->getAllAnnouncementsForAdminAndViewer();
+        } else {
+            $announcements = $this->announcement->getAllAnnouncements();
+        }
         return response()->json($announcements, 200);
     }
 
