@@ -140,7 +140,7 @@ class AnnouncementResumesController extends Controller
     public function getAnnouncementResumeByCompanyIdReport($data)
     {
         try {
-            $file_name = 'SIT_CC_Applications' . '_' . $data['start_date'] . '_' . $data['end_date'] . '.xlsx';
+            $file_name = 'SIT_CC_Applications' . '.xlsx';
             $announcement_resume_excel = Excel::download(new AnnouncementResumeByCompanyIdReport($data), $file_name);
             return $announcement_resume_excel;
         } catch (Throwable $e) {
@@ -183,14 +183,9 @@ class AnnouncementResumesController extends Controller
     public function createReportByCompanyId(Request $request)
     {
         $data = $request->all();
-        $validated = Validator::make($data, $this->ruleExportAnnouncementResume);
-        if ($validated->fails()){
-            return response()->json($validated->messages(), 400);
-        }
-        $file_date = $data['start_date'] . '_' . $data['end_date'];
         $file_name_zip = 'SIT_CC_Application_Report.zip';
 
-        $file_name = 'applications' . '_' . $file_date . '.xlsx';
+        $file_name = 'applications' . '.xlsx';
 
         $clean_old_file = $this->DeleteOldFiles();
 
