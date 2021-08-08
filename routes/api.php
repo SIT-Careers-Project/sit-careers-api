@@ -79,6 +79,7 @@ Route::group(['middleware' => ['checkAuth']], function () {
         Route::get('histories', 'HistoryController@get')->middleware(['role.permission:access_history']);
 
         Route::get('banner/{banner_id}', 'BannerController@getBannerById')->middleware(['role.permission:access_academic_banner']);
+        Route::put('banner', 'BannerController@update')->middleware(['role.permission:update_academic_banner']);
         Route::post('banner', 'BannerController@create')->middleware(['role.permission:create_academic_banner']);
         Route::delete('banner', 'BannerController@destroy')->middleware(['role.permission:delete_academic_banner']);
 
