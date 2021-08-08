@@ -254,37 +254,12 @@ class AnnouncementResumeTest extends TestCase
     {
         Excel::fake();
 
-        $data = [
-            'start_date' => '2021-07-01',
-            'end_date' => '2021-07-30'
-        ];
-
         $file_name = 'SIT_CC_Application_Report.zip';
 
-        $response = $this->postJson('api/academic-industry/company/applications/report', $data);
+        $response = $this->postJson('api/academic-industry/company/applications/report');
 
         $header = $response->headers->get('content-disposition');
         $response->assertStatus(200);
         $this->assertEquals($header, "attachment; filename=".$file_name);
-    }
-
-    public function test_export_announcement_resume_report_by_company_id_failed_should_return_error_message()
-    {
-        $data = [];
-
-        $response = $this->postJson('api/academic-industry/company/applications/report', $data);
-        $expected = json_decode($response->content(), true);
-
-        $assertion = [
-            "start_date" => [
-                "The start date field is required."
-            ],
-            "end_date" => [
-                "The end date field is required."
-            ]
-        ];
-
-        $response->assertStatus(400);
-        $this->assertEquals($assertion, $expected);
     }
 }
