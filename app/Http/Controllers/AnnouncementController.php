@@ -57,10 +57,10 @@ class AnnouncementController extends Controller
                 $my_role_id = $announcements['my_role_id'];
                 if ($this->CheckRoleAdmin($my_role_id) == 'admin' or $this->CheckRoleViewer($my_role_id) == 'viewer') {
                     $announcements = $this->announcement->getAllAnnouncementsForAdminAndViewer();
+                    return response()->json($announcements, 200);
                 }
-            } else {
-                $announcements = $this->announcement->getAllAnnouncements();
             }
+            $announcements = $this->announcement->getAllAnnouncements();
             return response()->json($announcements, 200);
         } catch (Throwable $e) {
             return response()->json([
