@@ -78,7 +78,7 @@ class BannerController extends Controller
             return response()->json($banner, 200);
         }catch (Throwable $e) {
             return response()->json([
-                "message" => "Something Wrong Hello !",
+                "message" => "Something Wrong !",
                 "error" => $e->getMessage()
             ], 500);
         }
