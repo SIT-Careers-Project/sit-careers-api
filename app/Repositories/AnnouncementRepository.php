@@ -11,10 +11,13 @@ use App\Models\JobType;
 use App\Models\Role;
 use App\Models\User;
 use App\Models\DataOwner;
+use App\Traits\Utils;
 use Carbon\Carbon;
 
 class AnnouncementRepository implements AnnouncementRepositoryInterface
 {
+    use Utils;
+
     public function getAnnouncementById($id)
     {
         $announcement = Announcement::join('companies', 'companies.company_id', '=', 'announcements.company_id')
@@ -96,6 +99,7 @@ class AnnouncementRepository implements AnnouncementRepositoryInterface
                             'addresses.postal_code'
                         )->get();
 
+        $this->checkDueDateForAnnouncement();
         $grouped = $announcements->map(function ($announcement) {
             $jobType = JobType::where('announcement_id', $announcement['announcement_id']);
             $announcement['job_type'] = $jobType->pluck('job_type');
