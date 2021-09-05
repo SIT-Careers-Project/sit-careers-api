@@ -62,5 +62,13 @@ php artisan test --env=testing
 ```
 
 > Note: DB_DATABASE on local have 2 databases: `sitcareers`, `sitcareers_testing`
+
+###### Health Check
+
+Request Endpoint `/health`
+Example:
+`http://localhost:8000/health`
+
+
 -----
 Enjoy !! ✌
