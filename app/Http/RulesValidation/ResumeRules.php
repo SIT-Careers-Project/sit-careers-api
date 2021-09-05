@@ -15,7 +15,7 @@ trait ResumeRules
         'tel_no' => 'required|string',
         'email' => 'required|email',
         'path_file' => 'nullable|string',
-        'file_resume' => 'nullable|mimes:pdf|max:5120',
+        'file_resume.*' => 'nullable|mimes:pdf|max:5120',
         'resume_link' => 'required|string'
     ];
     private $rulesUpdateResume = [
