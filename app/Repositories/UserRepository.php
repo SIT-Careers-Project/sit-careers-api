@@ -144,7 +144,7 @@ class UserRepository implements UserRepositoryInterface
         return "Not found role id.";
     }
 
-    public function createUserฺStudentByEmail($data, $role)
+    public function createUserStudentByEmail($data, $role)
     {
         $role = Role::where('role_name', $role)->first();
         $user = new User();
