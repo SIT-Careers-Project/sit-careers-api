@@ -2,7 +2,7 @@ version: "3.8"
 services:
 
   api:
-    image: 192479299400.dkr.ecr.ap-southeast-1.amazonaws.com/sit-careers-api:api
+    image: sit-careers-api:api
     build:
       context: .
       dockerfile: ./docker/api/Dockerfile
@@ -19,7 +19,7 @@ services:
       - sit-careers
 
   api-nginx:
-    image: 192479299400.dkr.ecr.ap-southeast-1.amazonaws.com/sit-careers-api:nginx
+    image: sit-careers-api:nginx
     build:
       context: .
       dockerfile: ./docker/nginx/Dockerfile
@@ -33,17 +33,6 @@ services:
       - "8080:80"
     networks:
       - sit-careers
-
-  phpmyadmin:
-      image: phpmyadmin/phpmyadmin:latest
-      restart: always
-      container_name: sit-careers-myadmin
-      ports:
-          - "8081:80"
-      environment:
-          PMA_HOST: ${DB_HOST}
-      networks:
-          - sit-careers
 
 volumes:
   api:

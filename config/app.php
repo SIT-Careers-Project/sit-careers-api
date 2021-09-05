@@ -169,6 +169,7 @@ return [
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
+        UKFast\HealthCheck\HealthCheckServiceProvider::class,
 
         /*
          * Package Service Providers...
