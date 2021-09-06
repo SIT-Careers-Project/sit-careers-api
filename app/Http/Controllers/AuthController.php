@@ -71,7 +71,7 @@ class AuthController extends Controller
 
             if (is_null($user)) {
                 if ($body->user_type === 'st_group') {
-                    $user = $this->user->createUserฺStudentByEmail($body, 'student');
+                    $user = $this->user->createUserStudentByEmail($body, 'student');
                 } else {
                     return response()->json(
                         [
