@@ -13,6 +13,7 @@ interface UserRepositoryInterface
     public function createViewerUser($data);
     public function createUserByManger($data);
     public function updateUser($data);
+    public function updateStaff($data);
     public function updateUserFirstTime($data);
     public function deleteUserByUserId($data);
     public function updateUserStudent($data, $role);
