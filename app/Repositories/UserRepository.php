@@ -177,6 +177,19 @@ class UserRepository implements UserRepositoryInterface
         return $user;
     }
 
+    public function updateStaff($data)
+    {
+        $user = User::where('email', $data->email)->first();
+        $user->username = $data->user_id;
+        $user->first_name = explode(" ", $data->name_en)[0];
+        $user->last_name = explode(" ", $data->name_en)[1];
+        $user->token = $data->token->token;
+        $user->created_by = '-';
+        $user->save();
+
+        return $user;
+    }
+
     public function updateUserStudent($data, $role)
     {
         $user = User::where([
