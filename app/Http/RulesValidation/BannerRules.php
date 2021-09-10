@@ -15,4 +15,8 @@ trait BannerRules
         'banner_id' => 'required|string',
         'path_image' => 'required|string'
     ];
+
+    private $ruleUpdateBanner = [
+        'banner_id' => 'required',
+    ];
 }

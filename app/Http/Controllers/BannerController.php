@@ -66,6 +66,24 @@ class BannerController extends Controller
         return response()->json($banner, 200);
     }
 
+    public function update(Request $request)
+    {
+        $data = request()->all();
+        $validated = Validator::make($data, $this->ruleUpdateBanner);
+        if ($validated->fails()) {
+            return response()->json($validated->messages(), 400);
+        }
+        try {
+            $banner = $this->banner->updateBanner($data);
+            return response()->json($banner, 200);
+        }catch (Throwable $e) {
+            return response()->json([
+                "message" => "Something Wrong !",
+                "error" => $e->getMessage()
+            ], 500);
+        }
+    }
+
     public function destroy(Request $request)
     {
         $data = request()->all();

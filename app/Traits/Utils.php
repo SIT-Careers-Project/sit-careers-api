@@ -3,6 +3,7 @@
 namespace App\Traits;
 
 use App\Models\Announcement;
+use App\Models\Role;
 use Carbon\Carbon;
 
 use Throwable;
@@ -17,15 +18,20 @@ trait Utils
     public function checkDueDateForAnnouncement()
     {
         $announcements = Announcement::get();
+        $message = 'Not have expired announcements';
         for($i=0; $i < count($announcements); $i++){
-            $announcement = $announcements[$i];
-            if(!$this->checkDateToDayBetweenStartAndEnd($announcement)){
+            $announcement = Announcement::find($announcements[$i]["announcement_id"]);
+            if($this->checkDateToDayBetweenStartAndEnd($announcement)){
+                $announcement->status = 'OPEN';
+                $announcement->save();
+                $message = 'Expired announcements have been updated status';
+            } else if (!$this->checkDateToDayBetweenStartAndEnd($announcement)) {
                 $announcement->status = 'CLOSE';
                 $announcement->save();
-                return 'Expired announcements have been updated status';
+                $message = 'Expired announcements have been updated status';
             }
         }
-        return 'Not have expired announcements';
+        return $message;
     }
 
     public function CheckUniqueAnnouncementResumeWithAnnouncement($announcement_resumes, $new_resume_id)
@@ -60,5 +66,21 @@ trait Utils
         }
 
         return 'Remove old files';
+    }
+
+    public function CheckRoleViewer($request_role_id)
+    {
+        $viewer_role_id = Role::where('role_name', 'viewer')->first();
+        if($request_role_id == $viewer_role_id['role_id']){
+            return 'viewer';
+        }
+    }
+
+    public function CheckRoleAdmin($request_role_id)
+    {
+        $admin_role_id = Role::where('role_name', 'admin')->first();
+        if($request_role_id == $admin_role_id['role_id']){
+            return 'admin';
+        }
     }
 }

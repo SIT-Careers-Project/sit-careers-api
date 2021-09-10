@@ -11,10 +11,13 @@ use App\Models\JobType;
 use App\Models\Role;
 use App\Models\User;
 use App\Models\DataOwner;
+use App\Traits\Utils;
 use Carbon\Carbon;
 
 class AnnouncementRepository implements AnnouncementRepositoryInterface
 {
+    use Utils;
+
     public function getAnnouncementById($id)
     {
         $announcement = Announcement::join('companies', 'companies.company_id', '=', 'announcements.company_id')
@@ -32,6 +35,44 @@ class AnnouncementRepository implements AnnouncementRepositoryInterface
     }
 
     public function getAllAnnouncements()
+    {
+        $check_end_date = Carbon::now();
+        $announcements = Announcement::join('addresses', 'addresses.address_id', '=', 'announcements.address_id')
+                        ->join('companies', 'companies.company_id', '=', 'announcements.company_id')
+                        ->join('job_positions', 'job_positions.job_position_id', '=', 'announcements.job_position_id')
+                        ->where('addresses.address_type', 'announcement')
+                        ->whereNotBetween('announcements.end_date', ['announcements.end_date', $check_end_date])
+                        ->select(
+                            'announcements.*',
+                            'companies.company_id',
+                            'companies.company_type',
+                            'companies.company_name_en',
+                            'companies.company_name_th',
+                            'companies.logo',
+                            'job_positions.job_position',
+                            'job_positions.job_position_id',
+                            'addresses.address_id',
+                            'addresses.address_one',
+                            'addresses.address_two',
+                            'addresses.lane',
+                            'addresses.road',
+                            'addresses.sub_district',
+                            'addresses.district',
+                            'addresses.province',
+                            'addresses.address_type',
+                            'addresses.postal_code'
+                        )->get();
+
+        $grouped = $announcements->map(function ($announcement) {
+            $jobType = JobType::where('announcement_id', $announcement['announcement_id']);
+            $announcement['job_type'] = $jobType->pluck('job_type');
+            return $announcement;
+        });
+
+        return $announcements;
+    }
+
+    public function getAllAnnouncementsForAdminAndViewer()
     {
         $announcements = Announcement::join('addresses', 'addresses.address_id', '=', 'announcements.address_id')
                         ->join('companies', 'companies.company_id', '=', 'announcements.company_id')
@@ -58,6 +99,7 @@ class AnnouncementRepository implements AnnouncementRepositoryInterface
                             'addresses.postal_code'
                         )->get();
 
+        $this->checkDueDateForAnnouncement();
         $grouped = $announcements->map(function ($announcement) {
             $jobType = JobType::where('announcement_id', $announcement['announcement_id']);
             $announcement['job_type'] = $jobType->pluck('job_type');

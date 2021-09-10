@@ -81,36 +81,6 @@ class CompanyRepository implements CompanyRepositoryInterface
         $address->save();
 
         $userID = array_key_exists('user_id', $data) ? $data['user_id'] : $data['my_user_id'];
-        $findUser = User::where('created_by', '=', $userID)->get();
-        $role = Role::find($data['my_role_id']);
-        if ($role->role_name === 'manager') {
-            for ($i=0; $i < count($findUser); $i++) { 
-                $dataOwner = new DataOwner();
-                $dataOwner->user_id = $findUser[$i]->user_id;
-                $dataOwner->company_id = $company->company_id;
-                $dataOwner->request_delete = false;
-                $dataOwner->save();
-            }
-            $dataOwner = new DataOwner();
-            $dataOwner->user_id = $userID;
-            $dataOwner->company_id = $company->company_id;
-            $dataOwner->request_delete = false;
-            $dataOwner->save();
-        } else if ($role->role_name === 'coordinator') {
-            $myData = User::find($userID);
-
-            $dataOwner = new DataOwner();
-            $dataOwner->user_id = $myData->created_by;
-            $dataOwner->company_id = $company->company_id;
-            $dataOwner->request_delete = false;
-            $dataOwner->save();
-
-            $dataOwner = new DataOwner();
-            $dataOwner->user_id = $userID;
-            $dataOwner->company_id = $company->company_id;
-            $dataOwner->request_delete = false;
-            $dataOwner->save();
-        }
 
         $user = User::find($userID);
         $role = Role::find($user->role_id);
@@ -139,9 +109,13 @@ class CompanyRepository implements CompanyRepositoryInterface
     {
         $id = $data['company_id'];
         $company = Company::find($id);
+        $roleAdminId = Role::where('role_name', 'admin')->first();
 
-        $company->company_name_th = $data['company_name_th'];
-        $company->company_name_en = $data['company_name_en'];
+        if ($roleAdminId->role_id == $data['my_role_id']) {
+            $company->company_name_th = $data['company_name_th'];
+            $company->company_name_en = $data['company_name_en'];
+        }
+
         $company->company_type = $data['company_type'];
         $company->description = $data['description'];
         $company->about_us = $data['about_us'];

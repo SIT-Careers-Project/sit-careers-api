@@ -68,9 +68,10 @@ class AuthController extends Controller
         if ($response->successful() && $data['state'] == config('app.SIT_SSO_STATE')) {
             $body = json_decode($response->body());
             $user = $this->user->getUserByEmail($body->email);
+
             if (is_null($user)) {
                 if ($body->user_type === 'st_group') {
-                    $user = $this->user->createUserฺStudentByEmail($body, 'student');
+                    $user = $this->user->createUserStudentByEmail($body, 'student');
                 } else {
                     return response()->json(
                         [
@@ -80,8 +81,13 @@ class AuthController extends Controller
                     );
                 }
             } else {
-                $this->user->updateUserStudent($body, 'student');
+                if ($body->user_type == 'st_group') {
+                    $this->user->updateUserStudent($body, 'student');
+                } else if ($body->user_type === 'staff_group') {
+                    $this->user->updateStaff($body);
+                }
             }
+
             $token = $this->encode($user, env('JWT_KEY'));
             $permissions = $this->role_permission->getRolePermissionsByUserId($user['user_id']);
             return response()->json(

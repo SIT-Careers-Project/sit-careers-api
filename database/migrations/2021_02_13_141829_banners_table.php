@@ -16,6 +16,8 @@ class BannersTable extends Migration
         Schema::create('banners', function (Blueprint $table) {
             $table->bigIncrements('banner_id');
             $table->string('path_image')->nullable();
+            $table->string('date_display_start')->nullable();
+            $table->string('date_display_end')->nullable();
             $table->timestamps();
         });
     }

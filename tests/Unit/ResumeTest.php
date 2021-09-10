@@ -39,7 +39,8 @@ class ResumeTest extends TestCase
             'tel_no' => '0956787294',
             'email' => 'mildHello@gmail.com',
             'resume_link' => '-',
-            'path_file' => '-'
+            'path_file' => '-',
+            'university_name' => 'มหาวิทยาลัยเทคโนโลยีพระจอมเกล้าธนบุรี'
         ];
         $response = $this->postJson('api/academic-industry/resume', $mockData);
         $response->assertStatus(200);

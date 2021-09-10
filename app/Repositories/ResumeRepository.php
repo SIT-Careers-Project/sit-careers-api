@@ -46,6 +46,7 @@ class ResumeRepository implements ResumeRepositoryInterface
         $resume->tel_no = $data['tel_no'];
         $resume->resume_link = $data['resume_link'];
         $resume->path_file = $data['path_file'] ? $data['path_file'] : '-';
+        $resume->university_name = 'มหาวิทยาลัยเทคโนโลยีพระจอมเกล้าธนบุรี';
         $resume->save();
 
         return $resume;
