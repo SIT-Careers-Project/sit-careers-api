@@ -23,7 +23,9 @@ class UserRepository implements UserRepositoryInterface
     public function getUsers()
     {
         $users = User::join('roles', 'roles.role_id', '=', 'users.role_id')
-                ->select('users.email', 'roles.role_name', 'users.user_id')
+                ->join('data_owner', 'data_owner.user_id', '=', 'users.user_id')
+                ->join('companies', 'companies.company_id', '=', 'data_owner.company_id')
+                ->select('users.email', 'roles.role_name', 'users.user_id', 'companies.company_name_th', 'companies.company_name_en', 'users.status')
                 ->get();
         return $users;
     }
@@ -185,6 +187,7 @@ class UserRepository implements UserRepositoryInterface
         $user->last_name = explode(" ", $data->name_en)[1];
         $user->token = $data->token->token;
         $user->created_by = '-';
+        $user->status = "active";
         $user->save();
 
         return $user;
@@ -205,6 +208,7 @@ class UserRepository implements UserRepositoryInterface
         $user->last_name = explode(" ", $data->name_th)[1];
         $user->token = $data->token->token;
         $user->created_by = '-';
+        $user->status = "active";
         $user->save();
 
         return $user;
