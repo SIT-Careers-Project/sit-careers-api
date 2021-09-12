@@ -29,9 +29,6 @@ class RolePermissionsSeeder extends Seeder
         $permissionsViewer = [
             'access_company',
             'access_company_by_admin',
-            'access_user',
-            'update_user',
-            'access_user_by_admin',
             'access_resume',
             'access_announcement_resume_by_admin',
             'access_academic_announcement',
