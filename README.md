@@ -57,6 +57,11 @@ DB_DATABASE=sitcareers_testing
 docker exec -it sit-careers-api bash
 ```
 3. Run test
+
+-- **Warning‼️** --
+
+> This command run will reset the database.
+
 ```bash
 php artisan test --env=testing
 ```
