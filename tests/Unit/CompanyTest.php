@@ -82,6 +82,114 @@ class CompanyTest extends TestCase
         $this->assertEquals($company_arr, $response_arr['company_id']);
     }
 
+    public function test_post_company_for_admin_success_should_return_company()
+    {
+        $roleStd = Role::where('role_name', 'admin')->first();
+        $user = factory(User::class)->create([
+            'role_id' => $roleStd->role_id,
+            'email' => 'sit-coll@gmail.com'
+        ]);
+
+        $data = [
+            'company_id' => $this->faker->company_id,
+            'my_user_id' => $user->user_id,
+            'my_role_id' => $user->role_id,
+            'company_name_th' => 'บริษัท เทส จำกัด',
+            'company_name_en' => 'Test COmpany',
+            'description' => '',
+            'about_us' => '',
+            'company_image_logo' => '',
+            'logo' => '',
+            'company_type' => '',
+            'start_business_day' => '',
+            'end_business_day' => '',
+            'start_business_time' => '',
+            'end_business_time' => '',
+            'e_mail_coordinator' => '',
+            'e_mail_manager' => '',
+            'tel_no' => '',
+            'phone_no' => '',
+            'website' => '',
+            "address_one" => "",
+            "address_two" => "-",
+            "lane" => "",
+            "road" => "",
+            "sub_district" => "",
+            "district" => "",
+            "province" => "",
+            "postal_code" => "",
+            "mou_type" => "",
+            "mou_link" => "",
+            "start_date_mou" => "",
+            "end_date_mou" => ""
+        ];
+
+        $response = $this->postJson('api/admin/company', $data);
+        $response->assertStatus(200);
+
+        $response_arr = json_decode($response->content(), true);
+        $company = Company::find($response_arr['company_id']);
+        $company_arr = $company->toArray()['company_id'];
+
+        $this->assertEquals($company_arr, $response_arr['company_id']);
+    }
+
+    public function test_post_company_for_admin_failed_should_return_company()
+    {
+        $roleStd = Role::where('role_name', 'admin')->first();
+        $user = factory(User::class)->create([
+            'role_id' => $roleStd->role_id,
+            'email' => 'sit-coll@gmail.com'
+        ]);
+
+        $data = [
+            'company_id' => $this->faker->company_id,
+            'my_user_id' => $user->user_id,
+            'my_role_id' => $user->role_id,
+            'description' => '',
+            'about_us' => '',
+            'company_image_logo' => '',
+            'logo' => '',
+            'company_type' => '',
+            'start_business_day' => '',
+            'end_business_day' => '',
+            'start_business_time' => '',
+            'end_business_time' => '',
+            'e_mail_coordinator' => '',
+            'e_mail_manager' => '',
+            'tel_no' => '',
+            'phone_no' => '',
+            'website' => '',
+            "address_one" => "",
+            "address_two" => "-",
+            "lane" => "",
+            "road" => "",
+            "sub_district" => "",
+            "district" => "",
+            "province" => "",
+            "postal_code" => "",
+            "mou_type" => "",
+            "mou_link" => "",
+            "start_date_mou" => "",
+            "end_date_mou" => ""
+        ];
+
+        $response = $this->postJson('api/admin/company', $data);
+        $expect = json_decode($response->content(), true);
+
+        $assertion = [
+            "company_name_th" => [
+                "The company name th field is required."
+            ],
+            "company_name_en" => [
+                "The company name en field is required."
+            ]
+            ];
+
+        $response->assertStatus(400);
+        $this->assertEquals($assertion, $expect);
+    }
+
     public function test_get_all_companies_by_company_success_should_return_has_same_data_on_db()
     {
 

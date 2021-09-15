@@ -72,6 +72,25 @@ class CompanyController extends Controller
         return response()->json($companies, 200);
     }
 
+    public function createForAdmin(Request $request)
+    {
+        $data = $request->all();
+        $validated = Validator::make($data, $this->rulesCreationCompanyForAdmin);
+        if ($validated->fails()) {
+            return response()->json($validated->messages(), 400);
+        }
+        $storage = Storage::disk('minio');
+        $companyName = str_replace(' ', '_', $data['company_name_en']);
+        $companyNamePath = $companyName.'_'.rand(10000, 99999);
+        $file = $request->file('company_logo_image');
+        if (!is_null($file)) {
+            $uploaded = $storage->put('/logo/'.$companyNamePath, file_get_contents($file), 'public');
+            $data['logo'] = $companyNamePath;
+        }
+        $companies = $this->company->createCompany($data);
+        return response()->json($companies, 200);
+    }
+
     public function update(Request $request)
     {
         $data = $request->all();
