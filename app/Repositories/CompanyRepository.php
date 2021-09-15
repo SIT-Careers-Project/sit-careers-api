@@ -55,12 +55,12 @@ class CompanyRepository implements CompanyRepositoryInterface
         $company->company_type = $data['company_type'];
         $company->description = $data['description'];
         $company->about_us = $data['about_us'];
-        $company->logo = $data['logo'] == "" ? "-": $data['logo'];
+        $company->logo = $data['logo'];
         $company->e_mail_manager = $data['e_mail_manager'];
         $company->e_mail_coordinator = $data['e_mail_coordinator'];
-        $company->tel_no = $data['tel_no'] == "" ? "-": $data['tel_no'];
-        $company->phone_no = $data['phone_no'] == "" ? "-": $data['phone_no'];
-        $company->website = $data['website'] == "" ? "-": $data['website'];
+        $company->tel_no = $data['tel_no'];
+        $company->phone_no = $data['phone_no'];
+        $company->website = $data['website'];
         $company->start_business_day = $data['start_business_day'];
         $company->end_business_day = $data['end_business_day'];
         $company->start_business_time = $data['start_business_time'];
@@ -69,9 +69,9 @@ class CompanyRepository implements CompanyRepositoryInterface
 
         $address = new Address();
         $address->address_one = $data['address_one'];
-        $address->address_two = $data['address_two'] == "" ? "-": $data['address_two'];
-        $address->lane = $data['lane'] == "" ? "-": $data['lane'];
-        $address->road = $data['road'] == "" ? "-": $data['road'];
+        $address->address_two = $data['address_two'];
+        $address->lane = $data['lane'];
+        $address->road = $data['road'];
         $address->sub_district = $data['sub_district'];
         $address->district = $data['district'];
         $address->province = $data['province'];
@@ -87,10 +87,10 @@ class CompanyRepository implements CompanyRepositoryInterface
         if ($role->role_name === 'admin') {
             $mou = new MOU();
             $mou->company_id = $company->company_id;
-            $mou->mou_link = $data['mou_link'] == "" ? "-": $data['mou_link'];
-            $mou->mou_type = $data['mou_type'] == "" ? "-": $data['mou_type'];
-            $mou->start_date_mou = $data['start_date_mou'] == "" ? "-": $data['start_date_mou'];
-            $mou->end_date_mou = $data['end_date_mou'] == "" ? "-": $data['end_date_mou'];
+            $mou->mou_link = $data['mou_link'];
+            $mou->mou_type = $data['mou_type'];
+            $mou->start_date_mou = $data['start_date_mou'];
+            $mou->end_date_mou = $data['end_date_mou'];
             $mou->save();
         } else {
             $mou = new MOU();
@@ -159,7 +159,7 @@ class CompanyRepository implements CompanyRepositoryInterface
             $mou->save();
             return array_merge($company->toArray(),  $address->toArray(), $mou->toArray());
         }
-        
+
         return array_merge($company->toArray(),  $address->toArray());
     }
 
@@ -187,7 +187,7 @@ class CompanyRepository implements CompanyRepositoryInterface
         }
 
         $userAdmin = User::join('roles', 'roles.role_id', '=', 'users.role_id')->where('roles.role_name', 'admin')->get();
-        for ($i=0; $i < count($userAdmin); $i++) { 
+        for ($i=0; $i < count($userAdmin); $i++) {
             $sendMailToAdmin = Mail::to($userAdmin[$i]->email)->send(new AdminRequestDelete($userAdmin[$i], $userRequest, $company));
         }
 

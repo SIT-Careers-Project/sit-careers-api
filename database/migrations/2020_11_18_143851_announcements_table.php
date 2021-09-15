@@ -18,15 +18,15 @@ class AnnouncementsTable extends Migration
             $table->uuid('company_id')->nullable(false);
             $table->uuid('address_id')->nullable(false);
             $table->string('announcement_title');
-            $table->string('job_description');
+            $table->text('job_description');
             $table->uuid('job_position_id')->nullable(false);
-            $table->string('property');
+            $table->text('property');
             $table->string('priority')->nullable();
             $table->string('picture')->nullable();
             $table->datetime('start_date');
             $table->datetime('end_date');
             $table->string('salary');
-            $table->string('welfare');
+            $table->text('welfare');
             $table->string('status');
             $table->string('start_business_day', 20);
             $table->string('end_business_day', 20);
