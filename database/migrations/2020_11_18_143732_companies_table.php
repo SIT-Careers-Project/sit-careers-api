@@ -18,8 +18,8 @@ class CompaniesTable extends Migration
             $table->string('company_name_th');
             $table->string('company_name_en');
             $table->string('company_type')->nullable();
-            $table->string('description')->nullable();
-            $table->string('about_us')->nullable();
+            $table->text('description')->nullable();
+            $table->text('about_us')->nullable();
             $table->string('logo')->nullable();
             $table->string('e_mail_manager', 50)->nullable();
             $table->string('e_mail_coordinator', 50)->nullable();
