@@ -15,15 +15,15 @@ class AddressesTable extends Migration
     {
         Schema::create('addresses', function (Blueprint $table) {
             $table->uuid('address_id')->primary();
-            $table->string('address_one');
-            $table->string('address_two');
-            $table->string('lane');
-            $table->string('road');
-            $table->string('sub_district');
-            $table->string('district');
-            $table->string('province');
-            $table->string('postal_code', 5);
-            $table->string('address_type', 20);
+            $table->string('address_one')->nullable();
+            $table->string('address_two')->nullable();
+            $table->string('lane')->nullable();
+            $table->string('road')->nullable();
+            $table->string('sub_district')->nullable();
+            $table->string('district')->nullable();
+            $table->string('province')->nullable();
+            $table->string('postal_code', 5)->nullable();
+            $table->string('address_type', 20)->nullable();
             $table->uuid('company_id')->nullable(false);
             $table->timestamps();
             $table->softDeletes();
