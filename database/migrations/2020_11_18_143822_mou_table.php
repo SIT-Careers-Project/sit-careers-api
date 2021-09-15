@@ -16,10 +16,10 @@ class MouTable extends Migration
         Schema::create('mou', function (Blueprint $table) {
             $table->uuid('mou_id')->primary();
             $table->uuid('company_id')->nullable(false);
-            $table->string('mou_link');
-            $table->string('mou_type');
-            $table->string('start_date_mou', 20);
-            $table->string('end_date_mou', 20);
+            $table->string('mou_link')->nullable();
+            $table->string('mou_type')->nullable();
+            $table->string('start_date_mou', 20)->nullable();
+            $table->string('end_date_mou', 20)->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
