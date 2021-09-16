@@ -42,6 +42,6 @@ RUN chmod 755 -R $APPLICATION_ROOT/storage/
 RUN chmod 775 -R $APPLICATION_ROOT/storage/framework
 RUN chmod 775 -R $APPLICATION_ROOT/public
 
-VOLUME /api/app
+VOLUME $APPLICATION_ROOT
 
 EXPOSE 9000
