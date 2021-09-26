@@ -19,13 +19,13 @@
   </style>
   <body style="flex-direction: column; align-items: center; justify-content: center;">
     <div style="height: 100px; background-color: #295B8D; display: flex; align-items: center; justify-content: center;">
-      <div style="width: 5%; height: 100%; display: flex; align-items: center; margin-right: 8px;" class="flex items-center h-full mr-8">
+      <div style="width: 30%; height: 100%; display: flex; align-items: center; margin-right: 8px;" class="flex items-center h-full mr-8">
         <a href="https://www.sit.kmutt.ac.th/" target="_blank">
-          <img src="https://dev.sit-industry.systems/image/sit-logo.png" />
+          <img src="{{ $url }}/image/sit-logo.png" />
         </a>
       </div>
       <a href="{{ $url }}" target="_blank">
-        <p style="color: white;">Logo</p>
+        <img src="https://avatars.githubusercontent.com/u/70281896?s=96&v=4" />
       </a>
     </div>
     <div class="text-center">
@@ -36,7 +36,7 @@
       </p>
       <p>
         ทั้งนี้ หากคุณ {{ $hello_name }} มีข้อสงสัยหรือต้องการติดต่อสอบถามข้อมูลเพิ่มเติม สามารถติดต่อได้ที่ คุณรุ่งโรจน์ ขวัญโกมล
-        Tel: 66 2470 9887  Email: rungroj@sit.kmutt.ac.th
+        Tel: 66 2470 9889  Email: rungroj@sit.kmutt.ac.th
       </p>
       <hr style="margin-top: 6px; margin-bottom: 3px;"/>
       <p class="text-sm">© SIT Career Center</p>
