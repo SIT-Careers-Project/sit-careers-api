@@ -119,11 +119,6 @@ class CompanyController extends Controller
         if($this->CheckRoleCoordinator($my_role_id) != 'coordinator') {
             $updated = $this->company->updateCompanyById($data);
         } else {
-            if (!empty($data['e_mail_manager'])){
-                return response()->json([
-                    "message" => "Access Denied"
-                ], 403);
-            }
             $updated = $this->company->updateCompanyByIdForCoordinator($data);
         }
         return response()->json($updated, 200);

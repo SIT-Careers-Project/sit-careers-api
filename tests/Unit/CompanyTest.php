@@ -568,61 +568,6 @@ class CompanyTest extends TestCase
         $response->assertStatus(500);
     }
 
-    public function test_update_company_by_coordinator_fail_should_return_status_401()
-    {
-        $roleStd = Role::where('role_name', 'coordinator')->first();
-        $user = factory(User::class)->create([
-            'role_id' => $roleStd->role_id,
-            'email' => 'coordinator@sitcc.com'
-        ]);
-
-        $address = factory(Address::class)->create([
-            "company_id" => $this->faker->company_id,
-            "address_id" => Uuid::uuid()
-        ]);
-
-        $mou = factory(MOU::class)->create([
-            "company_id" => $this->faker->company_id,
-            "mou_id" => Uuid::uuid()
-        ]);
-
-        $data = [
-            'company_id' => $this->faker->company_id,
-            'my_role_id' => $user->role_id,
-            'company_name_th' => 'บริษัท ฮัลโหล จำกัด',
-            'company_name_en' => 'TEST COMPANY',
-            'description' => 'เป็นบริษัทพัฒนา software บริษัทใหญ่ อยู่เยอรมัน',
-            'about_us' => 'อยากเท่ อยากเจ๋ง มาเข้าบริษัทนี้',
-            'company_image_logo' => '',
-            'logo' => '',
-            'company_type' => 'Technology',
-            'start_business_day' => 'จันทร์',
-            'end_business_day' => 'ศุกร์',
-            'start_business_time' => '07:00',
-            'end_business_time' => '18:00',
-            'e_mail_coordinator' => 'test@gmail.com',
-            'e_mail_manager' => 'company@gmail.com',
-            'tel_no' => '0988882356',
-            'phone_no' => '0298987645',
-            'website' => 'http://test.com',
-            "address_one" => "138/2 พรีวิวหอพัก",
-            "address_two" => "-",
-            "lane" => "9",
-            "road" => "วิภาวดีรังสิต",
-            "sub_district" => "ดินแดง",
-            "district" => "ดินแดง",
-            "province" => "กรุงเทพ",
-            "postal_code" => "10400",
-            "mou_type" => "ชนิด MOU",
-            "mou_link" => "https://www.google.co.th",
-            "start_date_mou" => "30 กันยายน 2563",
-            "end_date_mou" => "30 กันยายน 2565"
-        ];
-
-        $response = $this->putJson('api/company', $data);
-        $response->assertStatus(403);
-    }
-
     public function test_delete_company_by_id_success_should_return_true()
     {
         $data = $this->faker;
