@@ -122,7 +122,7 @@ class CompanyController extends Controller
             if (!empty($data['e_mail_manager'])){
                 return response()->json([
                     "message" => "Access Denied"
-                ], 401);
+                ], 403);
             }
             $updated = $this->company->updateCompanyByIdForCoordinator($data);
         }
