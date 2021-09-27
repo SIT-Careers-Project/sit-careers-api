@@ -163,6 +163,63 @@ class CompanyRepository implements CompanyRepositoryInterface
         return array_merge($company->toArray(),  $address->toArray());
     }
 
+    public function updateCompanyByIdForCoordinator($data)
+    {
+        $id = $data['company_id'];
+        $company = Company::find($id);
+        $roleAdminId = Role::where('role_name', 'admin')->first();
+
+        if ($roleAdminId->role_id == $data['my_role_id']) {
+            $company->company_name_th = $data['company_name_th'];
+            $company->company_name_en = $data['company_name_en'];
+        }
+
+        $company->company_type = $data['company_type'];
+        $company->description = $data['description'];
+        $company->about_us = $data['about_us'];
+        $company->logo = $data['logo'] == "" ? "-": $data['logo'];
+        $company->e_mail_coordinator = $data['e_mail_coordinator'];
+        $company->tel_no = $data['tel_no'] == "" ? "-": $data['tel_no'];
+        $company->phone_no = $data['phone_no'] == "" ? "-": $data['phone_no'];
+        $company->website = $data['website'] == "" ? "-": $data['website'];
+        $company->start_business_day = $data['start_business_day'];
+        $company->end_business_day = $data['end_business_day'];
+        $company->start_business_time = $data['start_business_time'];
+        $company->end_business_time = $data['end_business_time'];
+        $company->save();
+
+        $address = Address::where([
+            ['company_id', $id],
+            ['address_type', 'company']
+        ])->first();
+        $address->address_one = $data['address_one'];
+        $address->address_two = $data['address_two'] == "" ? "-": $data['address_two'];
+        $address->lane = $data['lane'] == "" ? "-": $data['lane'];
+        $address->road = $data['road'] == "" ? "-": $data['road'];
+        $address->sub_district = $data['sub_district'];
+        $address->district = $data['district'];
+        $address->province = $data['province'];
+        $address->postal_code = $data['postal_code'];
+        $address->address_type = 'company';
+        $address->company_id = $company->company_id;
+        $address->save();
+
+        $user = User::find($data['my_user_id']);
+        $role = Role::find($user->role_id);
+        if ($role->role_name === 'admin') {
+            $mou = MOU::where('company_id', $id)->first();
+            $mou->company_id = $company->company_id;
+            $mou->mou_link = $data['mou_link'] == "" ? "-": $data['mou_link'];
+            $mou->mou_type = $data['mou_type'] == "" ? "-": $data['mou_type'];
+            $mou->start_date_mou = $data['start_date_mou'] == "" ? "-": $data['start_date_mou'];
+            $mou->end_date_mou = $data['end_date_mou'] == "" ? "-": $data['end_date_mou'];
+            $mou->save();
+            return array_merge($company->toArray(),  $address->toArray(), $mou->toArray());
+        }
+
+        return array_merge($company->toArray(),  $address->toArray());
+    }
+
     public function requestDelete($data)
     {
         $user_id = $data['my_user_id'];

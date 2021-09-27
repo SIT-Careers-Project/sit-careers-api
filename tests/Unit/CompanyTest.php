@@ -354,6 +354,137 @@ class CompanyTest extends TestCase
         ]);
     }
 
+    public function test_update_company_by_coordinator_success_should_return_status_200()
+    {
+        $roleStd = Role::where('role_name', 'coordinator')->first();
+        $user = factory(User::class)->create([
+            'role_id' => $roleStd->role_id,
+            'email' => 'coordinator@sitcc.com'
+        ]);
+
+        $address = factory(Address::class)->create([
+            "company_id" => $this->faker->company_id,
+            "address_id" => Uuid::uuid()
+        ]);
+
+        $mou = factory(MOU::class)->create([
+            "company_id" => $this->faker->company_id,
+            "mou_id" => Uuid::uuid()
+        ]);
+
+        # field e_mail_manager should not send it.
+        $data = [
+            'company_id' => $this->faker->company_id,
+            'my_user_id' => $user->user_id,
+            'my_role_id' => $user->role_id,
+            'company_name_th' => 'บริษัท ฮัลโหล จำกัด',
+            'company_name_en' => 'TEST COMPANY',
+            'description' => 'เป็นบริษัทพัฒนา software บริษัทใหญ่ อยู่เยอรมัน coordinator update',
+            'about_us' => 'อยากเท่ อยากเจ๋ง มาเข้าบริษัทนี้',
+            'company_image_logo' => '',
+            'logo' => '',
+            'company_type' => 'Technology',
+            'start_business_day' => 'จันทร์',
+            'end_business_day' => 'ศุกร์',
+            'start_business_time' => '07:00',
+            'end_business_time' => '18:00',
+            'e_mail_coordinator' => 'test@gmail.com',
+            'tel_no' => '0988882356',
+            'phone_no' => '0298987645',
+            'website' => 'http://test.com',
+            "address_one" => "138/2 พรีวิวหอพัก",
+            "address_two" => "-",
+            "lane" => "9",
+            "road" => "วิภาวดีรังสิต",
+            "sub_district" => "ดินแดง",
+            "district" => "ดินแดง",
+            "province" => "กรุงเทพ",
+            "postal_code" => "10400",
+            "mou_type" => "ชนิด MOU",
+            "mou_link" => "https://www.google.co.th",
+            "start_date_mou" => "30 กันยายน 2563",
+            "end_date_mou" => "30 กันยายน 2565"
+        ];
+
+        $response = $this->putJson('api/company', $data);
+        $response->assertStatus(200);
+
+        $response_arr = json_decode($response->content(), true);
+        $company = Company::find($response_arr['company_id']);
+        $company_arr = $company->toArray();
+
+        $this->assertDatabaseHas('companies', [
+            'company_id' => $response_arr['company_id'],
+            'company_name_th' => $response_arr['company_name_th'],
+        ]);
+    }
+
+    public function test_update_company_by_coordinator_success_field_is_null_should_return_status_200()
+    {
+        $roleStd = Role::where('role_name', 'coordinator')->first();
+        $user = factory(User::class)->create([
+            'role_id' => $roleStd->role_id,
+            'email' => 'coordinator@sitcc.com'
+        ]);
+
+        $address = factory(Address::class)->create([
+            "company_id" => $this->faker->company_id,
+            "address_id" => Uuid::uuid()
+        ]);
+
+        $mou = factory(MOU::class)->create([
+            "company_id" => $this->faker->company_id,
+            "mou_id" => Uuid::uuid()
+        ]);
+
+        # field e_mail_manager is null.
+        $data = [
+            'company_id' => $this->faker->company_id,
+            'my_user_id' => $user->user_id,
+            'my_role_id' => $user->role_id,
+            'company_name_th' => 'บริษัท ฮัลโหล จำกัด',
+            'company_name_en' => 'TEST COMPANY',
+            'description' => 'เป็นบริษัทพัฒนา software บริษัทใหญ่ อยู่เยอรมัน coordinator update',
+            'about_us' => 'อยากเท่ อยากเจ๋ง มาเข้าบริษัทนี้',
+            'company_image_logo' => '',
+            'logo' => '',
+            'company_type' => 'Technology',
+            'start_business_day' => 'จันทร์',
+            'end_business_day' => 'ศุกร์',
+            'start_business_time' => '07:00',
+            'end_business_time' => '18:00',
+            'e_mail_coordinator' => 'test@gmail.com',
+            'e_mail_manager' => '',
+            'tel_no' => '0988882356',
+            'phone_no' => '0298987645',
+            'website' => 'http://test.com',
+            "address_one" => "138/2 พรีวิวหอพัก",
+            "address_two" => "-",
+            "lane" => "9",
+            "road" => "วิภาวดีรังสิต",
+            "sub_district" => "ดินแดง",
+            "district" => "ดินแดง",
+            "province" => "กรุงเทพ",
+            "postal_code" => "10400",
+            "mou_type" => "ชนิด MOU",
+            "mou_link" => "https://www.google.co.th",
+            "start_date_mou" => "30 กันยายน 2563",
+            "end_date_mou" => "30 กันยายน 2565"
+        ];
+
+        $response = $this->putJson('api/company', $data);
+        $response->assertStatus(200);
+
+        $response_arr = json_decode($response->content(), true);
+        $company = Company::find($response_arr['company_id']);
+        $company_arr = $company->toArray();
+
+        $this->assertDatabaseHas('companies', [
+            'company_id' => $response_arr['company_id'],
+            'company_name_th' => $response_arr['company_name_th'],
+        ]);
+    }
+
     public function test_post_company_not_have_some_field_should_return_status_400()
     {
         $data = [
