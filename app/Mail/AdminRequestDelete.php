@@ -34,7 +34,7 @@ class AdminRequestDelete extends Mailable
     public function build()
     {
         return $this->subject('Delete Information of Company')
-                ->view('emails.admin_request_delete', [
+                ->markdown('emails.admin_request_delete', [
                     'hello_name' => $this->user->first_name,
                     'user_req' => $this->user_req->first_name,
                     'company_name_th' => $this->company->company_name_th,

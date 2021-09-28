@@ -33,7 +33,7 @@ class CompanyDeleted extends Mailable
     public function build()
     {
         return $this->subject('Notification: Information of Company already has deleted.')
-                ->view('emails.company_deleted', [
+                ->markdown('emails.company_deleted', [
                     'hello_name' => $this->user->first_name,
                     'company_name_th' => $this->company->company_name_th,
                     'company_name_en' => $this->company->company_name_en,
