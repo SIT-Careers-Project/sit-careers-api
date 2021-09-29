@@ -33,7 +33,7 @@ class VerifyEmail extends Mailable
     public function build()
     {
         return $this->subject('Welcome to SIT Career Center')
-                ->view('emails.verify_email', [
+                ->markdown('emails.verify_email', [
                     'email' => $this->user->email,
                     'company_name_th' => null,
                     'company_name_en' => null,

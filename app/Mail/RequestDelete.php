@@ -34,7 +34,7 @@ class RequestDelete extends Mailable
     public function build()
     {
         return $this->subject('Delete Information of Company')
-                ->view('emails.request_delete', [
+                ->markdown('emails.request_delete', [
                     'hello_name' => $this->user->first_name,
                     'user_req' => $this->user_req->first_name,
                     'company_name_th' => $this->company->company_name_th,
