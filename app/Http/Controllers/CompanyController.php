@@ -13,11 +13,13 @@ use League\Flysystem\AwsS3v3\AwsS3Adapter;
 use App\Http\Controllers\Controller as Controller;
 use App\Repositories\CompanyRepositoryInterface;
 use App\Http\RulesValidation\CompanyRules;
+use App\Traits\Utils;
 use ErrorException;
 
 class CompanyController extends Controller
 {
     use CompanyRules;
+    use Utils;
     private $company;
 
     public function __construct(CompanyRepositoryInterface $company_repo)
@@ -113,7 +115,12 @@ class CompanyController extends Controller
             $data['logo'] = $companyNamePath;
         }
 
-        $updated = $this->company->updateCompanyById($data);
+        $my_role_id = $data['my_role_id'];
+        if($this->CheckRoleCoordinator($my_role_id) != 'coordinator') {
+            $updated = $this->company->updateCompanyById($data);
+        } else {
+            $updated = $this->company->updateCompanyByIdForCoordinator($data);
+        }
         return response()->json($updated, 200);
     }
 

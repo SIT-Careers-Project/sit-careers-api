@@ -83,4 +83,12 @@ trait Utils
             return 'admin';
         }
     }
+
+    public function CheckRoleCoordinator($request_role_id)
+    {
+        $coordinator_role_id = Role::where('role_name', 'coordinator')->first();
+        if($request_role_id == $coordinator_role_id['role_id']){
+            return 'coordinator';
+        }
+    }
 }

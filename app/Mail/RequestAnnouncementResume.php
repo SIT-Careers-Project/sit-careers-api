@@ -32,7 +32,7 @@ class RequestAnnouncementResume extends Mailable
     public function build()
     {
         return $this->subject('New Request Application')
-                ->view('emails.request_announcement_resume', [
+                ->markdown('emails.request_announcement_resume', [
                     'hello_name' => $this->user->first_name,
                     'announcement_title' => $this->announcement->announcement_title,
                     'company_name_th' => $this->announcement->company_name_th,

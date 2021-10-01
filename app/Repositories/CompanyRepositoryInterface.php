@@ -9,6 +9,7 @@ interface CompanyRepositoryInterface
     public function getCompaniesByUserId($user_id);
     public function createCompany($data);
     public function updateCompanyById($data);
+    public function updateCompanyByIdForCoordinator($data);
     public function requestDelete($data);
     public function deleteCompanyById($id);
 }
