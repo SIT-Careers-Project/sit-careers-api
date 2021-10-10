@@ -230,6 +230,7 @@ class AnnouncementRepository implements AnnouncementRepositoryInterface
     public function updateAnnouncement($data)
     {
         $announcement = Announcement::find($data['announcement_id']);
+        $myRole = Role::find($data['my_role_id']);
 
         $announcement->announcement_title = $data['announcement_title'];
         $announcement->job_description = $data['job_description'];
@@ -237,8 +238,10 @@ class AnnouncementRepository implements AnnouncementRepositoryInterface
         $announcement->property = $data['property'];
         $announcement->priority = $data['priority'] == "" ? "-": $data['priority'];
         $announcement->picture = $data['picture'] == "" ? "-": $data['picture'];
-        $announcement->start_date = $data['start_date'];
-        $announcement->end_date = $data['end_date'];
+        if ($myRole->role_name === "admin") {
+            $announcement->start_date = $data['start_date'];
+            $announcement->end_date = $data['end_date'];
+        }
         $announcement->salary = $data['salary'];
         $announcement->welfare = $data['welfare'];
         $announcement->status = $data['status'];
