@@ -257,6 +257,7 @@ class AnnouncementTest extends TestCase
         ]);
 
         $data['my_user_id'] = $user['user_id'];
+        $data['my_role_id'] = $user['role_id'];
         $data['announcement_title'] = 'รับสมัครงานตำแหน่ง UX/UI';
         $data['job_description'] = 'ต้องการ UX/UI';
         $data['job_type'] = json_encode([
@@ -299,6 +300,7 @@ class AnnouncementTest extends TestCase
         ]);
 
         $data['my_user_id'] = $user['user_id'];
+        $data['my_role_id'] = $user['role_id'];
         $data['announcement_title'] = 'รับสมัครงานตำแหน่ง UX/UI';
         $data['job_description'] = 'ต้องการ UX/UI';
         $data['job_type'] = json_encode([

@@ -43,8 +43,6 @@ trait AnnouncementRules
         'property' => 'required|string',
         'file_picture' => 'nullable|mimes:jpeg,jpg,png,gif|max:5242880',
         'picture' => 'nullable|string',
-        'start_date' => 'required|string',
-        'end_date' => 'required|string',
         'salary' => 'required|string',
         'welfare' => 'required|string',
         'status' => 'required|string',
