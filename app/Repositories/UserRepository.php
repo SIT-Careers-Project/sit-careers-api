@@ -154,8 +154,8 @@ class UserRepository implements UserRepositoryInterface
         $user->role_id = $role->role_id;
         $user->username = $data->user_id;
         $user->email = $data->email;
-        $user->first_name = explode(" ", $data->name_th)[0];
-        $user->last_name = explode(" ", $data->name_th)[1];
+        $user->first_name = explode(" ", $data->name_en)[0];
+        $user->last_name = explode(" ", $data->name_en)[1];
         $user->token = $data->token->token;
         $user->created_by = '-';
         $user->save();
