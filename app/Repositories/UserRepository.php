@@ -66,7 +66,7 @@ class UserRepository implements UserRepositoryInterface
             $user->save();
 
             $urlVerify = URL::temporarySignedRoute(
-                'verification.verify', now()->addHours(24), ['user_id' => $user->user_id]
+                'verification.verify', now()->addDays(7), ['user_id' => $user->user_id]
             );
 
             $dataOwner = new DataOwner();
@@ -98,7 +98,7 @@ class UserRepository implements UserRepositoryInterface
             $user->save();
 
             $urlVerify = URL::temporarySignedRoute(
-                'verification.verify', now()->addHours(24), ['user_id' => $user->user_id]
+                'verification.verify', now()->addDays(7), ['user_id' => $user->user_id]
             );
 
             Mail::to($user->email)->send(new VerifyEmail($user, $urlVerify));
@@ -130,7 +130,7 @@ class UserRepository implements UserRepositoryInterface
             $user->save();
 
             $urlVerify = URL::temporarySignedRoute(
-                'verification.verify', now()->addHours(24), ['user_id' => $user->user_id]
+                'verification.verify', now()->addDays(7), ['user_id' => $user->user_id]
             );
 
             $dataOwner = new DataOwner();
