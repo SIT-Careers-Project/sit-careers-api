@@ -3,10 +3,11 @@
 @if ($company_name_th)
   <p class="line-height-6">
     {{ $company_name_th }} - {{ $company_name_en }} ได้เพิ่มคุณเป็นผู้ใช้งานในระบบ 
-    SIT Career Center สำเร็จ กรุณากดเพื่อไปยัง 
+    SIT Career Center สำเร็จ กรุณากด 
     <a target="_blank" href="{{ $url }}/login/verification?urlVerify={{ $code_verify }}">
       SIT Career Center - Verify Email
     </a>
+    เพื่อตั้งรหัสผ่านและทำการยืนยันอีเมลของคุณภายในเวลา 7 วัน
   </p>
 @else
   <p class="line-height-6">
@@ -14,6 +15,7 @@
     <a target="_blank" href="{{ $url }}/login/verification?urlVerify={{ $code_verify }}">
       SIT Career Center - Verify Email
     </a>
+    และเพื่อทำการยืนยันอีเมลของคุณภายในเวลา 7 วัน
   </p>
 @endif
 @endcomponent
